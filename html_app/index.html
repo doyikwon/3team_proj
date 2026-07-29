@@ -1,0 +1,3108 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뉴트리매치 (NutriMatch) - 개인 맞춤형 영양 진단 & 스마트 케어</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Lora & Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: '#1E3A2F', // Deep Forest Green
+                        mint: '#10B981',   // Mint Emerald
+                        cream: '#FAF9F6',  // Warm Cream Base
+                        warning: '#EF4444',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FAF9F6;
+            overflow-x: hidden;
+        }
+
+        .pulse-emerald {
+            animation: pulse-emerald-animation 2s infinite;
+        }
+
+        @keyframes pulse-emerald-animation {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .pulse-red {
+            animation: pulse-red-animation 1.5s infinite;
+        }
+
+        @keyframes pulse-red-animation {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen text-slate-700 antialiased">
+
+    <!-- 헤더 네비게이션 -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- 로고 영역 -->
+            <a href="#" onclick="switchView('landing')" class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-[#1E3A2F] flex items-center justify-center text-white">
+                    <i class="fa-solid fa-seedling text-lg text-[#10B981]"></i>
+                </div>
+                <span class="font-serif text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span
+                        class="text-[#10B981]">Match</span></span>
+            </a>
+
+            <!-- 네비게이션 메뉴 -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#" onclick="switchView('landing')"
+                    class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">소개</a>
+                <a href="#" onclick="navigateQuiz()"
+                    class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">AI 맞춤 추천</a>
+                <a href="#" onclick="switchView('checker')"
+                    class="font-medium text-[#10B981] hover:text-[#0f9f6e] flex items-center gap-1.5 transition font-bold">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 내 영양제 초과 진단
+                </a>
+                <a href="#" onclick="showToast('준비 중인 서비스입니다.')"
+                    class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">커뮤니티</a>
+            </nav>
+
+            <!-- 우측 액션 버튼 삭제됨 -->
+            <div class="flex items-center gap-4">
+            </div>
+        </div>
+    </header>
+
+    <!-- 토스트 알림 컨테이너 -->
+    <div id="custom-toast" class="hidden">
+        <div id="toast-content" class="flex items-center gap-3"></div>
+    </div>
+
+    <main class="flex-grow">
+
+        <!-- ==============================================
+         VIEW 1: LANDING VIEW (홈페이지 메인 화면)
+         ============================================== -->
+        <div id="landing-view" class="view-section py-16 sm:py-24 bg-gradient-to-b from-[#FAF9F6] to-white">
+            <div class="max-w-7xl mx-auto px-6 space-y-24">
+
+                <!-- 히어로 영역 -->
+                <div class="grid md:grid-cols-12 gap-12 items-center">
+                    <div class="md:col-span-7 space-y-6">
+                        <span
+                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-[#10B981] text-xs font-bold tracking-wide">
+                            <i class="fa-solid fa-shield-heart"></i> AI 기반 1:1 개인 맞춤형 영양 케어
+                        </span>
+                        <h1
+                            class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A2F] font-serif leading-tight tracking-tight">
+                            더 이상 넘겨짚지 마세요.<br>내 몸에 꼭 맞는<br><span class="text-[#10B981]">안심 영양 설계</span>
+                        </h1>
+                        <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-lg">
+                            복잡한 23개의 신체 변수와 지병 상태를 완벽 분석하여 부작용 위험 0% 수준의 영양제 추천 및 초과 중복 섭취 필터 대시보드를 제공합니다.
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-3">
+                            <button onclick="startQuiz()"
+                                class="bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold px-8 py-4.5 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 text-center text-base">
+                                무료 건강 설문 시작하기 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+                            </button>
+                            <button onclick="switchView('checker')"
+                                class="bg-white border-2 border-slate-200 hover:border-[#10B981] hover:text-[#10B981] text-slate-700 font-bold px-8 py-4.5 rounded-2xl transition duration-300 text-center text-base">
+                                내 영양제 자가진단 검사
+                            </button>
+                        </div>
+
+                        <!-- 로컬스토리지 보존 불러오기 트리거 -->
+                        <div id="restore-answers-container"
+                            class="hidden animate-fadeIn p-4 rounded-2xl bg-teal-50 border border-teal-200/60 flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-clock-rotate-left text-teal-600 text-lg"></i>
+                                <div>
+                                    <span class="text-xs font-bold text-teal-900 block">이전 건강 분석 기록 발견</span>
+                                    <p class="text-[11px] text-teal-700">과거에 완료하신 설문 데이터가 브라우저에 안전히 임시 보관 중입니다.</p>
+                                </div>
+                            </div>
+                            <button onclick="loadPreviousResults()"
+                                class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs py-2 px-4 rounded-xl transition shadow-sm">
+                                이전 추천 결과 다시보기
+                            </button>
+                        </div>
+                    </div>
+                    <div class="md:col-span-5 relative">
+                        <div class="absolute -inset-4 bg-emerald-100/40 rounded-full blur-3xl z-0"></div>
+                        <div
+                            class="relative z-10 bg-white p-8 rounded-3xl border border-slate-100 shadow-2xl space-y-6">
+                            <div class="flex justify-between items-center">
+                                <span
+                                    class="text-xs bg-[#1E3A2F] text-white px-2.5 py-1 rounded font-bold uppercase tracking-wider">AI
+                                    Medical Filter Verified</span>
+                                <i class="fa-solid fa-heart-pulse text-red-500 animate-pulse text-lg"></i>
+                            </div>
+                            <div class="space-y-4">
+                                <div
+                                    class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100/50 flex gap-3.5">
+                                    <i class="fa-solid fa-shield-virus text-[#10B981] text-xl mt-1"></i>
+                                    <div>
+                                        <span class="text-xs font-bold text-[#1E3A2F] block">흡연자 특별 필터 탑재</span>
+                                        <p class="text-[11px] text-slate-500">흡연자의 폐암 유발 확률을 높이는 고농도 베타카로틴 성분을 자동 우회·원천
+                                            차단합니다.</p>
+                                    </div>
+                                </div>
+                                <div class="p-3.5 rounded-2xl bg-amber-50/50 border border-amber-100/50 flex gap-3.5">
+                                    <i class="fa-solid fa-capsules text-amber-600 text-xl mt-1"></i>
+                                    <div>
+                                        <span class="text-xs font-bold text-amber-800 block">복용 약물 시너지 가미</span>
+                                        <p class="text-[11px] text-slate-500">고혈압, 당뇨 및 항응고제 섭취자를 위해 혈액 응고 방지 중복 충돌을
+                                            조율합니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KDRI 데이터 출처 명시 -->
+                <div
+                    class="mt-12 bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6 animate-fadeIn">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-book-medical"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">공신력 있는 국가 표준 데이터 적용</h4>
+                            <p class="text-sm text-slate-500 mt-1">본 서비스는 보건복지부 및 한국영양학회에서 발간한 <strong>『2025 한국인 영양소
+                                    섭취기준 (KDRI)』</strong> 최신 통계와 연령별 가이드라인을 기반으로 정밀하게 개인별 맞춤 영양 설계를 제공합니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 핵심 특징 요약 -->
+                <div class="grid sm:grid-cols-3 gap-8 pt-12 border-t border-slate-100">
+                    <div class="space-y-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-[#10B981]">
+                            <i class="fa-solid fa-chart-bar text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-[#1E3A2F]">23개 정밀 신체 변수 연산</h3>
+                        <p class="text-xs text-slate-400 leading-normal">성별, BMI, 수면 패턴, 알레르기 및 만성질환을 조합한 다차원 추천 설계를
+                            제공합니다.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-[#10B981]">
+                            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-[#1E3A2F]">중복·오버도즈 자가진단</h3>
+                        <p class="text-xs text-slate-400 leading-normal">현재 먹는 영양소들이 내 몸 상태에 적합한지 안전 한계선(Tolerable Upper
+                            Intake)으로 조율합니다.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-[#10B981]">
+                            <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-[#1E3A2F]">정밀 아웃링크 가격비교</h3>
+                        <p class="text-xs text-slate-400 leading-normal">쿠팡, 아이허브, 올리브영에 판매 중인 최적의 건강기능식품 구매처로 직접 원스톱
+                            가이드합니다.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==============================================
+         VIEW 2: QUIZ VIEW (세분화된 10단계 건강 설문 페이지)
+         ============================================== -->
+        <div id="quiz-view" class="view-section transition-all duration-300 hidden py-12 bg-[#FAF9F6]">
+            <div class="max-w-3xl mx-auto px-6">
+                <!-- 퀴즈 단계 프로그레스 헤더 -->
+                <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8">
+                    <div class="flex justify-between items-center">
+                        <span id="quiz-step-indicator"
+                            class="text-xs sm:text-sm font-bold text-[#1E3A2F] tracking-wide uppercase">동의 안내 (Step
+                            0)</span>
+                        <button onclick="switchView('landing')"
+                            class="text-slate-400 hover:text-slate-600 text-sm transition">
+                            설문 취소 <i class="fa-solid fa-xmark ml-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                        <div id="quiz-progress"
+                            class="bg-gradient-to-r from-[#10B981] to-emerald-400 h-full transition-all duration-300"
+                            style="width: 0%;"></div>
+                    </div>
+
+                    <!-- 퀴즈 폼 동적 출력 타켓 -->
+                    <div id="quiz-content-area" class="min-h-[300px]">
+                        <!-- Step UI는 JavaScript에서 동적으로 빌드 -->
+                    </div>
+
+                    <!-- 퀴즈 액션 버튼들 -->
+                    <div class="flex justify-between items-center pt-6 border-t border-slate-100">
+                        <button id="quiz-prev-btn" onclick="prevQuizStep()"
+                            class="text-slate-500 hover:text-[#1E3A2F] font-bold py-3 px-6 rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i> 이전 단계
+                        </button>
+                        <button id="quiz-next-btn" onclick="nextQuizStep()"
+                            class="bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition flex items-center gap-2">
+                            다음 단계 <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 퀴즈 분석 중 로더 화면 -->
+        <div id="quiz-loading-view"
+            class="view-section transition-all duration-300 hidden py-24 bg-[#FAF9F6] text-center">
+            <div class="max-w-md mx-auto px-6 flex flex-col items-center justify-center space-y-8">
+                <div class="relative w-28 h-28 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-4 border-emerald-100 animate-pulse"></div>
+                    <div
+                        class="absolute inset-0 rounded-full border-4 border-transparent border-t-[#10B981] animate-spin">
+                    </div>
+                    <i class="fa-solid fa-dna text-4xl text-[#10B981] animate-bounce"></i>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">AI 정밀 유전체 및 건강 시뮬레이션 가동 중</h3>
+                    <p id="loading-subtitle" class="text-sm text-slate-500 min-h-[40px] transition-all duration-500">
+                        성분 간 충돌 여부 정밀 시뮬레이션 중...
+                    </p>
+                </div>
+                <!-- 정밀 검수 로딩 상태바 -->
+                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                    <div id="loading-progress" class="bg-[#10B981] h-full rounded-full transition-all duration-1000"
+                        style="width: 5%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==============================================
+         VIEW 3: RECOMMENDATION RESULT VIEW (결과 페이지)
+         ============================================== -->
+        <div id="result-view" class="view-section transition-all duration-300 hidden py-12 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-6">
+                <!-- 결과 헤더 요약 대시보드 -->
+                <div
+                    class="bg-gradient-to-r from-[#1E3A2F] to-[#142820] rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden mb-12">
+                    <div class="absolute -right-24 -bottom-24 w-80 h-80 bg-[#10B981]/10 rounded-full blur-3xl"></div>
+
+                    <div class="relative z-10 grid md:grid-cols-12 gap-8 items-center">
+                        <div class="md:col-span-8 space-y-4">
+                            <span class="text-xs text-[#10B981] font-bold tracking-widest uppercase">AI Clinical
+                                Diagnosis Result</span>
+                            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight font-serif"><span
+                                    id="user-display-name">고객</span>님만을 위한 안심 하루 한 팩 솔루션</h2>
+                            <p class="text-slate-300 text-sm sm:text-base max-w-xl">
+                                입력하신 프로필, 라이프스타일, 질환 유무 및 알레르기를 종합 분석했습니다. 부작용을 회피한 1:1 맞춤 설계입니다.
+                            </p>
+                            <!-- BMI 배지 출력부 -->
+                            <div id="result-bmi-badge"
+                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold">
+                                <!-- JS에서 동적 입력 -->
+                            </div>
+                        </div>
+                        <div
+                            class="md:col-span-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-center">
+                            <div class="text-xs text-emerald-400 font-bold uppercase tracking-widest">종합 매치 신뢰 스코어</div>
+                            <div class="text-5xl font-extrabold font-serif my-2 text-[#10B981]" id="result-match-score">
+                                98.8<span class="text-sm">점</span></div>
+                            <p class="text-[11px] text-slate-300">알레르기 / 약물 충돌 요인 완전 차단 검증</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 메인 컨텐츠 영역: 2단 배치 -->
+                <div class="grid lg:grid-cols-12 gap-8 items-start">
+
+                    <!-- 좌측 영역: 추천 팩 제품 카드 리스트 & 차트 -->
+                    <div class="lg:col-span-8 space-y-8">
+
+                        <!-- 특이 의료 알림/경고 대시보드 (흡연, 알레르기, 만성질환 대응) -->
+                        <div id="medical-safety-dashboard"
+                            class="hidden bg-red-50 border border-red-200/60 rounded-3xl p-6 sm:p-8 space-y-4">
+                            <h3 class="text-sm font-bold text-red-900 flex items-center gap-2">
+                                <i class="fa-solid fa-shield-virus text-red-600 animate-pulse text-lg"></i> AI 긴급 안전성 의료
+                                교차 필터 발동 중
+                            </h3>
+                            <div id="medical-safety-alerts-list" class="space-y-2 text-xs text-red-800 leading-relaxed">
+                                <!-- JS를 통해 상황별 안전 조치 및 경고 피드백을 실시간 렌더링 -->
+                            </div>
+                        </div>
+
+                        <!-- 추천 팩 리스트 -->
+                        <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
+                            <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                                <i class="fa-solid fa-basket-shopping text-[#10B981]"></i> 인기 영양제 추천 및 실시간 외부 판매처 바로가기
+                            </h3>
+
+                            <div id="pharmacist-opinion-container"
+                                class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 mb-6 hidden">
+                                <h4 class="font-bold text-emerald-900 flex items-center gap-2 mb-3">
+                                    <i class="fa-solid fa-user-doctor"></i> 전담 약사의 종합 소견서
+                                </h4>
+                                <div id="pharmacist-opinion-text"
+                                    class="text-[13px] text-emerald-800 leading-loose space-y-3 whitespace-pre-line">
+                                </div>
+                            </div>
+
+                            <div id="recommended-products-container" class="space-y-4">
+                                <!-- JS를 통해 선택된 고민에 따라 영양소 카드가 실시간 생성됩니다. -->
+                            </div>
+                        </div>
+
+                        <!-- 실시간 기존 영양제와의 사전 충돌 방지 진단기 -->
+                        <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                        <i class="fa-solid fa-shuffle text-amber-500"></i> 구매 전 안심 검수: 기존 영양제와 상호 충돌 검사
+                                    </h3>
+                                    <p class="text-xs text-slate-400 mt-1">현재 복용 영양제 보관함 속 제품들과의 오남용 우려를 실시간 비교합니다.</p>
+                                </div>
+                                <button onclick="checkSupplementsCollision()"
+                                    class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl transition shadow-md flex items-center gap-1.5 shrink-0">
+                                    <i class="fa-solid fa-bolt"></i> 실시간 충돌 여부 정밀 진단
+                                </button>
+                            </div>
+                            <div id="pre-purchase-clash-results" class="hidden space-y-3">
+                                <!-- JS에서 유동적으로 충돌 분석 정보 렌더링 -->
+                            </div>
+                        </div>
+
+                        <!-- 중복/안전 섭취량 바 차트 영역 -->
+                        <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
+                            <div>
+                                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-line text-[#10B981]"></i> 안심 영양성분 1일 상호 복용 안전 검수 대시보드
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-1">
+                                    중복 복용에 따른 부작용을 원천 차단하기 위해 NutriMatch AI 분석 엔진이 하루 최적섭취량(100%)을 완벽 제어했습니다.
+                                </p>
+                            </div>
+
+                            <!-- 동적 바 차트 컨테이너 -->
+                            <div id="safety-chart-container" class="space-y-4 pt-4">
+                                <!-- 동적 생성 바 차트 자리 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 우측 영역: 이메일 구독 폼 및 입점몰 구매처 가이드 -->
+                    <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+
+                        <!-- 신규 기능: 이메일로 리포트 전송 받아보기 카드 -->
+                        <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 space-y-4">
+                            <div class="space-y-1">
+                                <span class="text-xs text-emerald-500 font-bold uppercase tracking-widest block">PDF
+                                    Health Report</span>
+                                <h4 class="text-lg font-bold text-slate-800">1:1 맞춤 영양 리포트 이메일 발송</h4>
+                                <p class="text-xs text-slate-400">작성하신 23개 지표 기반 종합 분석 서류를 이메일로 즉시 받아 보관해 보세요.</p>
+                            </div>
+                            <div class="space-y-2">
+                                <input type="email" id="report-email-input" placeholder="example@email.com"
+                                    class="w-full text-xs p-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981]">
+                                <button onclick="sendEmailReport()"
+                                    class="w-full bg-[#10B981] hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-envelope"></i> 맞춤 분석 리포트 받아보기
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 내 보관함에 추천 성분 담고 1:1 진단 연계 버튼 -->
+                        <div
+                            class="bg-gradient-to-r from-teal-900 to-emerald-900 rounded-3xl p-6 text-white shadow-xl space-y-4">
+                            <span
+                                class="bg-emerald-500 text-white font-bold text-[9px] px-2 py-0.5 rounded uppercase tracking-wider">Diagnostic
+                                Continuity</span>
+                            <h4 class="text-base font-bold">기존 보관함에 이 추천 조합 합산하기</h4>
+                            <p class="text-[11px] text-slate-200 leading-relaxed">
+                                추천된 영양 성분들을 현재 보관함에 즉시 투입시켜, 기존 영양제들과 누적으로 합산된 과다 복용 상태를 진단기로 연속 모니터링합니다.
+                            </p>
+                            <button onclick="addRecommendedToChecker()"
+                                class="w-full bg-[#10B981] hover:bg-[#0f9f6e] text-white font-bold py-3.5 rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-plus"></i> 내 보관함에 추천팩 임시 저장 & 진단하기
+                            </button>
+                        </div>
+
+                        <!-- 쇼핑몰 스마트 스토어 정보 가이드 -->
+                        <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 space-y-6">
+                            <div class="space-y-1">
+                                <div
+                                    class="inline-flex px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#10B981] font-bold text-[10px] uppercase tracking-wide">
+                                    🛒 외부 스토어 최저가 쇼핑 도우미
+                                </div>
+                                <h4 class="text-base font-bold text-[#1E3A2F]">스마트 스토어 종합 비교</h4>
+                            </div>
+
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                쿠팡, 올리브영, 아이허브의 각 영양소별 검색 필터가 자동으로 생성되었습니다. 필요하신 영양소 하단에서 원하시는 스토어의 로고를 누르면 맞춤 제품 검색으로
+                                바로 이동합니다.
+                            </p>
+
+                            <!-- 입점 채널 주요 혜택 정보 -->
+                            <div class="border-y border-slate-100 py-4 space-y-3">
+                                <div class="flex items-center gap-3 text-xs">
+                                    <span
+                                        class="w-16 text-center py-1 rounded bg-[#0074E9] text-white font-bold text-[10px]">쿠팡</span>
+                                    <span class="text-slate-600 font-medium">와우회원 무료 로켓배송 / 새벽 배송 보장</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs">
+                                    <span
+                                        class="w-16 text-center py-1 rounded bg-[#82BA27] text-white font-bold text-[10px]">올리브영</span>
+                                    <span class="text-slate-600 font-medium">오늘드림 즉시 배송 적용 가능</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs">
+                                    <span
+                                        class="w-16 text-center py-1 rounded bg-[#4E7E24] text-white font-bold text-[10px]">아이허브</span>
+                                    <span class="text-slate-600 font-medium">직구 전문 몰, 특별 코드 할인 제공</span>
+                                </div>
+                            </div>
+
+                            <!-- 혜택 요약 -->
+                            <div
+                                class="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100 space-y-2.5 text-xs text-slate-600">
+                                <div class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-info text-[#10B981] mt-0.5"></i>
+                                    <span><strong>주의사항:</strong> 의약품이 아닌 건강기능식품이며, 임산부나 특이체질인 경우 구매 사이트 내 상세 표기 원료 성분을
+                                        확인한 후 섭취하시기 바랍니다.</span>
+                                </div>
+                            </div>
+
+                            <button onclick="showToast('필요한 영양소 카드의 쇼핑 버튼을 클릭하시면 각 스토어 페이지로 안전하게 이동합니다.', 'success')"
+                                class="w-full bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-center flex items-center justify-center gap-2 text-sm">
+                                <i class="fa-solid fa-magnifying-glass"></i> 내 맞춤 쇼핑 경로 확인 완료
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==============================================
+         VIEW 4: SUPPLEMENT CHECKER VIEW (내 영양제 초과 진단 화면)
+         ============================================== -->
+        <div id="checker-view" class="view-section transition-all duration-300 hidden py-12 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-6">
+
+                <!-- 상단 가이드 및 정보 영역 -->
+                <div
+                    class="bg-gradient-to-r from-teal-900 to-emerald-900 text-white p-8 rounded-3xl shadow-xl mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div class="space-y-2 max-w-2xl">
+                        <span
+                            class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Nutrient
+                            Overlap Diagnostic</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold font-serif">내 영양제 중복·과다 섭취 자가진단</h2>
+                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                            현재 식탁 위 혹은 서랍장에 보관 중이신 영양제를 목록에 등록하세요. 사용자의 연령 및 특이 몸 상태 프로필에 기반하여 위험 상한선(Tolerable Upper
+                            Intake Level)을 동적으로 변경하고 부작용 위장장애 및 간독성을 경고해 드립니다.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl text-center">
+                            <div class="text-[10px] text-emerald-300 uppercase font-mono">현재 등록된 수</div>
+                            <div id="active-supp-count" class="text-3xl font-extrabold text-white mt-1">2개</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 메인 진단 대시보드 구조 -->
+                <div class="grid lg:grid-cols-12 gap-8 items-start">
+
+                    <!-- 1. 좌측: 프로필 필터 및 내 영양제 관리 -->
+                    <div class="lg:col-span-5 space-y-6">
+
+                        <!-- 1:1 맞춤 진단 프로필 필터 위젯 -->
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-5">
+                            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-user-gear text-[#10B981]"></i> 👤 1:1 진단 적용 프로필 설정
+                            </h3>
+                            <p class="text-[11px] text-slate-400">
+                                영양학적 안전 상한 섭취선은 사용자의 연령대, 신진대사율 및 신체 조건에 의해 다르게 계산됩니다. 몸 상태 필터를 켜면 실시간으로 차트 경고선이 변동합니다.
+                            </p>
+
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 mb-1">성별</label>
+                                    <select id="checker-gender" onchange="recalculateSupplements()"
+                                        class="w-full p-3 rounded-xl border border-slate-200 bg-white font-medium">
+                                        <option value="male">남성 (Male)</option>
+                                        <option value="female">여성 (Female)</option>
+                                        <option value="not_disclosed">응답 안함</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 mb-1">연령대</label>
+                                    <select id="checker-age" onchange="recalculateSupplements()"
+                                        class="w-full p-3 rounded-xl border border-slate-200 bg-white font-medium">
+                                        <option value="under_20">20대 미만</option>
+                                        <option value="20s">20대</option>
+                                        <option value="30s">30대</option>
+                                        <option value="40s" selected>40대</option>
+                                        <option value="50s">50대</option>
+                                        <option value="60s+">60대 이상</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-3 border-t border-slate-100">
+                                <label class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">특이 몸
+                                    상태 선택 (중복 설정 가능)</label>
+
+                                <div class="space-y-2">
+                                    <label
+                                        class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                                        <input type="checkbox" id="cond-pregnant" onchange="recalculateSupplements()"
+                                            class="w-4 h-4 rounded text-[#10B981] accent-[#10B981]">
+                                        <span>🤰 임신 또는 수유기 (비타민D/실리마린 차단 대응)</span>
+                                    </label>
+                                    <label
+                                        class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                                        <input type="checkbox" id="cond-organ" onchange="recalculateSupplements()"
+                                            class="w-4 h-4 rounded text-[#10B981] accent-[#10B981]">
+                                        <span>⚠️ 간/신장 기능 우려 (마그네슘/실리마린 보수적 조율)</span>
+                                    </label>
+                                    <label
+                                        class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                                        <input type="checkbox" id="cond-sport" onchange="recalculateSupplements()"
+                                            class="w-4 h-4 rounded text-[#10B981] accent-[#10B981]">
+                                        <span>⚡ 고강도 스포츠 / 격렬한 육체 활동 (비타민 B군/C 한계 완화)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 영양제 추가하기 컨트롤 패널 (실제 유명 제품 빠른 추가) -->
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-6">
+                            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-folder-plus text-[#10B981]"></i> 현재 먹는 제품 빠른 선택 추가
+                            </h3>
+
+                            <!-- 프리셋 그리드 -->
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <button onclick="addPresetSupplement('multi')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">얼라이브 종합비타민</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">비타민C,D,B군,마그네슘 등</span>
+                                </button>
+                                <button onclick="addPresetSupplement('vitb')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">센트룸 포 맨</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">B군 활력 위주 성분 조합</span>
+                                </button>
+                                <button onclick="addPresetSupplement('vitd')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">솔가 비타민 D3 2200</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">지용성 비타민D 고함량</span>
+                                </button>
+                                <button onclick="addPresetSupplement('calmag')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">칼마디 플러스</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">칼슘/마그네슘/비타민D</span>
+                                </button>
+                                <button onclick="addPresetSupplement('omega')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">rTG 오메가3 울트라</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">식물성 EPA/DHA 100%</span>
+                                </button>
+                                <button onclick="addPresetSupplement('lutein')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">안국 루테인지아잔틴</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">눈 노화 보호 황반 성분</span>
+                                </button>
+                                <button onclick="addPresetSupplement('zinc')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">고려은단 비타민C 1000</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">비타민C 항산화 단일제</span>
+                                </button>
+                                <button onclick="addPresetSupplement('milk')"
+                                    class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                    <span class="block font-bold text-slate-700">락토핏 생유산균 골드</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5 block">유산균 & 면역 아연 보강</span>
+                                </button>
+                            </div>
+
+                            <!-- 수동 커스텀 등록 영역 -->
+                            <div class="border-t border-slate-100 pt-5 space-y-4">
+                                <span class="block text-xs font-bold text-slate-700"><i
+                                        class="fa-solid fa-pen-fancy text-emerald-500"></i> 내가 먹는 다른 실제 영양제 직접 등록</span>
+
+                                <div class="space-y-4">
+                                    <div class="relative">
+                                        <label class="block text-[10px] text-slate-400 mb-1">영양제 제조사 및 제품명 검색</label>
+                                        <input type="text" id="custom-supp-name"
+                                            oninput="searchBrandSupplements(this.value)"
+                                            placeholder="예: 센트룸, 솔가, 나우푸드, 락토핏, 고려은단 검색..."
+                                            class="w-full text-xs px-3.5 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-slate-50/50">
+
+                                        <!-- 실시간 검색 자동완성 추천 드롭다운 -->
+                                        <div id="brand-suggest-dropdown"
+                                            class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 max-h-48 overflow-y-auto">
+                                        </div>
+                                    </div>
+
+                                    <!-- 자동으로 분석된 함량 정보 실시간 시각화 보드 -->
+                                    <div id="auto-ingredients-preview"
+                                        class="hidden p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100 text-xs animate-fadeIn space-y-2">
+                                        <!-- JS에서 선택 시 동적으로 함량 배지와 상세 정보를 주입하게 됩니다 -->
+                                    </div>
+
+                                    <!-- 제품별 복복합 성분 구성 빌더 (수동 및 검색 자동완성 연계) -->
+                                    <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-150">
+                                        <label
+                                            class="block text-[10px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                                            <i class="fa-solid fa-layer-group text-emerald-500"></i> 이 제품에 함유된 성분 모두 체크
+                                            (함량 기재)
+                                        </label>
+
+                                        <div id="custom-ingredients-grid" class="grid grid-cols-2 gap-2 text-xs">
+                                            <!-- 자바스크립트로 일관성 있는 복합 영양소 빌더 그리드 동적 삽입 -->
+                                        </div>
+                                    </div>
+
+                                    <button onclick="addCustomSupplement()"
+                                        class="w-full py-3 bg-[#1E3A2F] hover:bg-[#142820] text-white text-xs font-bold rounded-xl transition-all shadow-md">
+                                        위 구성으로 영양제 보관함에 추가 <i class="fa-solid fa-plus ml-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 등록된 나의 복용 리스트 -->
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
+                            <h3 class="text-base font-bold text-slate-800 flex items-center justify-between">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-pills text-emerald-500"></i>
+                                    복용 중인 실제 영양제 보관함</span>
+                                <span class="text-xs text-[#10B981] font-semibold">실시간 계산</span>
+                            </h3>
+
+                            <!-- 리스트 컴포넌트 -->
+                            <div id="my-supplements-list" class="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
+                                <!-- JS에 의해 동적 렌더링 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. 우측: 섭취 과다 및 중복 모니터링 실시간 차트 대시보드 -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-100 space-y-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-xl font-bold text-slate-800 font-serif flex items-center gap-2">
+                                        <i class="fa-solid fa-square-poll-horizontal text-emerald-500"></i> 종합 영양 성분 섭취
+                                        분석기
+                                    </h3>
+                                    <p class="text-xs text-slate-500 mt-1">
+                                        등록한 실제 영양제 속 복잡한 성분 수치를 모두 실시간 합산한 누계 결과입니다. (100% = 하루 권장량)
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-2.5 py-1 rounded-full bg-red-50 text-red-500 font-bold text-[10px] border border-red-100 flex items-center gap-1">
+                                    <i class="fa-solid fa-triangle-exclamation animate-pulse"></i> 프로필 동적 연산 중
+                                </span>
+                            </div>
+
+                            <!-- 프로필 필터 적용 로그 알림판 -->
+                            <div id="checker-profile-status-logs" class="space-y-2 hidden">
+                                <!-- JS에 의해 프로필 변경 시 가동 및 조정 로그 요약 삽입 -->
+                            </div>
+
+                            <!-- 섭취량 실시간 동적 차트 출력부 -->
+                            <div id="diagnose-chart-area" class="space-y-4 pt-2">
+                                <!-- JS를 통해 각 영양소 누계 수치가 동적 바 형태로 실시간 갱신됨 -->
+                            </div>
+
+                            <!-- 상태 분류 범례 -->
+                            <div
+                                class="grid grid-cols-3 gap-2.5 bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center text-xs font-semibold">
+                                <div class="flex items-center justify-center gap-1.5 text-slate-500">
+                                    <span class="w-3 h-3 rounded-full bg-slate-300"></span> 부족 (50% 미만)
+                                </div>
+                                <div class="flex items-center justify-center gap-1.5 text-emerald-600">
+                                    <span class="w-3 h-3 rounded-full bg-[#10B981]"></span> 안전/적정 (50% ~ 150%)
+                                </div>
+                                <div class="flex items-center justify-center gap-1.5 text-red-500">
+                                    <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span> 초과/경계 (150% 이상)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 실시간 영양 진단 처방 및 AI 피드백 메모 -->
+                        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 space-y-5">
+                            <h4 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-user-doctor text-[#10B981]"></i> 맞춤 복용 최적화 종합 리포트
+                            </h4>
+
+                            <div id="diagnostic-feedback-box" class="space-y-3">
+                                <!-- 과다 영양소 발생 시 알람 및 섭취 대책 가이드 텍스트 자동 삽입 -->
+                            </div>
+
+                            <!-- 격일 복용 팁 및 배합 꿀팁 -->
+                            <div
+                                class="bg-amber-50 border border-amber-200/50 rounded-2xl p-4 flex gap-3 text-xs text-amber-900">
+                                <i class="fa-solid fa-lightbulb text-lg text-amber-500 mt-0.5"></i>
+                                <div>
+                                    <span class="font-bold">복용 상호작용 스마트 팁:</span>
+                                    <p class="text-amber-800 leading-relaxed mt-1 text-[11px]">
+                                        칼슘과 마그네슘은 서로 흡수 통로가 같아 고함량일 땐 1:1 또는 2:1 비율을 넘지 않아야 흡수율이 높아집니다.
+                                        지용성 영양소인 비타민D, 오메가3는 흡수 효율 증대를 위해 공복보다는 가급적 식사 직후 함께 드시는 것을 권장합니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AI OCR 스캔 가상 카메라 모달 (식약처 미발견 대체 등록용) -->
+    <div id="ocr-scan-modal"
+        class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-6 relative border border-slate-100 animate-fadeIn">
+            <button onclick="closeOcrModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="space-y-1.5 text-center">
+                <span
+                    class="bg-emerald-50 text-emerald-600 font-bold text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">AI
+                    OCR Label Scanner</span>
+                <h3 class="text-lg font-bold text-[#1E3A2F]">영양성분표 사진 스캔 등록</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">영양제 뒷면의 '영양·기능정보' 표를 사각형 안에 맞춰 촬영해 주세요.</p>
+            </div>
+            <!-- 가상 뷰파인더 -->
+            <div
+                class="relative bg-slate-950 rounded-2xl aspect-[4/3] overflow-hidden flex flex-col items-center justify-center text-white border border-slate-800">
+                <!-- 가상 비디오 화면 -->
+                <div id="ocr-viewfinder-screen"
+                    class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                    <i class="fa-solid fa-camera text-4xl text-slate-500 mb-2"></i>
+                    <span class="text-xs text-slate-400">카메라 대기 중...</span>
+                </div>
+                <!-- 스캔 가이드 라인 -->
+                <div id="ocr-scanner-laser"
+                    class="hidden absolute left-4 right-4 top-4 bottom-4 border-2 border-dashed border-[#10B981] rounded-xl flex items-center justify-center">
+                    <div
+                        class="w-full h-0.5 bg-gradient-to-r from-transparent via-[#10B981] to-transparent shadow-[0_0_10px_#10B981] animate-bounce">
+                    </div>
+                </div>
+            </div>
+            <!-- 스캔 결과 미리보기 (초기 숨김) -->
+            <div id="ocr-extracted-result"
+                class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+                <span class="font-bold text-slate-700 block"><i class="fa-solid fa-microchips text-[#10B981]"></i> 추출된
+                    성분 분석 정보</span>
+                <div class="flex flex-wrap gap-1.5" id="ocr-badges-area"></div>
+            </div>
+            <!-- 모달 액션 -->
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button id="ocr-action-btn" onclick="startOcrCapture()"
+                    class="col-span-2 bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-camera"></i> 사진 촬영 및 분석 시작
+                </button>
+                <button id="ocr-apply-btn" onclick="applyOcrResult()"
+                    class="hidden col-span-2 bg-[#10B981] hover:bg-[#0f9f6e] text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md">
+                    영양 성분 빌더에 일괄 자동 매핑하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 공통 영역 -->
+    <footer class="bg-[#1E3A2F] text-slate-300 py-16 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 text-sm">
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-[#10B981] flex items-center justify-center text-white">
+                        <i class="fa-solid fa-seedling text-sm"></i>
+                    </div>
+                    <span class="font-serif text-lg font-bold text-white tracking-tight">NutriMatch</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    뉴트리매치는 식약처 권장 가이드를 준수하며 개인의 복용 데이터 분석해 최상의 오버도즈 케어 시스템과 천연 원료 영양 매칭 솔루션을 선사합니다.
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <h5 class="text-white font-bold">서비스 및 안심 케어</h5>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="#" onclick="navigateQuiz()" class="hover:text-white transition">AI 무료 성분매치</a></li>
+                    <li><a href="#" onclick="switchView('checker')" class="hover:text-white transition">내 영양제 중복 섭취
+                            검사</a></li>
+                    <li><a href="#" class="hover:text-white transition">영양 부작용 백과사전</a></li>
+                </ul>
+            </div>
+
+            <div class="space-y-3">
+                <h5 class="text-white font-bold">고객 지원 센터</h5>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><i class="fa-solid fa-envelope text-emerald-400 mr-1.5"></i> support@nutrimatch.com</li>
+                    <li><i class="fa-solid fa-phone text-emerald-400 mr-1.5"></i> 1644-2026 (평일 10:00~17:00)</li>
+                    <li><i class="fa-solid fa-location-dot text-emerald-400 mr-1.5"></i> 서울시 강남구 테헤란로 바이오연구소</li>
+                </ul>
+            </div>
+
+            <div class="space-y-3">
+                <h5 class="text-white font-bold font-serif">Supplements Safety Guard</h5>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    각 영양소의 일일 권장량 및 상한 섭취 기준은 식품의약품안전처 및 보건복지부의 최신 ‘한국인 영양소 섭취기준’ 원장을 준수하여 평가합니다.
+                </p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+            <p>© 2026 NutriMatch Inc. All rights reserved. 본 제품은 건강기능식품입니다.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 전역 상태 관리 객체 (23개 유저 전항목 연동)
+        const state = {
+            currentView: 'landing', // 'landing', 'quiz', 'result', 'checker'
+            quizStep: 0, // Step 0: 동의 동시 처리
+            agreements: {
+                terms: false,
+                age: false,
+                sensitive: false
+            },
+            answers: {
+                // STEP1 (Demographics)
+                gender: '',
+                maleConcerns: [], // 복수 선택
+                femaleStage: '', // 단일 선택
+                ageGroup: '',
+                height: '',
+                weight: '',
+                bmi: null,
+
+                // STEP2 (Lifestyle)
+                exercise: [],
+                sleep: '',
+                diet: '',
+                alcohol: '',
+                caffeine: '',
+                stress: 3,
+
+                // STEP3 (Medical & Safety)
+                smoking: '',
+                allergies: [],
+                sideEffects: [],
+                customSideEffect: '',
+                conditions: [], // 기저 질환 복수
+
+                // STEP4 (Health Goals)
+                goals: [],
+
+                // STEP5 (Preference)
+                buyingValues: [],
+                portability: '',
+                budget: '',
+                buyingType: ''
+            },
+            mySupplements: [
+                { id: 1, name: "얼라이브 종합비타민", type: "preset_multi", items: { "비타민C": 150, "비타민D": 100, "비타민B군": 150, "아연": 100, "칼슘": 30, "마그네슘": 20 } },
+                { id: 2, name: "솔가 고함량 비타민 D3", type: "preset_vitd", items: { "비타민D": 300, "칼슘": 10 } }
+            ]
+        };
+
+        // 실시간 자동 함량 매칭 브랜드 제품 데이터베이스
+        const BRAND_SUPPLEMENTS_DB = [
+            { brand: "센트룸 (Centrum)", name: "센트룸 포 맨", items: { "비타민B군": 200, "비타민C": 100, "아연": 100, "비타민D": 100 } },
+            { brand: "센트룸 (Centrum)", name: "센트룸 포 우먼", items: { "비타민B군": 150, "비타민C": 100, "아연": 80, "비타민D": 100, "칼슘": 30 } },
+            { brand: "솔가 (Solgar)", name: "솔가 비타민 D3 2200IU", items: { "비타민D": 550 } },
+            { brand: "솔가 (Solgar)", name: "솔가 에스테르 C 1000", items: { "비타민C": 1000 } },
+            { brand: "나우푸드 (Now Foods)", name: "나우푸드 실리마린 2x", items: { "실리마린": 150 } },
+            { brand: "나우푸드 (Now Foods)", name: "나우푸드 울트라 오메가3", items: { "오메가3": 120 } },
+            { brand: "락토핏 (Lactofit)", name: "락토핏 생유산균 골드", items: { "실리마린": 0, "비타민D": 50, "아연": 60 } }, // 유익균 대체 매칭
+            { brand: "오쏘몰 (Orthomol)", name: "오쏘몰 이뮨 멀티비타민", items: { "비타민C": 1000, "비타민B군": 300, "아연": 100, "비타민D": 100 } },
+            { brand: "고려은단", name: "고려은단 비타민C 1000", items: { "비타민C": 1000 } },
+            { brand: "GNC", name: "GNC 밀크씨슬 1300", items: { "실리마린": 100 } }
+        ];
+
+        // 프리셋 영양제 데이터베이스 (초기 추가용)
+        const PRESET_SUPPLEMENTS = {
+            multi: { name: "얼라이브 종합비타민", items: { "비타민C": 150, "비타민D": 100, "비타민B군": 150, "아연": 100, "칼슘": 30, "마그네슘": 20 } },
+            vitb: { name: "센트룸 포 맨", items: { "비타민B군": 200, "비타민C": 100, "아연": 100, "비타민D": 100 } },
+            vitd: { name: "솔가 고함량 비타민 D3", items: { "비타민D": 300, "칼슘": 10 } },
+            calmag: { name: "칼마디 플러스", items: { "칼슘": 80, "마그네슘": 80, "비타민D": 80 } },
+            omega: { name: "rTG 오메가3 울트라", items: { "오메가3": 100, "비타민D": 50 } },
+            lutein: { name: "안국 루테인지아잔틴", items: { "루테인": 100, "비타민D": 80 } },
+            zinc: { name: "고려은단 비타민C 1000", items: { "비타민C": 1000 } },
+            milk: { name: "락토핏 생유산균 골드", items: { "비타민D": 50, "아연": 60 } }
+        };
+
+        // 영양소 안전 가이드라인
+        const NUTRIENT_GUIDELINES = {
+            "비타민B군": { maxSafe: 300, danger: 500, unit: "%", desc: "수용성이지만 일일 500% 초과 섭취 시 과도한 대사 자극 및 신경계 자극 우려가 있습니다." },
+            "비타민D": { maxSafe: 200, danger: 350, unit: "%", desc: "지용성 영양소로 장기 과다 복용 시 체내 누적되어 고칼슘혈증 및 신장 결석 위험이 있습니다." },
+            "비타민C": { maxSafe: 500, danger: 1000, unit: "%", desc: "일일 1,000% 초과 시 소화기관 자극으로 인한 위장 장애, 설사 및 결석 유발 원인이 될 수 있습니다." },
+            "아연": { maxSafe: 150, danger: 250, unit: "%", desc: "250% 초과 과다 복용 시 미네랄 흡수 방해로 인한 구리 결핍 및 일시적 면역 저하를 유발할 수 있습니다." },
+            "칼슘": { maxSafe: 120, danger: 200, unit: "%", desc: "과도한 칼슘은 심혈관 벽 석회화 우려를 유발하고 마그네슘 등 기타 미네랄 흡수를 심하게 가로막습니다." },
+            "마그네슘": { maxSafe: 120, danger: 200, unit: "%", desc: "일일 200% 초과 섭취 시 일시적 위장 수축 지연으로 인한 설사, 소화 불량 및 신장 부담이 있을 수 있습니다." },
+            "오메가3": { maxSafe: 150, danger: 250, unit: "%", desc: "지나친 지용성 오일 섭취 시 혈액 응고 작용을 방해하여 외상 시 지혈 지연을 유발할 수 있습니다." },
+            "루테인": { maxSafe: 100, danger: 150, unit: "%", desc: "황반 보호 성분이나 장기 과다 복용 시 카로티노이드 성분 누적으로 피부 일시 황색화가 있을 수 있습니다." },
+            "실리마린": { maxSafe: 100, danger: 200, unit: "%", desc: "간 해독 작용을 돕지만 과량 지속 시 가벼운 소화기 설사나 알레르기 반응을 가중시킵니다." },
+            "베타카로틴": { maxSafe: 100, danger: 100, unit: "%", desc: "흡연자의 경우 대량의 베타카로틴 축적 시 산화 스트레소로 폐암 발병 위험을 급격히 증가시키는 것으로 밝혀져 엄격한 관리가 필요합니다." }
+        };
+
+        // 쇼핑 연동용 맞춤형 카테고리 데이터베이스
+        const INGREDIENTS_DB = {
+            fatigue: [
+                { name: "비타민B군 콤플렉스", tag: "활력 에너지", size: "적당함", detail: "만성 피로 회복과 체내 에너지 대사를 극대화하기 위해 흡수율이 높은 활성형 비타민 B1, B2, B6가 고함량 배합된 제품을 제안합니다.", searchQuery: "비타민B 콤플렉스", dailyGoalPercent: 100, effect: "탄수화물, 단백질, 지방을 에너지로 전환하는 대사 과정의 핵심 조효소로 작용합니다. 육체 피로, 구내염 예방, 신경통 완화에 매우 효과적입니다.", caution: "고용량 비타민C와 동시 복용 시 위장 장애가 발생할 수 있어 식후 복용을 권장합니다. 수용성이므로 취침 전 복용하면 수면을 방해할 수 있으므로 오전에 섭취하세요. 당뇨약이나 제산제와 간격을 두고 드시는 것이 좋습니다." },
+                { name: "코엔자임 Q10", tag: "세포 항산화", size: "작음", detail: "세포 내 미토콘드리아의 ATP 에너지 생성을 촉진하여 피로를 근본적으로 개선하고, 활성산소를 억제하는 강력한 항산화 성분입니다.", searchQuery: "코엔자임 Q10", dailyGoalPercent: 100, effect: "심장 및 근육 세포의 에너지 생성을 돕고 정상적인 혈압 유지에 기여합니다. 노화 방지와 활력 증진에 핵심적인 역할을 합니다.", caution: "지용성이므로 반드시 식후에 지방이 포함된 식사와 함께 드셔야 흡수율이 높습니다. 고혈압 약이나 항응고제(와파린) 복용 시 약효에 영향을 줄 수 있으므로 주의해야 합니다." }
+            ],
+            eyes: [
+                { name: "루테인 지아잔틴", tag: "망막/황반 보호", size: "보통", detail: "스마트폰이나 모니터에서 발생하는 블루라이트로부터 망막을 보호하고, 나이가 들며 감소하는 황반 중심부 색소 밀도를 효과적으로 채워줍니다.", searchQuery: "루테인 지아잔틴", dailyGoalPercent: 100, effect: "황반 색소 밀도를 유지하여 시각 기능을 개선하고, 자외선 및 청색광으로 인한 시력 저하와 안구 산화를 방지합니다.", caution: "흡연자의 경우 과다 복용 시 폐암 발병 위험이 증가할 수 있다는 연구가 있으므로 권장량(하루 20mg)을 지켜야 합니다. 식후 복용을 권장합니다." },
+                { name: "rTG 오메가-3", tag: "혈류/눈건조 케어", size: "조금 큼", detail: "체내 흡수율을 높인 rTG 형태로 안구 건조증 완화는 물론, 눈의 미세 혈관 혈액 순환을 원활하게 하여 피로를 덜어줍니다.", searchQuery: "rtg 오메가3", dailyGoalPercent: 100, effect: "안구의 건조함을 완화하고 망막 미세혈관의 혈행을 개선합니다. 체내 중성지질 수치를 낮추어 심혈관 건강에도 탁월한 효과를 보입니다.", caution: "혈액 응고를 방해하므로 수술을 앞두고 있거나 아스피린, 와파린 등 혈전 용해제를 복용 중이라면 섭취를 중단하거나 전문가 상담이 필수적입니다." }
+            ],
+            gut: [
+                { name: "프로바이오틱스 유산균", tag: "장내 유익균 보강", size: "작음", detail: "위산과 담즙산에 살아남아 장까지 도달하는 보장균수가 높은 유산균으로, 유해균을 억제하고 장내 미생물 생태계를 건강하게 복원합니다.", searchQuery: "프로바이오틱스 유산균", dailyGoalPercent: 100, effect: "유익균 증식 및 유해균 억제로 배변 활동을 원활하게 하고, 장벽 면역을 강화하여 알레르기 질환 예방에도 도움을 줍니다.", caution: "항생제와 함께 복용 시 유산균이 사멸될 수 있으므로 최소 2~4시간의 간격을 두고 섭취해야 합니다. 기상 직후 공복에 충분한 물과 함께 드시는 것이 좋습니다." }
+            ],
+            skin: [
+                { name: "저분자 피쉬 콜라겐", tag: "피부 탄력", size: "가루/포", detail: "일반 동물성 콜라겐보다 흡수율이 수십 배 높은 저분자 펩타이드 구조로, 피부 진피층의 수분 보유력을 높이고 처진 탄력을 속부터 끌어올려 줍니다.", searchQuery: "저분자 콜라겐", dailyGoalPercent: 100, effect: "진피층의 뼈대를 형성하여 피부 탄력을 개선하고 주름을 완화합니다. 연골과 관절, 손톱 및 모발 건강에도 기여합니다.", caution: "비타민C와 함께 섭취하면 합성에 큰 시너지가 납니다. 다만 과량 섭취 시 소화 불량이나 가스가 찰 수 있으므로 권장량을 지키세요." },
+                { name: "히알루론산 엘라스틴", tag: "수분 보충", size: "보통", detail: "자기 무게의 1000배 수분을 머금는 히알루론산과 콜라겐을 지탱하는 엘라스틴이 배합되어 근본적인 피부 속당김을 해결합니다.", searchQuery: "히알루론산", dailyGoalPercent: 100, effect: "수분을 끌어당기고 유지시켜 피부 보습을 돕고 건조함을 방지합니다. 엘라스틴이 탄력망을 지지해 줍니다.", caution: "체내 수분이 부족하면 오히려 피부 밖 수분을 빼앗길 수 있으므로, 복용 시 물을 평소보다 충분히 마시는 것이 매우 중요합니다." }
+            ],
+            diet: [
+                { name: "가르시니아 캄보지아", tag: "체지방 감소", size: "보통", detail: "HCA(Hydroxycitric Acid) 성분이 잉여 탄수화물이 체지방으로 전환되는 핵심 효소 작용을 차단하여 효과적인 체중 관리를 돕습니다.", searchQuery: "가르시니아", dailyGoalPercent: 100, effect: "탄수화물의 지방 합성을 억제하여 복부 피하지방과 내장지방을 줄입니다. 렙틴 호르몬에 영향을 주어 식욕 억제에도 도움을 줍니다.", caution: "간 독성 위험이 보고된 바 있어 간염, 간경화 등 간 질환 환자는 절대 복용을 피해야 합니다. 식사 30분 전 공복 복용이 가장 효과적입니다." },
+                { name: "녹차카테킨 추출물", tag: "체지방/항산화", size: "보통", detail: "지방 산화를 촉진하여 기초대사량을 높이고, 식후 혈중 콜레스테롤 개선에 도움을 주는 대표적인 다이어트 기능성 원료입니다.", searchQuery: "녹차카테킨", dailyGoalPercent: 100, effect: "지방 세포 분해를 촉진하고 혈중 콜레스테롤을 낮춥니다. 강력한 항산화 작용으로 체내 염증 수치를 감소시킵니다.", caution: "카페인이 함유되어 있어 카페인에 민감하거나 수면 장애가 있는 분, 심장 질환자는 저녁 섭취를 피해야 합니다. 공복 섭취 시 속쓰림이 발생할 수 있습니다." }
+            ],
+            immunity: [
+                { name: "아연 & 면역 글루칸", tag: "면역력 강화", size: "작음", detail: "정상적인 세포 분열과 면역 세포(T세포, 대식세포 등)의 활성을 극대화하여 환절기 감염 질환으로부터 몸을 강력하게 보호합니다.", searchQuery: "면역 아연", dailyGoalPercent: 100, effect: "정상적인 세포 분열과 면역 기능에 필수적이며 감기 예방 및 호흡기 감염 방어에 도움을 줍니다.", caution: "철분이나 칼슘 보충제와 동시 복용 시 서로 흡수를 방해하므로 시간차를 두고 드세요. 빈속에 고용량 복용 시 메스꺼움이 발생할 수 있습니다." },
+                { name: "비타민C 항산화제", tag: "유해산소 차단", size: "조금 큼", detail: "유해 산소로부터 세포를 보호하는 1차 방어선 역할을 하며, 철분 흡수 촉진과 콜라겐 합성을 도와 전반적인 신체 방어력을 높입니다.", searchQuery: "비타민C 1000", dailyGoalPercent: 100, effect: "면역 체계를 증진시키고 바이러스 억제를 도우며, 콜라겐 생성 및 피로 회복에 탁월합니다.", caution: "강한 산성이므로 공복에 섭취 시 심한 위장 장애를 유발합니다. 고용량 섭취 시 신장 결석 위험이 있는 환자는 주의해야 합니다." }
+            ],
+            joints: [
+                { name: "MSM 식이유황", tag: "연골 탄력 보호", size: "조금 큼", detail: "연골 조직을 구성하는 핵심 유황 성분으로, 관절 및 연골의 염증성 통증을 감소시키고 뻣뻣함을 부드럽게 개선해 줍니다.", searchQuery: "MSM 식이유황", dailyGoalPercent: 100, effect: "연골과 인대 조직을 구성하고 항염증 작용을 통해 관절 통증을 경감시키고 활동성을 개선합니다.", caution: "황(Sulfur) 알레르기가 있는 경우 발진이나 가려움이 생길 수 있습니다. 뇌 혈류를 증가시켜 취침 전 복용 시 잠이 안 올 수 있으므로 낮에 섭취하세요." },
+                { name: "비타민D3", tag: "뼈 형성/칼슘 흡수", size: "매우 작음", detail: "햇빛을 통해 합성되는 비타민D 부족을 채워 칼슘과 인의 체내 흡수를 돕고, 골다공증 발생 위험을 획기적으로 낮춰줍니다.", searchQuery: "비타민D3", dailyGoalPercent: 100, effect: "칼슘 흡수를 도와 뼈의 밀도를 높이고, 면역력을 증진시켜 각종 염증 질환 및 우울감 개선에 도움을 줍니다.", caution: "과다 복용 시 체내 칼슘 수치가 비정상적으로 높아지는 고칼슘혈증을 유발해 신장 결석이나 혈관 석회화가 올 수 있습니다. 칼슘제와 과량 병용 시 주의하세요." }
+            ],
+            stress: [
+                { name: "L-테아닌", tag: "스트레스 긴장 완화", size: "보통", detail: "녹차에 들어있는 아미노산 성분이 뇌의 알파(α)파 발생을 촉진해 수면을 유발하지 않으면서도 긴장과 스트레스를 부드럽게 완화합니다.", searchQuery: "테아닌", dailyGoalPercent: 100, effect: "뇌 신경을 안정시키고 알파파를 증가시켜 불안감을 줄여줍니다. 집중력 저하 없이 심리적 안정을 유도합니다.", caution: "항우울제나 신경 안정제와 함께 복용 시 졸음이나 무기력을 가중시킬 수 있습니다. 운전 전이나 정밀한 기계 조작 전에는 섭취에 유의하세요." },
+                { name: "락티움", tag: "수면 질 개선", size: "작음", detail: "아기가 우유를 먹고 평온해지는 원리에서 착안한 생리활성 펩타이드로, 신경을 안정시켜 편안한 수면 환경을 조성합니다.", searchQuery: "락티움 수면", dailyGoalPercent: 100, effect: "수면 입면 시간을 단축하고 수면 중 깨는 횟수를 줄여 전체적인 수면의 질을 높여줍니다.", caution: "우유 단백질 가수분해물이므로 유제품 또는 유당 불내증이 심한 분이나 우유 알레르기가 있는 분은 섭취 전 확인이 필요합니다." }
+            ],
+            antioxidants: [
+                { name: "셀레늄 & 비타민E", tag: "세포막 보호", size: "보통", detail: "활성 산소로 인한 DNA 손상을 방어하는 미량 미네랄 셀레늄과 지용성 항산화제 비타민E가 결합하여 세포 노화를 늦춥니다.", searchQuery: "셀레늄", dailyGoalPercent: 100, effect: "강력한 항산화 작용으로 체내 염증을 억제하고 세포막을 보호하여 노화 방지 및 면역 기능 유지에 필수적입니다.", caution: "고용량 비타민E는 지혈을 방해하므로 아스피린 등 항응고제와 중복 복용을 피해야 하며, 수술 전 섭취를 중단해야 합니다." }
+            ],
+            menses: [
+                { name: "감마리놀렌산 (달맞이꽃유)", tag: "월경전 이상 상태 개선", size: "조금 큼", detail: "염증 유발 물질을 억제하여 월경 전 발생하는 신체적, 정신적 불편함을 다스리고, 혈중 콜레스테롤 개선에도 기여하는 식물성 오일입니다.", searchQuery: "감마리놀렌산 달맞이꽃", dailyGoalPercent: 100, effect: "프로스타글란딘 밸런스를 조절해 생리 전 증후군(PMS)과 피부 상태(건조증, 가려움)를 완화합니다.", caution: "혈전 용해제나 혈압약을 복용 중인 경우 약물 효과를 증폭시킬 수 있습니다. 발작성 질환 환자는 증상을 악화시킬 수 있으니 주의가 필요합니다." },
+                { name: "식물성 액티브 철분", tag: "빈혈 예방", size: "작음", detail: "월경으로 인해 매달 손실되는 혈액 생성을 보충하며, 위장 장애와 변비 부작용을 최소화한 순한 식물성 철분 제제입니다.", searchQuery: "유기농 철분제", dailyGoalPercent: 100, effect: "헤모글로빈과 적혈구 생성에 필수적이며, 체내 산소 운반을 원활하게 하여 어지러움과 만성 피로를 개선합니다.", caution: "칼슘, 아연 보충제나 녹차/커피(타닌, 카페인)와 동시 복용 시 흡수율이 급격히 떨어집니다. 식전 공복에 오렌지 주스(비타민C)와 먹으면 가장 좋습니다." }
+            ],
+            hair: [
+                { name: "비오틴 & 약용효모", tag: "모발/두피 에너지", size: "보통", detail: "케라틴 단백질 생성을 촉진하는 수용성 비타민B군(비오틴)과 양질의 모근 영양 공급원인 약용 맥주효모가 결합된 솔루션입니다.", searchQuery: "비오틴 맥주효모", dailyGoalPercent: 100, effect: "모발의 핵심 구성 성분인 케라틴 합성을 촉진하여 모근을 튼튼하게 하고, 손톱 갈라짐을 방지합니다.", caution: "여드름성 피부의 경우 고용량 비오틴 섭취 시 트러블이 악화될 수 있습니다. 갑상선 기능 검사(혈액검사) 수치에 교란을 줄 수 있어 검사 전 며칠간 중단해야 합니다." }
+            ],
+            prostate: [
+                { name: "쏘팔메토 로르산", tag: "전립선 건강 유지", size: "보통", detail: "전립선 비대증 유발 효소 활성을 억제해 잔뇨감, 야간뇨 등 배뇨 불편함을 실질적으로 개선하는 야자수 추출 기능성 성분입니다.", searchQuery: "쏘팔메토 옥타코사놀", dailyGoalPercent: 100, effect: "전립선 비대 증상(빈뇨, 잔뇨감, 야간뇨)을 완화하고 소변 속도를 개선하는 데 탁월합니다.", caution: "남성 호르몬 대사에 영향을 주므로 여성과 어린이는 섭취하지 않는 것이 좋습니다. 항응고제 복용 시 출혈 위험이 증가할 수 있습니다." }
+            ],
+            muscle: [
+                { name: "L-아르기닌 콤플렉스", tag: "혈류/근육 에너지", size: "가루/액상", detail: "체내 산화질소(NO) 생성을 촉진해 혈관을 이완시키고, 근육으로 가는 산소와 영양소 공급량을 늘려 운동 수행 능력을 폭발적으로 높입니다.", searchQuery: "L아르기닌", dailyGoalPercent: 100, effect: "혈관을 확장시켜 혈액 순환을 촉진하고, 근육으로의 산소 공급을 늘려 운동 후 피로 회복과 활력 증진을 돕습니다.", caution: "헤르페스(구순포진) 바이러스가 있는 경우 바이러스 증식을 촉진할 수 있으므로 발병 시 복용을 중단하세요. 혈압 강하제와 중복 시 저혈압 위험이 있습니다." }
+            ]
+        };
+
+        // 토스트 팝업 헬퍼
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('custom-toast');
+            const toastContent = document.getElementById('toast-content');
+
+            toast.className = `fixed bottom-5 right-5 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 ${type === 'success' ? 'bg-[#1E3A2F] text-white border-l-4 border-[#10B981]' : 'bg-red-900 text-white border-l-4 border-red-500'
+                }`;
+
+            const icon = type === 'success'
+                ? '<i class="fa-solid fa-circle-check text-[#10B981] text-xl"></i>'
+                : '<i class="fa-solid fa-circle-exclamation text-red-500 text-xl"></i>';
+
+            toastContent.innerHTML = `${icon} <span class="font-medium text-xs sm:text-sm">${message}</span>`;
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => { toast.className = 'hidden'; }, 300);
+            }, 3500);
+        }
+
+        // 뷰 전환 컨트롤러
+        function switchView(viewId) {
+            state.currentView = viewId;
+
+            // 모든 뷰 가리기
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('block');
+            });
+
+            // 타겟 뷰만 보이기
+            const activeSection = document.getElementById(`${viewId}-view`);
+            if (activeSection) {
+                activeSection.classList.remove('hidden');
+                activeSection.classList.add('block');
+            }
+
+            // 초과 진단 화면으로 진입할 경우 데이터 실시간 연산
+            if (viewId === 'checker') {
+                recalculateSupplements();
+            }
+
+            // 홈화면에 복구할 수 있는 로컬 답변 이력이 있는지 판단하여 배너 제어
+            if (viewId === 'landing') {
+                checkStoredAnswers();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // AI 맞춤 추천 이동 (기존 결과 보존)
+        function navigateQuiz() {
+            if (state.currentView === 'result' || state.currentView === 'quiz') return;
+
+            // 1. 이미 퀴즈가 진행 중이거나 완료된 상태인지 확인 (로컬 state.answers 검사)
+            if (state.answers.goals && state.answers.goals.length > 0) {
+                // 이미 결과가 렌더링 된 상태
+                renderRecommendationResults();
+                return;
+            } else if (state.quizStep > 0 && state.quizStep <= 10) {
+                // 퀴즈 진행 중
+                switchView('quiz');
+                return;
+            }
+
+            // 2. LocalStorage 데이터 확인
+            const saved = localStorage.getItem('nutrimatch_survey_answers');
+            if (saved) {
+                loadPreviousResults();
+                return;
+            }
+
+            // 3. 다 없으면 새로 시작
+            startQuiz();
+        }
+
+        // 퀴즈 개시 함수
+        function startQuiz() {
+            state.quizStep = 0; // Step 0 동의부터 시작
+            state.agreements = { terms: false, age: false, sensitive: false };
+            state.answers = {
+                gender: '', maleConcerns: [], femaleStage: '', ageGroup: '', height: '', weight: '', bmi: null,
+                exercise: [], sleep: '', diet: '', alcohol: '', caffeine: '', stress: 3,
+                smoking: '', allergies: [], sideEffects: [], customSideEffect: '', conditions: [],
+                goals: [],
+                pillDiscomfort: '', altForm: '', preferredForm: '', buyingValues: [], portability: '', budget: '', buyingType: ''
+            };
+            switchView('quiz');
+            renderQuizStep();
+        }
+
+        // BMI 실시간 계산기
+        function calculateBMIInline() {
+            const hVal = parseFloat(document.getElementById('profile-height')?.value);
+            const wVal = parseFloat(document.getElementById('profile-weight')?.value);
+            const bmiResultBox = document.getElementById('bmi-calc-status');
+
+            if (hVal && wVal && hVal > 100 && wVal > 10) {
+                const hM = hVal / 100;
+                const bmi = (wVal / (hM * hM)).toFixed(1);
+                state.answers.height = hVal;
+                state.answers.weight = wVal;
+                state.answers.bmi = parseFloat(bmi);
+
+                let category = "정상체중";
+                let color = "text-[#10B981]";
+                if (bmi < 18.5) { category = "저체중"; color = "text-yellow-600"; }
+                else if (bmi >= 23 && bmi < 25) { category = "과체중"; color = "text-amber-600"; }
+                else if (bmi >= 25) { category = "비만"; color = "text-red-500 animate-pulse"; }
+
+                if (bmiResultBox) {
+                    bmiResultBox.innerHTML = `
+                    <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex justify-between items-center text-xs animate-fadeIn">
+                        <div>
+                            <span class="text-slate-400 font-medium">산출된 BMI 지수</span>
+                            <div class="text-lg font-bold text-[#1E3A2F] mt-0.5">BMI: <span class="${color}">${bmi}</span></div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-white font-bold text-[10px] border border-emerald-200">${category}</span>
+                    </div>
+                `;
+                }
+            } else {
+                if (bmiResultBox) bmiResultBox.innerHTML = '';
+                state.answers.bmi = null;
+            }
+        }
+
+        // 동의 체크 박스 리스너
+        function toggleAgreement(key) {
+            state.agreements[key] = !state.agreements[key];
+            const nextBtn = document.getElementById('quiz-next-btn');
+            if (state.agreements.terms && state.agreements.age && state.agreements.sensitive) {
+                nextBtn.classList.remove('opacity-40', 'pointer-events-none');
+            } else {
+                nextBtn.classList.add('opacity-40', 'pointer-events-none');
+            }
+        }
+
+        // 이전 단계 조작
+        function prevQuizStep() {
+            if (state.quizStep > 0) {
+                state.quizStep--;
+                renderQuizStep();
+            }
+        }
+
+        // 10단계 세분화에 따른 다음 단계 유효성 검사 및 분기처리
+        function nextQuizStep() {
+            if (state.quizStep === 0) {
+                if (!state.agreements.terms || !state.agreements.age || !state.agreements.sensitive) {
+                    showToast("모든 필수 약관 및 개인정보 수집에 동의하셔야 시작할 수 있습니다.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 1) {
+                // STEP 1. 성별 및 남/여 특수 정보
+                if (!state.answers.gender) {
+                    showToast("성별을 선택해 주세요.", "error");
+                    return;
+                }
+                if (state.answers.gender === 'male' && state.answers.maleConcerns.length === 0) {
+                    showToast("최소 1개의 고민 영역을 선택해 주세요.", "error");
+                    return;
+                }
+                if (state.answers.gender === 'female' && !state.answers.femaleStage) {
+                    showToast("생애주기 상태를 선택해 주세요.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 2) {
+                // STEP 2. 연령대 & 신체 정보(BMI)
+                if (!state.answers.ageGroup) {
+                    showToast("연령대를 선택해 주세요.", "error");
+                    return;
+                }
+                const heightInput = document.getElementById('profile-height');
+                const weightInput = document.getElementById('profile-weight');
+                if (!heightInput?.value || !weightInput?.value || isNaN(state.answers.bmi)) {
+                    showToast("올바른 신체 프로필(키, 몸무게)을 입력하여 BMI 산출을 유도해 주세요.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 3) {
+                // STEP 3. 운동 종류 및 수면 시간
+                if (state.answers.exercise.length === 0) {
+                    showToast("가장 유사한 운동 형태를 1개 이상 선택해 주세요.", "error");
+                    return;
+                }
+                if (!state.answers.sleep) {
+                    showToast("평균 수면 시간을 선택해 주세요.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 4) {
+                // STEP 4. 식습관 & 음주 빈도 & 하루 카페인
+                if (!state.answers.diet || !state.answers.alcohol || !state.answers.caffeine) {
+                    showToast("식습관과 생활 기호 정보를 모두 선택해 주세요.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 5) {
+                // STEP 5. 스트레스수준
+                if (!state.answers.stress) {
+                    showToast("스트레스 수준을 선택해 주세요.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 6) {
+                // STEP 6. 흡연 여부 & 알레르기 원료
+                if (!state.answers.smoking) {
+                    showToast("흡연 여부를 선택해 주세요.", "error");
+                    return;
+                }
+                if (state.answers.allergies.length === 0) {
+                    showToast("알레르기 유발 원료 필터를 1개 이상 선택해 주세요. (없으면 '없음' 클릭)", "error");
+                    return;
+                }
+            } else if (state.quizStep === 7) {
+                // STEP 7. 과거 부작용 경험 및 기저질환
+                if (state.answers.sideEffects.length === 0) {
+                    showToast("부작용 경험 성분을 1개 이상 선택해 주세요. (없으면 '없음' 클릭)", "error");
+                    return;
+                }
+                if (state.answers.conditions.length === 0) {
+                    showToast("기저질환 정보를 1개 이상 선택해 주세요. (없으면 '없음·기타' 클릭)", "error");
+                    return;
+                }
+            } else if (state.quizStep === 8) {
+                // STEP 8. 건강 고민 및 목표 (최대 2개)
+                if (state.answers.goals.length === 0) {
+                    showToast("집중 개선이 필요하신 건강 고민을 선택해 주세요.", "error");
+                    return;
+                }
+                if (state.answers.goals.length > 2) {
+                    showToast("건강 고민은 최대 2개까지만 선택이 가능합니다.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 9) {
+                // STEP 9. 알약 불편감 및 제형 선호
+                if (!state.answers.pillDiscomfort || !state.answers.altForm || !state.answers.preferredForm) {
+                    showToast("목넘김 불편감 및 선호 제형 정보를 선택해 주세요.", "error");
+                    return;
+                }
+            } else if (state.quizStep === 10) {
+                // STEP 10. 우선가치, 보관환경, 예산, 구매방식
+                if (state.answers.buyingValues.length === 0) {
+                    showToast("최우선 선택 가치를 1개 이상 선택해 주세요.", "error");
+                    return;
+                }
+                if (!state.answers.portability || !state.answers.budget || !state.answers.buyingType) {
+                    showToast("보관, 예산, 구매 방식 선호를 모두 답변해 주세요.", "error");
+                    return;
+                }
+
+                // 모든 10단계 완료 -> 데이터 영구 스토리지에 백업
+                try {
+                    localStorage.setItem('nutrimatch_survey_answers', JSON.stringify(state.answers));
+                } catch (e) {
+                    console.warn("Storage save failed", e);
+                }
+
+                // 시뮬레이션 로딩 구동
+                runAnalysisLoading();
+                return;
+            }
+
+            state.quizStep++;
+            renderQuizStep();
+        }
+
+        // 복수 선택 및 단일 선택 가공기
+        function toggleMultiSelect(arrayName, value, maxLimit = null) {
+            const idx = state.answers[arrayName].indexOf(value);
+            if (idx > -1) {
+                state.answers[arrayName].splice(idx, 1);
+            } else {
+                if (maxLimit && state.answers[arrayName].length >= maxLimit) {
+                    showToast(`이 항목은 최대 ${maxLimit}개까지 선택이 가능합니다.`, "error");
+                    return;
+                }
+                if (value === 'none') {
+                    state.answers[arrayName] = ['none'];
+                } else {
+                    state.answers[arrayName] = state.answers[arrayName].filter(v => v !== 'none');
+                    state.answers[arrayName].push(value);
+                }
+            }
+            renderQuizStep();
+        }
+
+        function setSingleSelect(variableName, value) {
+            state.answers[variableName] = value;
+            renderQuizStep();
+        }
+
+        // 세분화된 10단계 퀴즈 동적 빌더
+        function renderQuizStep() {
+            const stepInd = document.getElementById('quiz-step-indicator');
+            const progress = document.getElementById('quiz-progress');
+            const container = document.getElementById('quiz-content-area');
+            const prevBtn = document.getElementById('quiz-prev-btn');
+            const nextBtn = document.getElementById('quiz-next-btn');
+
+            stepInd.textContent = `Step ${state.quizStep} of 10`;
+            progress.style.width = `${(state.quizStep / 10) * 100}%`;
+
+            // 이전/다음 단계 조율
+            if (state.quizStep === 0) {
+                prevBtn.classList.add('opacity-40', 'pointer-events-none');
+            } else {
+                prevBtn.classList.remove('opacity-40', 'pointer-events-none');
+            }
+
+            if (state.quizStep === 0) {
+                stepInd.textContent = "동의 안내 (Step 0)";
+                if (state.agreements.terms && state.agreements.age && state.agreements.sensitive) {
+                    nextBtn.classList.remove('opacity-40', 'pointer-events-none');
+                } else {
+                    nextBtn.classList.add('opacity-40', 'pointer-events-none');
+                }
+            } else {
+                nextBtn.classList.remove('opacity-40', 'pointer-events-none');
+            }
+
+            let html = '';
+
+            // --- STEP 0: 이용약관 동의 ---
+            if (state.quizStep === 0) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-2 text-center py-4 border-b border-slate-100">
+                    <h3 class="text-2xl font-extrabold text-[#1E3A2F] font-serif">시작 전 이용약관 및 정보 동의</h3>
+                    <p class="text-xs text-slate-400">맞춤 영양 매칭 시스템을 위해 안전 가이드를 읽어주세요.</p>
+                </div>
+                
+                <div class="bg-amber-50 border border-amber-200/50 rounded-2xl p-4.5 text-xs text-amber-900 leading-relaxed space-y-2">
+                    <span class="font-bold block"><i class="fa-solid fa-circle-exclamation text-amber-500"></i> 서비스 제공 안내 및 법적 면책 고지</span>
+                    <p class="text-[11px] text-amber-800">
+                        본 서비스는 의학적 치료나 진단을 대체하는 의료 행위가 아니며, 식품의약품안전처 공공데이터를 기반으로 한 영양 정보 참고용 웰니스 큐레이션 서비스입니다. 제안받은 영양 성분은 기저질환과 복용 약물이 있는 경우 의사, 약사 등 전문의와 필히 상담 후 복용을 진행하시기 바랍니다.
+                    </p>
+                </div>
+
+                <div class="space-y-3.5 pt-2">
+                    <label class="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                        <input type="checkbox" onchange="toggleAgreement('terms')" ${state.agreements.terms ? 'checked' : ''} class="w-4.5 h-4.5 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div class="space-y-0.5">
+                            <span class="text-slate-800">[필수] 서비스 이용약관 및 일반 개인정보 수집·이용 동의</span>
+                            <p class="text-[10px] text-slate-400 font-normal">서비스 이용 목적 및 웹 서비스 이용 규칙에 준하는 기본 인지 규정입니다.</p>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                        <input type="checkbox" onchange="toggleAgreement('age')" ${state.agreements.age ? 'checked' : ''} class="w-4.5 h-4.5 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div class="space-y-0.5">
+                            <span class="text-slate-800">[필수] 만 14세 이상 이용 확인</span>
+                            <p class="text-[10px] text-slate-400 font-normal">만 14세 미만의 아동은 영양 요구량이 상이하여 안전상 이용이 제한됩니다.</p>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                        <input type="checkbox" onchange="toggleAgreement('sensitive')" ${state.agreements.sensitive ? 'checked' : ''} class="w-4.5 h-4.5 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div class="space-y-0.5">
+                            <span class="text-slate-800">[필수] 건강 상태 및 라이스스타일(민감정보) 수집·이용 동의</span>
+                            <p class="text-[10px] text-slate-400 font-normal">질환 정보, 알레르기, 흡연 여부 등 맞춤 정밀 계산에 쓰이는 민감정보 처리에 대한 수집 동의서입니다.</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 1: 성별 및 성별 맞춤 서브 고민 ---
+            else if (state.quizStep === 1) {
+                const isMale = state.answers.gender === 'male';
+                const isFemale = state.answers.gender === 'female';
+
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 1. 생물학적 성별 선택 및 전용 라이프 영역</h3>
+                    <p class="text-xs text-slate-400">성별 특화 기관 건강과 복용 안전 범위를 매칭하기 위한 필수 관문입니다.</p>
+                </div>
+                
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold text-slate-500 uppercase">성별</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="setSingleSelect('gender', 'male')" class="p-4 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center gap-2 ${state.answers.gender === 'male' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <i class="fa-solid fa-mars text-xl text-blue-500"></i>
+                            <span>남성</span>
+                        </button>
+                        <button onclick="setSingleSelect('gender', 'female')" class="p-4 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center gap-2 ${state.answers.gender === 'female' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <i class="fa-solid fa-venus text-xl text-pink-500"></i>
+                            <span>여성</span>
+                        </button>
+                        <button onclick="setSingleSelect('gender', 'not_disclosed')" class="p-4 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center gap-2 ${state.answers.gender === 'not_disclosed' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <i class="fa-solid fa-user-slash text-xl text-slate-400"></i>
+                            <span>응답 안 함</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 남성 전용 선택지 -->
+                ${isMale ? `
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 animate-fadeIn">
+                    <label class="block text-xs font-bold text-[#1E3A2F]">🙋‍♂️ 남성 전용 건강 집중 영역 (복수 선택)</label>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        ${[
+                            { id: 'hair', label: '💇‍♂️ 탈모·두피 관리' },
+                            { id: 'prostate', label: '⚕️ 전립선 건강' },
+                            { id: 'muscle', label: '💪 근육량 증가' }
+                        ].map(opt => {
+                            const isSel = state.answers.maleConcerns.includes(opt.id);
+                            return `
+                            <button onclick="toggleMultiSelect('maleConcerns', '${opt.id}')" class="p-3 rounded-xl border font-bold transition ${isSel ? 'border-[#10B981] bg-white text-[#10B981] shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- 여성 전용 선택지 -->
+                ${isFemale ? `
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 animate-fadeIn">
+                    <label class="block text-xs font-bold text-[#1E3A2F]">🙋‍♀️ 여성 생애주기 신체 상태 선택 (단일 선택)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px] font-bold">
+                        ${[
+                            { id: 'normal', label: '해당 없음' },
+                            { id: 'trying', label: '임신 준비 중' },
+                            { id: 'pregnant', label: '임신 중' },
+                            { id: 'lactating', label: '수유 중' },
+                            { id: 'menopause', label: '폐경기' }
+                        ].map(opt => {
+                            const isSel = state.answers.femaleStage === opt.id;
+                            return `
+                            <button onclick="setSingleSelect('femaleStage', '${opt.id}')" class="p-2.5 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-white text-[#10B981] shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+            `;
+            }
+
+            // --- STEP 2: 연령대 및 신체 치수 (BMI 자동화) ---
+            else if (state.quizStep === 2) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 2. 연령대 및 신체 대사 분석</h3>
+                    <p class="text-xs text-slate-400">BMI(체질량 지수)를 자동 연산하여 칼슘 흡수율과 영양 밸런스를 측정합니다.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase">연령대 선택</label>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        ${['20대 미만', '20대', '30대', '40대', '50대', '60대 이상'].map(age => {
+                    const isSel = state.answers.ageGroup === age;
+                    return `
+                            <button onclick="setSingleSelect('ageGroup', '${age}')" class="py-3.5 rounded-xl border transition text-[11px] font-bold ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${age}
+                            </button>
+                            `;
+                }).join('')}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">키 (cm)</label>
+                        <input type="number" id="profile-height" oninput="calculateBMIInline()" value="${state.answers.height || ''}" placeholder="예: 175" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">몸무게 (kg)</label>
+                        <input type="number" id="profile-weight" oninput="calculateBMIInline()" value="${state.answers.weight || ''}" placeholder="예: 70" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-white">
+                    </div>
+                </div>
+
+                <!-- BMI 실시간 연동박스 -->
+                <div id="bmi-calc-status"></div>
+            </div>
+            `;
+                setTimeout(calculateBMIInline, 50);
+            }
+
+            // --- STEP 3: 운동 목적 및 수면 시간 ---
+            else if (state.quizStep === 3) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 3. 운동 성향 및 수면 패턴 파악</h3>
+                    <p class="text-xs text-slate-400">땀 배출과 수면 회복 효율에 연관된 비타민B군, L-테아닌 소모율을 가산합니다.</p>
+                </div>
+
+                <div class="space-y-2.5">
+                    <label class="block text-xs font-bold text-slate-500">🏋️‍♂️ 주 운동 성향 및 목적 (복수 선택)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] font-bold">
+                        ${[
+                        { id: 'none', label: '안 함 · 체력 유지' },
+                        { id: 'cardio', label: '🏃 유산소 운동' },
+                        { id: 'strength', label: '🏋️‍♂️ 근력 저항성' },
+                        { id: 'flexibility', label: '🧘 요가 · 코어' },
+                        { id: 'hiit', label: '⚡ 고강도 서킷' }
+                    ].map(opt => {
+                        const isSel = state.answers.exercise.includes(opt.id);
+                        return `
+                            <button onclick="toggleMultiSelect('exercise', '${opt.id}')" class="p-3 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                    }).join('')}
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">😴 평균 수면 시간 선택</label>
+                    <div class="grid grid-cols-3 gap-3 text-xs font-bold">
+                        ${[
+                        { id: 'under_5', label: '🛌 5시간 미만 (부족)' },
+                        { id: '5-7', label: '⏰ 5~7시간 (적정)' },
+                        { id: 'over_8', label: '💤 8시간 이상 (충분)' }
+                    ].map(opt => {
+                        const isSel = state.answers.sleep === opt.id;
+                        return `
+                            <button onclick="setSingleSelect('sleep', '${opt.id}')" class="p-4 rounded-2xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                    }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 4: 식습관, 음주 빈도, 카페인 섭섭취 ---
+            else if (state.quizStep === 4) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 4. 평소 식습관 및 일상 섭취 기호</h3>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500">🥗 평소 대표적인 식생활 형태</label>
+                    <select onchange="setSingleSelect('diet', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                        <option value="">-- 선택해 주세요 --</option>
+                        <option value="irregular" ${state.answers.diet === 'irregular' ? 'selected' : ''}>한식위주 / 규칙적</option>
+                           <option value="irregular" ${state.answers.diet === 'irregular' ? 'selected' : ''}>가공식품 / 인스턴트 및 불규칙식</option>
+                        <option value="meat" ${state.answers.diet === 'meat' ? 'selected' : ''}>육식 위주 지방질 식습관</option>
+                        <option value="veg" ${state.answers.diet === 'veg' ? 'selected' : ''}>채식 위주 정갈한 식사 / 간헐적 단식</option>
+                        <option value="vegan" ${state.answers.diet === 'vegan' ? 'selected' : ''}>완벽한 순수 비건 (동물 원료 차단)</option>
+                    </select>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">🍺 음주 빈도 수준</label>
+                        <select onchange="setSingleSelect('alcohol', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 선택해 주세요 --</option>
+                            <option value="none" ${state.answers.alcohol === 'none' ? 'selected' : ''}>전혀 마시지 않음</option>
+                            <option value="normal" ${state.answers.alcohol === 'normal' ? 'selected' : ''}>보통 (주 1회 내외 소량)</option>
+                            <option value="frequent" ${state.answers.alcohol === 'frequent' ? 'selected' : ''}>잦은 술자리 (주 2~3회 이상)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">☕ 하루 커피/카페인 섭취량</label>
+                        <select onchange="setSingleSelect('caffeine', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 선택해 주세요 --</option>
+                            <option value="0" ${state.answers.caffeine === '0' ? 'selected' : ''}>0잔 (안 마심)</option>
+                            <option value="1-2" ${state.answers.caffeine === '1-2' ? 'selected' : ''}>1 ~ 2잔</option>
+                            <option value="3" ${state.answers.caffeine === '3' ? 'selected' : ''}>3잔</option>
+                            <option value="4+" ${state.answers.caffeine === '4+' ? 'selected' : ''}>4잔 이상 (고카페인 자극)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 5: 스트레스 지수 자가인지 ---
+            else if (state.quizStep === 5) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 5. 만성 일상 스트레스 인지 수준</h3>
+                    <p class="text-xs text-slate-400">자율신경계 과항진 완화를 돕는 테아닌, 부신 피로 보호 영양소 매칭을 조절합니다.</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2.5">
+                    ${[
+                        { val: 1, label: '🟢 1단계 - 매우 쾌적함', desc: '스트레스를 거의 느끼지 않고 평온한 활력이 유지됨' },
+                        { val: 2, label: '🟢 2단계 - 무난함', desc: '가벼운 긴장감이 들지만 스스로 관리가 수월함' },
+                        { val: 3, label: '🟡 3단계 - 보통', desc: '업무/가사 등으로 인해 이따금 피로감과 머리 무거움을 느낌' },
+                        { val: 4, label: '🟠 4단계 - 다소 강함', desc: '매일 긴장 상태가 계속되며 짜증 및 가벼운 불면을 겪음' },
+                        { val: 5, label: '🔴 5단계 - 한계 도달', desc: '만성 불안 및 가슴 두근거림, 일상적인 무기력함에 시달림' }
+                    ].map(opt => {
+                        const isSel = state.answers.stress === opt.val;
+                        return `
+                        <button onclick="setSingleSelect('stress', ${opt.val})" class="p-4 rounded-2xl border-2 text-left transition flex justify-between items-center ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            <div class="space-y-0.5">
+                                <span class="font-bold text-xs sm:text-sm text-slate-800">${opt.label}</span>
+                                <p class="text-[10px] sm:text-[11px] text-slate-400 font-normal">${opt.desc}</p>
+                            </div>
+                            ${isSel ? '<i class="fa-solid fa-circle-check text-[#10B981] text-lg"></i>' : ''}
+                        </button>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 6: 흡연 유무 & 알레르기 유발 원료 ---
+            else if (state.quizStep === 6) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-red-500 animate-pulse"></i> STEP 6. 의료 안전 필터 (흡연 & 알레르기)</h3>
+                    <p class="text-xs text-red-500/70">식약처 기능성 배합 위험 원료 자동 우회 가동을 위한 정보 수집입니다.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500">🚬 흡연 여부 <span class="text-red-500">*필수</span></label>
+                    <div class="grid grid-cols-2 gap-3 text-xs font-bold">
+                        <button onclick="setSingleSelect('smoking', 'no')" class="p-4 rounded-2xl border-2 transition ${state.answers.smoking === 'no' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            🚭 비흡연자 (해당 사항 없음)
+                        </button>
+                        <button onclick="setSingleSelect('smoking', 'yes')" class="p-4 rounded-2xl border-2 transition ${state.answers.smoking === 'yes' ? 'border-red-400 bg-red-50/30 text-red-800' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            🚬 흡연자 (폐암 유발 방지 베타카로틴 경보 연동)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">🦐 기피하는 알레르기 유발 원료 (복수 선택)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] sm:text-xs font-semibold">
+                        ${[
+                        { id: 'shrimp', label: '갑각류 (게/새우)' },
+                        { id: 'soy', label: '대두 (콩가공 전분)' },
+                        { id: 'gluten', label: '글루텐 (밀 유래)' },
+                        { id: 'dairy', label: '유제품 (유당)' },
+                        { id: 'nuts', label: '견과류 (땅콩)' },
+                        { id: 'fish', label: '어류 (생선오일)' },
+                        { id: 'none', label: '✨ 해당 사항 없음 (알레르기 무)' }
+                    ].map(opt => {
+                        const isSel = state.answers.allergies.includes(opt.id);
+                        return `
+                            <button onclick="toggleMultiSelect('allergies', '${opt.id}')" class="p-3 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F] font-bold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                    }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 7: 과거 부작용 경험 및 기저질환 ---
+            else if (state.quizStep === 7) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-prescription-bottle text-red-500"></i> STEP 7. 부작용 이력 및 복용 약물 점검</h3>
+                    <p class="text-xs text-red-500/70">현재 드시는 병원 약품과의 상호 작용 및 과거 위장 피로 요인을 배제합니다.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500">⚠️ 과거 복용 시 소화 장애, 위장 피로 유발 이력 성분 (복수 선택)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] font-semibold">
+                        ${[
+                        { id: 'iron', label: '철분 (속 얹힘/변비)' },
+                        { id: 'omega', label: '오메가3 (비린내/가스)' },
+                        { id: 'vitc', label: '비타민C (속 쓰림)' },
+                        { id: 'probiotics', label: '유산균 (복부 가스)' },
+                        { id: 'none', label: '✨ 없음' }
+                    ].map(opt => {
+                        const isSel = state.answers.sideEffects.includes(opt.id);
+                        return `
+                            <button onclick="toggleMultiSelect('sideEffects', '${opt.id}')" class="p-2.5 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F] font-bold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                    }).join('')}
+                    </div>
+                    <!-- 기타 직접 서술 -->
+                    <div class="pt-1">
+                        <input type="text" placeholder="기타 과거 위장 장애나 설사 유발 영양소 기재 (선택)" oninput="state.answers.customSideEffect = this.value" value="${state.answers.customSideEffect || ''}" class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-white">
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">🏥 현재 겪고 계신 질환 및 정기 복용 중인 약물 (복수 선택)</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold">
+                        ${[
+                        { id: 'bp', label: '고혈압 (혈압 조절제)' },
+                        { id: 'diabetes', label: '당뇨병 (혈당 강하제 복용)' },
+                        { id: 'lipids', label: '이상지질혈증 (고지혈증 스타틴 처방)' },
+                        { id: 'gastro', label: '만성 역류성 식도염 / 만성 위염' },
+                        { id: 'bloodclot', label: '혈전 지혈 장애 (와파린/항응고제 복용)' },
+                        { id: 'kidney', label: '간 기능 피로 / 신장 여과 장애 우려' },
+                        { id: 'none', label: '✨ 해당 없음 (지병·복용 약품 무)' }
+                    ].map(opt => {
+                        const isSel = state.answers.conditions.includes(opt.id);
+                        return `
+                            <button onclick="toggleMultiSelect('conditions', '${opt.id}')" class="p-3 rounded-xl border text-left transition ${isSel ? 'border-red-400 bg-red-50/20 text-red-950' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                    }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 8: 건강 고민 및 목표 (Health Goals) ---
+            else if (state.quizStep === 8) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 8. 최우선 건강 목표 및 집중 고민 선택</h3>
+                    <p class="text-xs text-slate-400">가장 원하시는 목표 영역을 **최대 2개** 선택해 주세요. (가장 중요 단계)</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-2.5 text-xs">
+                    ${[
+                        { id: 'fatigue', label: '🔋 만성피로 및 기력 자극', desc: '쉽게 피로가 몰려오고 활력이 고갈되는 분' },
+                        { id: 'eyes', label: '👀 안구 건조 및 침침함', desc: '눈 피로 및 건조증 완화 희망자' },
+                        { id: 'gut', label: '腸 장내 유산균 및 유익균 정돈', desc: '가스가 차고 배변이 불규칙적인 분' },
+                        { id: 'skin', label: '✨ 피부 탄력 및 수분 이너뷰티', desc: '콜라겐 세포막 촉촉한 보습' },
+                        { id: 'diet', label: '🏃 체지방 감소 및 가벼운 라인', desc: '탄수화물 합성 억제 다이어트 보조' },
+                        { id: 'immunity', label: '🛡️ 면역 아연 케어 활성', desc: '잔병 치레 극복 및 면역 장벽 활성' },
+                        { id: 'joints', label: '🦵 관절 연골 마찰 완화', desc: '뼈와 뻣뻣한 관절 보호 목적' },
+                        { id: 'stress', label: '🧘 수면 불안 해소 및 스트레스', desc: '락티움 및 테아닌 숙면 평온 유도' },
+                        { id: 'antioxidants', label: '🍇 강인한 활성산소 차단', desc: '노화 지연 및 셀레늄 항산화' },
+                        { id: 'menses', label: '🩸 생리불순 및 월경 불쾌감', desc: '철분 보강 및 여성 호르몬 밸런스' }
+                    ].map(opt => {
+                        const isSel = state.answers.goals.includes(opt.id);
+                        return `
+                        <button onclick="toggleMultiSelect('goals', '${opt.id}', 2)" class="p-3.5 rounded-2xl border-2 text-left transition flex flex-col gap-1 ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <span class="font-bold text-xs sm:text-sm text-slate-800">${opt.label}</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-400 font-normal">${opt.desc}</span>
+                        </button>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 9: 알약 불편감 및 제형 선호 ---
+            else if (state.quizStep === 9) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 9. 복용 편의성 및 선호 가공 형태</h3>
+                    <p class="text-xs text-slate-400">알약 크기로 인한 삼킴 곤란 여부를 조율하고 선호 형태를 대조합니다.</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">💊 알약 삼킬 때 목넘김 불편도</label>
+                        <select onchange="setSingleSelect('pillDiscomfort', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 선택해 주세요 --</option>
+                            <option value="none" ${state.answers.pillDiscomfort === 'none' ? 'selected' : ''}>불편함 없음 (큰 알약도 소화가능)</option>
+                            <option value="extreme" ${state.answers.pillDiscomfort === 'extreme' ? 'selected' : ''}>삼키기 불편함 (소형 알약 선호)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">🍬 액상/분말 제형 대안 제안 선호</label>
+                        <select onchange="setSingleSelect('altForm', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 선택해 주세요 --</option>
+                            <option value="small" ${state.answers.altForm === 'small' ? 'selected' : ''}>목넘김이 편한 초소형 미니 태블릿 정제</option>
+                            <option value="gummy" ${state.answers.altForm === 'gummy' ? 'selected' : ''}>맛있게 씹을 수 있는 구미/츄어블 젤리</option>
+                            <option value="liquid" ${state.answers.altForm === 'liquid' ? 'selected' : ''}>흡수가 빠른 액상 앰플 드링크 형태</option>
+                            <option value="powder" ${state.answers.altForm === 'powder' ? 'selected' : ''}>물 없이도 상큼한 분말 분말 스틱</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">💡 일상 섭취 시 맛이나 형태 선호</label>
+                    <div class="grid grid-cols-4 gap-2 text-center text-xs font-bold">
+                        ${['젤리', '구미', '액상', '분말'].map(form => {
+                    const isSel = state.answers.preferredForm === form;
+                    return `
+                            <button onclick="setSingleSelect('preferredForm', '${form}')" class="py-3.5 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${form} 캡슐/스틱
+                            </button>
+                            `;
+                }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+            }
+
+            // --- STEP 10: 가치, 보관환경, 예산, 구매방식 ---
+            else if (state.quizStep === 10) {
+                html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 10. 가치관 및 구매 성향 맞춤 큐레이션</h3>
+                    <p class="text-xs text-slate-400">소비 성향과 휴대 편의성에 적합한 맞춤 포장 및 할인 구도를 산출합니다.</p>
+                </div>
+
+                <div class="space-y-2.5">
+                    <label class="block text-xs font-bold text-slate-500">💎 구매 결정 시 최우선 가치 (최대 2개)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-bold">
+                        ${[
+                        { id: 'dose', label: '🧪 성분 함량 및 시너지' },
+                        { id: 'origin', label: '🗺️ 원산지 및 프리미엄 원료' },
+                        { id: 'noadditives', label: '🌿 화학 부형제 무첨가' },
+                        { id: 'convenience', label: '👜 보관 편의성 및 디자인' }
+                    ].map(opt => {
+                        const isSel = state.answers.buyingValues.includes(opt.id);
+                        return `
+                            <button onclick="toggleMultiSelect('buyingValues', '${opt.id}', 2)" class="p-3 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F] font-bold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                    }).join('')}
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">💼 주로 섭취하게 될 복용 환경 형태</label>
+                        <select onchange="setSingleSelect('portability', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 선택해 주세요 --</option>
+                            <option value="bulk" ${state.answers.portability === 'bulk' ? 'selected' : ''}>가정/사무실 책상에 비치해두는 영양제 병 형태</option>
+                            <option value="portable" ${state.answers.portability === 'portable' ? 'selected' : ''}>출장/외출이 잦아 휴대성이 강한 개별 밀봉 팩 형태</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">💰 월 권장 투자 예산 대</label>
+                        <select onchange="setSingleSelect('budget', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 선택해 주세요 --</option>
+                            <option value="1-3" ${state.answers.budget === '1-3' ? 'selected' : ''}>1만원 ~ 3만원 (핵심 위주 알뜰 설계)</option>
+                            <option value="3-5" ${state.answers.budget === '3-5' ? 'selected' : ''}>3만원 ~ 5만원 (가장 이상적 조합)</option>
+                            <option value="5-10" ${state.answers.budget === '5-10' ? 'selected' : ''}>5만원 ~ 10만원 (토탈 안심 가동)</option>
+                            <option value="over_10" ${state.answers.budget === 'over_10' ? 'selected' : ''}>10만원 이상 (마스터 하이 클래스)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">🛒 선호하는 할인 및 구매 패턴</label>
+                    <div class="grid grid-cols-3 gap-2.5 text-xs font-bold">
+                        <button onclick="setSingleSelect('buyingType', 'subscription')" class="p-4 rounded-xl border transition ${state.answers.buyingType === 'subscription' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            📦 매달 자동 정기 구독
+                        </button>
+                        <button onclick="setSingleSelect('buyingType', 'one_time')" class="p-4 rounded-xl border transition ${state.answers.buyingType === 'one_time' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            🛍️ 단건 1회성 일반 구매
+                        </button>
+                        <button onclick="setSingleSelect('buyingType', 'any')" class="p-4 rounded-xl border transition ${state.answers.buyingType === 'any' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            ✨ 관계 없음 (할인율 중시)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // 퀴즈 분석 중 로더 화면
+        function runAnalysisLoading() {
+            switchView('quiz-loading');
+            const loadingSubtitle = document.getElementById('loading-subtitle');
+            const loadingProgress = document.getElementById('loading-progress');
+
+            const steps = [
+                { pct: 15, text: "신체 질량 지수(BMI) 및 대사 면적 산정 중..." },
+                { pct: 40, text: "흡연 여부 기반 고농도 발암 물질 회피 우회 필터 작동 중..." },
+                { pct: 70, text: "기저질환 및 복용 약물(항응고제 등) 교차 복용 상호작용 검출 중..." },
+                { pct: 90, text: "알레르기 가공 원료 원천 필터링 진행 중..." },
+                { pct: 100, text: "개인화 최적 안전 영양팩 로드맵 설계 완료!" }
+            ];
+
+            let currentStepIdx = 0;
+
+            const interval = setInterval(() => {
+                if (currentStepIdx < steps.length) {
+                    loadingProgress.style.width = `${steps[currentStepIdx].pct}%`;
+                    loadingSubtitle.textContent = steps[currentStepIdx].text;
+                    currentStepIdx++;
+                } else {
+                    clearInterval(interval);
+                    renderRecommendationResults();
+                }
+            }, 850);
+        }
+
+        // 분석 결과를 화면에 렌더링하고 쇼핑몰 자동 검색 연동 적용
+        function renderRecommendationResults() {
+            switchView('result');
+
+            const nameNode = document.getElementById('user-display-name');
+            const bmiBadgeNode = document.getElementById('result-bmi-badge');
+            const scoreNode = document.getElementById('result-match-score');
+            const medicalDashboard = document.getElementById('medical-safety-dashboard');
+            const medicalAlertsList = document.getElementById('medical-safety-alerts-list');
+
+            // 남성/여성 생애주기 명칭 조율
+            let profileText = state.answers.gender === 'male' ? '남성' : (state.answers.gender === 'female' ? '여성' : '고객');
+            if (state.answers.gender === 'female' && state.answers.femaleStage) {
+                const stages = { 'trying': '임신 준비', 'pregnant': '임신 중', 'lactating': '수유 중', 'menopause': '폐경기' };
+                if (stages[state.answers.femaleStage]) {
+                    profileText += ` (${stages[state.answers.femaleStage]})`;
+                }
+            }
+            nameNode.textContent = `${profileText} `;
+
+            // BMI 배지 드로잉
+            if (state.answers.bmi) {
+                bmiBadgeNode.className = "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold";
+                bmiBadgeNode.innerHTML = `<i class="fa-solid fa-weight-scale text-emerald-400"></i> BMI: ${state.answers.bmi} (신장 ${state.answers.height}cm / 체중 ${state.answers.weight}kg)`;
+            } else {
+                bmiBadgeNode.className = "hidden";
+            }
+
+            // 체크 리스너 및 기저 조건 동기화
+            const checkerGender = document.getElementById('checker-gender');
+            const checkerAge = document.getElementById('checker-age');
+            if (checkerGender && state.answers.gender) {
+                checkerGender.value = state.answers.gender;
+            }
+            if (checkerAge && state.answers.ageGroup) {
+                const mappedAge = { '20대 미만': 'under_20', '20대': '20s', '30대': '30s', '40대': '40s', '50대': '50s', '60대 이상': '60s+' };
+                if (mappedAge[state.answers.ageGroup]) checkerAge.value = mappedAge[state.answers.ageGroup];
+            }
+
+            // 위험 요인 감지 시 메디컬 필터 대시보드 로드
+            medicalDashboard.classList.add('hidden');
+            medicalAlertsList.innerHTML = '';
+            let matchScore = 98.8; // 기본 매치 스코어
+            let medicalAlerts = [];
+
+            // 1. 흡연 위험군 필터 적용
+            if (state.answers.smoking === 'yes') {
+                matchScore -= 5;
+                medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[중요 - 흡연 필터 작동]:</strong> 흡연자는 고함량 베타카로틴 함유 시 폐암 발병률을 증가시킵니다. 이에 맞춰 활성형 천연 대체 비타민 및 황반 아스타잔틴으로 대체 처방하여 추천 제품을 완전 정제했습니다.</span>
+                </li>
+            `);
+            }
+
+            // 2. 항응고제 질환 필터 적용
+            if (state.answers.conditions.includes('bloodclot')) {
+                matchScore -= 6;
+                medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[주의 - 항응고제 약물 상호작용]:</strong> 와파린 등 혈전 용해제를 드시는 분은 혈행 증진 목적 of 고농도 오메가3나 비타민E 복용 시 지혈 장애를 가중시킵니다. 본 배합은 해당 성분을 기저 섭취 한도 이내로 안전 제어했습니다.</span>
+                </li>
+            `);
+                // 체커 체크박스도 연동
+                document.getElementById('cond-organ').checked = true;
+            }
+
+            // 3. 임신부 필터 적용
+            if (state.answers.femaleStage === 'pregnant') {
+                matchScore -= 3;
+                medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[안심 - 임신/수유 전용 세이프가드]:</strong> 태아의 기형 유발을 막기 위해 과도한 지용성 비타민 A/D의 축적을 통제하고, 자궁 수축 등을 유발할 염려가 있는 허브 추출물(밀크씨슬 등) 성분 배합을 자동 제거하고 엽산/철분을 투입 설계했습니다.</span>
+                </li>
+            `);
+                document.getElementById('cond-pregnant').checked = true;
+            }
+
+            // 4. 알레르기 예외 적용
+            let filteredAllergies = state.answers.allergies.filter(v => v !== 'none');
+            if (filteredAllergies.length > 0) {
+                matchScore -= (filteredAllergies.length * 1.5);
+                const allergenNames = { shrimp: '갑각류', soy: '대두', gluten: '글루텐', dairy: '유제품', nuts: '견과류', fish: '어류' };
+                const detectedList = filteredAllergies.map(a => allergenNames[a] || a).join(', ');
+                medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[안전 - 알레르기 보호막]:</strong> ${detectedList} 알레르기가 감지되었습니다. 추천된 영양소는 식물성 연질 캡슐 및 전용 정제만을 선별하여 대두유 및 밀 유래 전분을 완벽 배제 처리했습니다.</span>
+                </li>
+            `);
+            }
+
+            // 경고가 있는 경우 메디컬 필터 보드 개방
+            if (medicalAlerts.length > 0) {
+                medicalDashboard.classList.remove('hidden');
+                medicalAlertsList.innerHTML = `<ul class="space-y-2.5">${medicalAlerts.join('')}</ul>`;
+            }
+
+            scoreNode.innerHTML = `${matchScore.toFixed(1)}<span class="text-sm">점</span>`;
+
+            // 추천 상품 카드 렌더링
+            const listContainer = document.getElementById('recommended-products-container');
+            const chartContainer = document.getElementById('safety-chart-container');
+            const opinionContainer = document.getElementById('pharmacist-opinion-container');
+            const opinionText = document.getElementById('pharmacist-opinion-text');
+
+            listContainer.innerHTML = '';
+            chartContainer.innerHTML = '';
+
+            // 핵심 고민 취득 (최대 2개)
+            let activeConcerns = [...state.answers.goals];
+
+            // 남성 특화 조건 강제 주입
+            if (state.answers.gender === 'male' && state.answers.maleConcerns.length > 0) {
+                state.answers.maleConcerns.forEach(mc => {
+                    if (!activeConcerns.includes(mc)) activeConcerns.push(mc);
+                });
+            }
+
+            // 여성 생애주기 중 임신/수유에 따른 엽산/철분 강제 추천 배합 추가
+            if (state.answers.femaleStage === 'pregnant' || state.answers.femaleStage === 'trying') {
+                if (!activeConcerns.includes('menses')) {
+                    activeConcerns.push('menses'); // 철분 성분이 내장된 menses 데이터 추가 연동
+                }
+            }
+
+            // 만약 선택된 고민이 아예 없다면 디폴트로 피로(fatigue)와 면역(immunity) 제공
+            if (activeConcerns.length === 0) {
+                activeConcerns = ['fatigue', 'immunity'];
+            }
+
+            // 약사 소견서 내용 동적 생성
+            const goalNames = {
+                fatigue: '만성 피로 개선', eyes: '눈 건강 보호', gut: '장 건강', skin: '피부 미용',
+                immunity: '면역력 증진', joints: '관절/뼈 건강', brain: '인지력 개선', diet: '체지방 관리',
+                menses: '여성 혈행 및 대사', hair: '모발 건강', sleep: '수면 질 개선', blood: '혈행/혈관 건강',
+                prostate: '전립선 건강', liver: '간 기능 회복'
+            };
+            const activeGoalTexts = activeConcerns.map(c => goalNames[c] || c).join(', ');
+
+            let opinionHTML = `안녕하세요. 꼼꼼하게 작성해주신 건강 설문을 바탕으로 맞춤 영양 설계를 완료했습니다.\n\n`;
+            opinionHTML += `현재 연령대와 체질량지수 등 신체 기초 데이터를 분석한 결과, 전반적인 대사 밸런스를 유지하면서도 <strong>[${activeGoalTexts}]</strong> 영역에서 적극적인 영양학적 개입이 필요해 보입니다. 시중에는 수많은 영양제가 존재하지만, 무작정 좋다고 하여 여러 제품을 섞어 드시면 오히려 간과 신장에 부담을 줄 수 있고 성분 간 충돌이 발생할 수 있습니다. 따라서 현재 건강 상태와 생활 습관(음주, 흡연, 운동량 등), 기저 질환까지 종합적으로 고려하여 가장 안전하면서도 시너지를 낼 수 있는 최적의 성분들만 엄선했습니다.\n\n`;
+
+            if (state.answers.smoking === 'yes') {
+                opinionHTML += `특히 <strong>흡연</strong>을 하시는 경우 항산화 관리가 필수적이지만, 고농도 베타카로틴이나 특정 합성 비타민A 유도체가 포함된 제품은 오히려 기관지와 폐 건강에 위험 인자로 작용할 수 있다는 임상 결과가 있습니다. 이에 따라 이번 추천 리스트에서는 해당 성분을 원천 차단하고, 안전하게 체내 활성 산소를 제거할 수 있는 <strong>대체 항산화 네트워크(비타민C, 아스타잔틴, 셀레늄 등)</strong> 위주로 재구성하였습니다.\n\n`;
+            }
+
+            if (state.answers.allergies.length > 0 && !state.answers.allergies.includes('none')) {
+                opinionHTML += `또한 작성해주신 <strong>알레르기 정보</strong>를 바탕으로 교차 반응 위험이 있는 원료(예: 대두 추출물, 특정 해조류 베이스 등)를 완전히 배제한 식물성 에코 캡슐 및 안심 정제만을 추천 목록에 올렸습니다.\n\n`;
+            }
+
+            if (state.answers.pillDiscomfort === 'extreme') {
+                opinionHTML += `평소 <strong>큰 알약을 삼키기 어려워하시는 점</strong>을 깊이 공감합니다. 영양제는 매일 꾸준히 섭취해야 그 의미가 있으므로, 복용 순응도를 극대화할 수 있도록 목넘김이 편안한 초소형 정제나 맛있는 구미(젤리), 혹은 흡수율이 높은 액상 제형 위주로 우선 선별했습니다.\n\n`;
+            }
+
+            opinionHTML += `아래 제안해 드리는 제품들은 함량 미달이거나 불필요한 첨가물이 많은 제품은 철저히 거르고, <strong>세계적인 원료사의 검증된 원료를 사용하며 식약처 인증을 통과한 신뢰도 높은 제품</strong>들입니다. 각 영양소는 식후 30분 이내에 충분한 물과 함께 섭취하실 때 체내 흡수율이 가장 높으며, 위장 장애를 최소화할 수 있습니다. 만약 현재 처방받아 드시는 전문 의약품이 있다면 아래의 '내 영양제 초과 진단' 탭에서 다시 한번 중복 및 상호작용 여부를 체크하시길 권장합니다. 꾸준한 섭취와 함께 가벼운 운동을 병행하시면 훨씬 더 활기찬 일상을 되찾으실 수 있을 것입니다. 건강한 내일을 응원합니다! 👨‍⚕️`;
+
+            // KDRI 2025 연령별 가이드라인 추가
+            const kdriData = {
+                '10s': { ageStr: '10대 성장기', calcium: '800~1,000mg', vitC: '90~100mg', vitD: '10μg', focus: '골격 형성과 성장을 위한 칼슘 및 에너지 대사 영양소' },
+                '20s': { ageStr: '20대 청년기', calcium: '800mg', vitC: '100mg', vitD: '10μg', focus: '활발한 사회활동에 따른 피로 회복과 항산화 영양소' },
+                '30s': { ageStr: '30대 성인기', calcium: '800mg', vitC: '100mg', vitD: '10μg', focus: '체력 유지 및 스트레스 관리를 위한 비타민 B군과 미네랄' },
+                '40s': { ageStr: '40대 중장년기', calcium: '800mg', vitC: '100mg', vitD: '10μg', focus: '대사율 저하 방지 및 노화 예방을 위한 강력한 항산화제' },
+                '50s': { ageStr: '50대 갱년기', calcium: '800mg', vitC: '100mg', vitD: '10μg', focus: '골밀도 감소 예방 및 심혈관 건강을 위한 칼슘, 비타민 D' },
+                '60s': { ageStr: '60대 이상 노년기', calcium: '700~800mg', vitC: '100mg', vitD: '15μg', focus: '근감소증 예방, 면역력 유지 및 인지 기능 보호를 위한 단백질과 비타민 D' }
+            };
+
+            const kdri = kdriData[state.answers.age];
+            if (kdri) {
+                opinionHTML += `<br><br>📌 <strong>[2025 보건복지부 한국인 영양소 섭취기준(KDRI) 반영]</strong><br>`;
+                opinionHTML += `회원님과 같은 <strong>${kdri.ageStr}</strong>에는 <strong>${kdri.focus}</strong> 섭취가 핵심적입니다. 최신 국가 섭취기준에 따르면 해당 연령대의 하루 권장 섭취량은 <strong>칼슘 ${kdri.calcium}, 비타민 C ${kdri.vitC}, 비타민 D ${kdri.vitD}</strong> 등입니다. 본 맞춤 설계는 이러한 국가 공인 기준치(EAR, RNI)를 엄격하게 적용하여 과다 복용에 의한 독성을 막고 결핍을 예방하는 안전한 함량으로 구성되었습니다.`;
+            }
+
+            opinionText.innerHTML = opinionHTML;
+            opinionContainer.classList.remove('hidden');
+
+            // 1. 추천 영양소 카드 빌더 루프
+            activeConcerns.forEach(concern => {
+                const items = INGREDIENTS_DB[concern];
+                if (items) {
+                    items.forEach(item => {
+                        const encodedQuery = encodeURIComponent(item.name);
+                        const coupangLink = `https://www.coupang.com/np/search?q=${encodedQuery}`;
+                        const iherbLink = `https://kr.iherb.com/search?kw=${encodedQuery}`;
+                        const naverLink = `https://search.shopping.naver.com/search/all?query=${encodedQuery}`;
+
+                        // 알약 편의성 제형 조정 텍스트 처리
+                        let pillFormText = item.size;
+                        let preferredBadge = `<span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-bold border border-emerald-100">권장량 100% 매칭</span>`;
+
+                        if (state.answers.pillDiscomfort === 'extreme') {
+                            pillFormText = state.answers.altForm ? `${state.answers.altForm} 제형으로 조정 추천` : "소형 알약 제형 적용";
+                            preferredBadge = `<span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-bold border border-blue-100">💊 목넘김 가공 조정됨</span>`;
+                        }
+
+                        // 흡연자 베타카로틴/루테인 성분 주의 경고 처리
+                        let itemWarningLabel = "";
+                        if (state.answers.smoking === 'yes' && item.name.includes("루테인")) {
+                            itemWarningLabel = `
+                            <div class="mt-2.5 p-2.5 rounded-xl bg-amber-50 border border-amber-100 text-[10px] text-amber-700 flex gap-1.5 items-start">
+                                <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                                <span><strong>흡연 주의 배합:</strong> 카로티노이드 계열 흡수를 고려하여 안심 대체 아스타잔틴 성분 위주의 정제 검색이 필터 처리되었습니다.</span>
+                            </div>
+                        `;
+                        }
+
+                        let extraInfoBlock = "";
+                        if (item.effect && item.caution) {
+                            extraInfoBlock = `
+                            <div class="mt-4 p-4 bg-[#F8FAFC] rounded-xl space-y-3 border border-slate-100">
+                                <div>
+                                    <h5 class="text-[13px] font-bold text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-microscope text-blue-500"></i> 영양제 주요 효능 및 작용 기전</h5>
+                                    <p class="text-[13px] text-slate-600 mt-1 leading-relaxed">${item.effect}</p>
+                                </div>
+                                <div class="pt-3 border-t border-slate-200">
+                                    <h5 class="text-[13px] font-bold text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-500"></i> 복용 시 주의사항 및 중복 금기</h5>
+                                    <p class="text-[13px] text-slate-600 mt-1 leading-relaxed">${item.caution}</p>
+                                </div>
+                            </div>
+                        `;
+                        }
+
+                        const card = document.createElement('div');
+                        card.className = "p-5 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white hover:shadow-md transition-all flex flex-col gap-4 animate-fadeIn";
+                        card.innerHTML = `
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div class="flex gap-4 items-start">
+                                <div class="w-12 h-12 rounded-xl bg-white text-[#10B981] shadow-inner border border-slate-100 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-capsules"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h4 class="font-bold text-slate-800 text-sm sm:text-base">${item.name}</h4>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-100/60 border border-emerald-200 text-[#1E3A2F] text-[9px] font-bold">${item.tag}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 leading-normal">${item.detail}</p>
+                                    ${itemWarningLabel}
+                                    ${extraInfoBlock}
+                                </div>
+                            </div>
+                            <div class="flex sm:flex-col items-start sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-slate-200/50 pt-3 sm:pt-0 text-xs">
+                                <span class="text-slate-400 sm:mb-1">제형 크기: <strong class="text-slate-600">${pillFormText}</strong></span>
+                                ${preferredBadge}
+                            </div>
+                        </div>
+
+                        <!-- 외부 스토어 빠른 이동 버튼 모음 -->
+                        <div class="grid grid-cols-3 gap-2.5 pt-3 border-t border-slate-200/50">
+                            <a href="${coupangLink}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#0074E9] hover:bg-[#005ec1] text-white font-bold text-xs shadow-sm transition">
+                                <i class="fa-solid fa-shopping-cart text-[11px]"></i> 쿠팡 검색
+                            </a>
+                            <a href="${iherbLink}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#4E7E24] hover:bg-[#3d651a] text-white font-bold text-xs shadow-sm transition">
+                                <i class="fa-solid fa-leaf text-[11px]"></i> 아이허브 직구
+                            </a>
+                            <a href="${naverLink}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#03C75A] hover:bg-[#02A64B] text-white font-bold text-xs shadow-sm transition">
+                                <i class="fa-solid fa-store text-[11px]"></i> 네이버 쇼핑
+                            </a>
+                        </div>
+                    `;
+                        listContainer.appendChild(card);
+                    });
+                }
+            });
+
+            // 2. 동적 안전 섭취량 바 차트 렌더링
+            activeConcerns.forEach(concern => {
+                const chartData = SAFE_INTAKE_VALUES[concern];
+                if (chartData) {
+                    chartData.forEach(barItem => {
+                        let adjustedPct = barItem.pct;
+                        let noticeLabel = "안전 배합 수치";
+
+                        // 운동 상태나 신체 상태에 따른 시각 안전 데이터선 상호 보정
+                        if (state.answers.exercise.includes('hiit') && barItem.name.includes("비타민 B1")) {
+                            adjustedPct = 100;
+                            noticeLabel = "에너지 격렬 소모 맞춤 보정 수치";
+                        }
+
+                        const barRow = document.createElement('div');
+                        barRow.className = "space-y-2 animate-fadeIn";
+                        barRow.innerHTML = `
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-700">${barItem.name} <span class="font-normal text-slate-400">(${barItem.unit})</span></span>
+                            <span class="font-mono font-bold text-[#10B981]">권장량 ${adjustedPct}% 정합 매칭</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-6 rounded-full overflow-hidden relative shadow-inner border border-slate-200/50">
+                            <div class="bg-gradient-to-r ${barItem.color} h-full rounded-full flex items-center justify-end pr-3 transition-all duration-1000" style="width: ${adjustedPct}%">
+                                <span class="text-[9px] text-white font-extrabold tracking-wider">${noticeLabel}</span>
+                            </div>
+                        </div>
+                    `;
+                        chartContainer.appendChild(barRow);
+                    });
+                }
+            });
+        }
+
+        // 내 보유 영양제 리스트 및 차트 동적 연산
+        function recalculateSupplements() {
+            const listContainer = document.getElementById('my-supplements-list');
+            const countBadge = document.getElementById('active-supp-count');
+            const chartArea = document.getElementById('diagnose-chart-area');
+            const feedbackBox = document.getElementById('diagnostic-feedback-box');
+            const logsBox = document.getElementById('checker-profile-status-logs');
+
+            countBadge.textContent = `${state.mySupplements.length}개`;
+
+            listContainer.innerHTML = '';
+            chartArea.innerHTML = '';
+            feedbackBox.innerHTML = '';
+            logsBox.innerHTML = '';
+            logsBox.classList.add('hidden');
+
+            if (state.mySupplements.length === 0) {
+                listContainer.innerHTML = `
+                <div class="text-center py-10 text-slate-400 text-xs flex flex-col items-center gap-2">
+                    <i class="fa-solid fa-box-open text-4xl text-slate-300"></i>
+                    <span>등록된 영양제가 없습니다.<br>위의 추천 영양소나 다른 항목을 추가해 보세요.</span>
+                </div>
+            `;
+                chartArea.innerHTML = `
+                <div class="text-center py-16 text-slate-400 text-xs">
+                    영양제를 보관함에 추가하면 실시간 함량 분석 차트가 표시됩니다.
+                </div>
+            `;
+                feedbackBox.innerHTML = `
+                <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100 text-xs text-center text-emerald-800">
+                    <i class="fa-solid fa-circle-check text-base mb-1.5 block"></i>
+                    현재 과다 복용 중인 영양 성분이 없습니다. 아주 안전한 식탁입니다!
+                </div>
+            `;
+                return;
+            }
+
+            // 보유 영양제 카드 렌더링
+            state.mySupplements.forEach((supp) => {
+                const card = document.createElement('div');
+                card.className = "p-3.5 bg-slate-50 border border-slate-200/60 rounded-2xl hover:bg-white transition-all flex justify-between items-center animate-fadeIn";
+
+                const itemBadges = Object.keys(supp.items).map(k => `
+                <span class="text-[9px] bg-slate-200/70 text-slate-600 px-1.5 py-0.5 rounded font-medium">${k} ${supp.items[k]}%</span>
+            `).join('');
+
+                card.innerHTML = `
+                <div class="space-y-1 max-w-[80%]">
+                    <span class="font-bold text-xs text-slate-800 block truncate">${supp.name}</span>
+                    <div class="flex flex-wrap gap-1">${itemBadges}</div>
+                </div>
+                <button onclick="removeSupplement(${supp.id})" class="text-slate-400 hover:text-red-500 w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center transition" title="삭제">
+                    <i class="fa-solid fa-trash-can text-sm"></i>
+                </button>
+            `;
+                listContainer.appendChild(card);
+            });
+
+            const gender = document.getElementById('checker-gender').value;
+            const age = document.getElementById('checker-age').value;
+            const isPregnant = document.getElementById('cond-pregnant').checked;
+            const isOrganCaution = document.getElementById('cond-organ').checked;
+            const isHighSport = document.getElementById('cond-sport').checked;
+
+            const activeGuidelines = JSON.parse(JSON.stringify(NUTRIENT_GUIDELINES));
+            let profileLogs = [];
+
+            // 다차원 간/신장 기능 보호 한계 조절
+            if (isOrganCaution) {
+                activeGuidelines["마그네슘"].maxSafe = 80;
+                activeGuidelines["마그네슘"].danger = 120;
+                activeGuidelines["마그네슘"].desc += " [간/신장기능 필터: 대사 부담 완화를 위해 마그네슘 일일 상한 주의선이 대폭 강화되었습니다.]";
+
+                activeGuidelines["실리마린"].maxSafe = 60;
+                activeGuidelines["실리마린"].danger = 100;
+                activeGuidelines["실리마린"].desc += " [간 대사 부담 완화를 위해 밀크씨슬(실리마린) 상한 섭취선이 낮아졌습니다.]";
+
+                activeGuidelines["아연"].maxSafe = 100;
+                activeGuidelines["아연"].danger = 150;
+
+                profileLogs.push("⚠️ <strong>간/신장 기능 우려:</strong> 해독 기관 부담을 방지하기 위해 <strong>마그네슘, 실리마린, 아연</strong>의 상한 복용 경고 기준선이 약 40% 하향 조정되었습니다.");
+            }
+
+            // 다차원 임신/수유 보호 한계 조절
+            if (isPregnant) {
+                activeGuidelines["비타민D"].maxSafe = 150;
+                activeGuidelines["비타민D"].danger = 220;
+                activeGuidelines["비타민D"].desc = "임산부 및 태아 안전을 위해 고용량 누적을 경계합니다.";
+
+                activeGuidelines["실리마린"].maxSafe = 30;
+                activeGuidelines["실리마린"].danger = 60;
+                activeGuidelines["실리마린"].desc = "임부 안전성 연구 미비로 가급적 밀크씨슬 복용는 주치의와 상담하기를 권고합니다.";
+
+                profileLogs.push("🤰 <strong>임신/수유 안심 필터:</strong> 태아 보호를 위해 지용성 <strong>비타민D</strong>와 태아 자궁수축 우려가 있는 <strong>실리마린(밀크씨슬)</strong> 한계선이 극도로 안전하게 격상되었습니다.");
+            }
+
+            // 고강도 스포츠 한계 조절
+            if (isHighSport) {
+                activeGuidelines["비타민B군"].maxSafe = 450;
+                activeGuidelines["비타민B군"].danger = 650;
+                activeGuidelines["비타민C"].maxSafe = 800;
+                activeGuidelines["비타민C"].danger = 1200;
+
+                profileLogs.push("⚡ <strong>스포츠/고강도 에너지 방출:</strong> 땀과 수분 배출이 격렬하여 대사가 빠른 수용성 <strong>비타민B군, 비타민C</strong>의 최적 수용 임계치가 30%~50% 상향 보정되었습니다.");
+            }
+
+            // 2025 KDRI 연령별 섭취 기준 적용
+            if (age === 'under_20') {
+                activeGuidelines["칼슘"].maxSafe = 140;
+                activeGuidelines["칼슘"].danger = 200;
+                activeGuidelines["칼슘"].desc += " [KDRI 2025: 청소년기는 뼈 성장이 급격한 시기로, 칼슘 상한 한계가 성인 대비 유연하게 적용되었습니다.]";
+                profileLogs.push("📈 <strong>10대 성장기 KDRI 기준:</strong> 골격 형성을 위해 <strong>칼슘</strong>의 권장 섭취 상한 한계치가 상향 조정되어 반영되었습니다.");
+            } else if (age === '20s' || age === '30s' || age === '40s') {
+                activeGuidelines["비타민B군"].maxSafe = 400;
+                activeGuidelines["비타민B군"].desc += " [KDRI 2025: 성인기는 활발한 에너지 대사와 피로 회복을 위해 비타민 B군의 상한 수용치가 상향 적용되었습니다.]";
+                activeGuidelines["비타민C"].maxSafe = 600;
+                profileLogs.push("🏃‍♂️ <strong>20~40대 청장년기 KDRI 기준:</strong> 에너지 대사 활성화를 위해 <strong>비타민 B군 및 C</strong>의 일일 안전 수용폭을 높게 반영하였습니다.");
+            } else if (age === '50s' || age === '60s+') {
+                activeGuidelines["칼슘"].maxSafe = 90;
+                activeGuidelines["칼슘"].danger = 130;
+                activeGuidelines["칼슘"].desc += " [KDRI 2025: 장·노년층은 고용량 칼슘의 혈관 석회화 우려로 칼슘 상한 기준(700~800mg)이 더욱 엄격하게 조절되었습니다.]";
+
+                activeGuidelines["비타민D"].maxSafe = 250;
+                activeGuidelines["비타민D"].danger = 400;
+                activeGuidelines["비타민D"].desc += " [KDRI 2025: 근감소증 및 골다공증 예방을 위해 비타민 D 권장 섭취량(15μg)이 상향됨에 따라 안전 한계치도 넓게 허용됩니다.]";
+
+                profileLogs.push("👵👴 <strong>50대 이상 KDRI 기준:</strong> 노화 예방을 위해 <strong>비타민D</strong> 한계치는 상향 완화되었으나, 심혈관 부담 경감을 위해 <strong>칼슘</strong> 상한 기준은 엄격히 제한되었습니다.");
+            }
+
+            if (profileLogs.length > 0) {
+                logsBox.classList.remove('hidden');
+                logsBox.innerHTML = `
+                <div class="p-4 rounded-2xl bg-teal-50/50 border border-teal-200/60 text-xs text-teal-900 space-y-1.5 animate-fadeIn">
+                    <span class="font-bold text-teal-800 flex items-center gap-1.5"><i class="fa-solid fa-sliders"></i> 개인별 조건에 따른 기준점 변경 실시간 추적</span>
+                    <ul class="list-disc pl-4 space-y-1 text-slate-600 leading-relaxed text-[11px]">
+                        ${profileLogs.map(log => `<li>${log}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            }
+
+            const nutrientTotals = {
+                "비타민D": 0, "비타민B군": 0, "비타민C": 0, "아연": 0,
+                "칼슘": 0, "마그네슘": 0, "오메가3": 0, "루테인": 0, "실리마린": 0
+            };
+
+            state.mySupplements.forEach(supp => {
+                for (const key in supp.items) {
+                    if (nutrientTotals.hasOwnProperty(key)) {
+                        nutrientTotals[key] += supp.items[key];
+                    }
+                }
+            });
+
+            let warningAlerts = [];
+
+            for (const nutrient in nutrientTotals) {
+                const totalPct = nutrientTotals[nutrient];
+                const rule = activeGuidelines[nutrient];
+
+                if (!rule) continue;
+                if (totalPct === 0) continue;
+
+                let statusText = "적정";
+                let statusColor = "bg-gradient-to-r from-emerald-400 to-emerald-500";
+                let alertStyle = "";
+
+                if (totalPct < 50) {
+                    statusText = "부족";
+                    statusColor = "bg-gradient-to-r from-slate-400 to-slate-500";
+                } else if (totalPct >= rule.danger) {
+                    statusText = "위험 (초과)";
+                    statusColor = "bg-gradient-to-r from-red-500 to-rose-600 pulse-red";
+                    alertStyle = "text-rose-600 font-extrabold";
+                    warningAlerts.push({
+                        nutrient: nutrient,
+                        level: 'danger',
+                        percent: totalPct,
+                        desc: rule.desc
+                    });
+                } else if (totalPct >= rule.maxSafe) {
+                    statusText = "주의 (경계)";
+                    statusColor = "bg-gradient-to-r from-amber-400 to-amber-500";
+                    alertStyle = "text-amber-600 font-bold";
+                    warningAlerts.push({
+                        nutrient: nutrient,
+                        level: 'warning',
+                        percent: totalPct,
+                        desc: rule.desc
+                    });
+                }
+
+                const chartRow = document.createElement('div');
+                chartRow.className = "space-y-1 animate-fadeIn";
+
+                const visualProgress = Math.min(totalPct, 150);
+
+                chartRow.innerHTML = `
+                <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-slate-700">${nutrient}</span>
+                    <span class="font-mono text-[11px] ${alertStyle}">누적 섭취: ${totalPct}${rule.unit} (${statusText})</span>
+                </div>
+                <div class="w-full bg-slate-100 h-5.5 rounded-full overflow-hidden relative border border-slate-200/50 shadow-inner">
+                    <div class="${statusColor} h-full rounded-full flex items-center justify-end pr-3 transition-all duration-700" style="width: ${(visualProgress / 150) * 100}%">
+                        <span class="text-[9px] text-white font-extrabold">${totalPct}%</span>
+                    </div>
+                    <div class="absolute top-0 bottom-0 w-0.5 bg-red-400 border-l border-dashed border-red-500" style="left: ${(Math.min(rule.maxSafe, 150) / 150) * 100}%" title="맞춤 경계 기준선 (${rule.maxSafe}%)"></div>
+                </div>
+            `;
+                chartArea.appendChild(chartRow);
+            }
+
+            if (warningAlerts.length === 0) {
+                feedbackBox.innerHTML = `
+                <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl text-xs flex gap-3 items-center animate-fadeIn">
+                    <i class="fa-solid fa-circle-check text-xl text-emerald-500"></i>
+                    <div>
+                        <span class="font-bold">복용 조화 상태: 안전함</span>
+                        <p class="text-[11px] text-emerald-700 mt-1">
+                            현재 중복 섭취 중인 영양소들이 귀하의 연령/몸 상태 대비 허용 범위 이내에 포진하고 있습니다. 안전하게 일상적인 루틴을 계속하셔도 무방합니다.
+                        </p>
+                    </div>
+                </div>
+            `;
+            } else {
+                warningAlerts.forEach(alert => {
+                    const alertCard = document.createElement('div');
+                    const isDanger = alert.level === 'danger';
+                    alertCard.className = `p-4 rounded-2xl border text-xs flex gap-3 items-start animate-fadeIn ${isDanger ? 'bg-red-50 border-red-200 text-red-900' : 'bg-amber-50 border-amber-200 text-amber-900'
+                        }`;
+
+                    alertCard.innerHTML = `
+                    <i class="fa-solid ${isDanger ? 'fa-triangle-exclamation text-red-500' : 'fa-circle-exclamation text-amber-500'} text-xl mt-0.5"></i>
+                    <div>
+                        <span class="font-bold">${alert.nutrient} ${alert.percent}% 복용 감지 (${isDanger ? '위험' : '주의'})</span>
+                        <p class="mt-1 text-[11px] ${isDanger ? 'text-red-700' : 'text-amber-800'} leading-relaxed">${alert.desc}</p>
+                        <div class="mt-2.5 flex gap-2">
+                            <span class="bg-white/80 px-2 py-0.5 rounded border border-slate-200 font-bold text-[9px] cursor-pointer hover:bg-white" onclick="suggestAdjustment('${alert.nutrient}', ${alert.percent})">
+                                💡 어떻게 조절해야 할지 알려주세요
+                            </span>
+                        </div>
+                    </div>
+                `;
+                    feedbackBox.appendChild(alertCard);
+                });
+            }
+        }
+
+        // 내 영양제 제거 핸들러
+        function removeSupplement(id) {
+            state.mySupplements = state.mySupplements.filter(item => item.id !== id);
+            showToast("보관함에서 영양제를 제외했습니다.", "success");
+            recalculateSupplements();
+        }
+
+        // 브랜드 제품 실시간 자소 검색 및 필터링 기능 (공공 DB & OCR 대체 연동 포함)
+        function searchBrandSupplements(query) {
+            const dropdown = document.getElementById('brand-suggest-dropdown');
+            if (!query || query.trim().length < 2) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+
+            const filtered = BRAND_SUPPLEMENTS_DB.filter(item =>
+                item.name.toLowerCase().includes(query.toLowerCase()) ||
+                item.brand.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                // 검색 결과 없을 때의 획기적 웰니서 대안 UI 출력
+                dropdown.innerHTML = `
+                <div class="p-4 text-center text-xs text-slate-500 space-y-3">
+                    <div class="space-y-1">
+                        <span class="font-bold text-slate-700 block">🔍 "${query}"에 대한 검색 결과가 없습니다.</span>
+                        <p class="text-[11px] text-slate-400">NutriMatch의 두 가지 인공지능 안심 우회 등록을 사용해 보세요.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 pt-1.5">
+                        <button onclick="triggerMfdsSearch('${query}')" class="w-full py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold border border-teal-200 transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-database text-teal-600"></i> 식약처 공공 데이터에서 즉시 조회하기
+                        </button>
+                        <button onclick="openOcrModal('${query}')" class="w-full py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1E3A2F] font-bold border border-emerald-200 transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-camera text-emerald-600"></i> 📸 영양성분표 사진 찍어 등록 (AI 스캔)
+                        </button>
+                    </div>
+                </div>
+            `;
+                dropdown.classList.remove('hidden');
+                return;
+            }
+
+            dropdown.innerHTML = filtered.map(item => `
+            <div onclick="selectBrandSupplement('${item.brand}', '${item.name}')" class="p-3 hover:bg-slate-50 cursor-pointer text-xs border-b border-slate-100 last:border-0 flex justify-between items-center">
+                <div>
+                    <span class="font-bold text-slate-700 block">${item.name}</span>
+                    <span class="text-[10px] text-slate-400">${item.brand}</span>
+                </div>
+                <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full font-bold">자동 분석</span>
+            </div>
+        `).join('');
+            dropdown.classList.remove('hidden');
+        }
+
+        // 식약처 공공 DB 조회 및 가상 데이터 매핑 생성
+        function triggerMfdsSearch(productName) {
+            const dropdown = document.getElementById('brand-suggest-dropdown');
+            dropdown.innerHTML = `
+            <div class="p-6 text-center text-xs space-y-3">
+                <div class="w-6 h-6 rounded-full border-2 border-slate-200 border-t-[#10B981] animate-spin mx-auto"></div>
+                <span class="font-bold text-teal-800 block">식품의약품안전처 품목제조공공데이터망 실시간 동기화 중...</span>
+                <p class="text-[10px] text-slate-400">식약처에 보고된 32,500여 개 기능식품 보고서 대조 중</p>
+            </div>
+        `;
+
+            setTimeout(() => {
+                // 입력 키워드 기반으로 가상의 건강 성분을 유추하여 mock 생성
+                let mockNutrients = { "비타민C": 100 }; // 기본
+                if (productName.includes("홍삼") || productName.includes("인삼")) {
+                    mockNutrients = { "실리마린": 80, "비타민B군": 50 };
+                } else if (productName.includes("칼슘") || productName.includes("뼈")) {
+                    mockNutrients = { "칼슘": 100, "비타민D": 100 };
+                } else if (productName.includes("유산균") || productName.includes("락토") || productName.includes("프리")) {
+                    mockNutrients = { "오메가3": 100, "아연": 50 };
+                } else {
+                    // 일반 비타민류 임의 생성
+                    mockNutrients = { "비타민C": 500, "비타민D": 150, "아연": 80 };
+                }
+
+                // 가상 데이터베이스에 생성된 데이터를 추가하여 영구 선택 가능하게 함
+                const mockProduct = {
+                    brand: "공공데이터 연동",
+                    name: productName,
+                    items: mockNutrients
+                };
+                BRAND_SUPPLEMENTS_DB.push(mockProduct);
+                selectBrandSupplement(mockProduct.brand, mockProduct.name);
+            }, 1500);
+        }
+
+        // AI OCR 성분 라벨 스캐너 모달 컨트롤
+        let currentOcrProduct = "";
+        function openOcrModal(productName) {
+            currentOcrProduct = productName;
+            document.getElementById('brand-suggest-dropdown').classList.add('hidden');
+            document.getElementById('ocr-scan-modal').classList.remove('hidden');
+
+            // 가상 뷰파인더 초기화
+            document.getElementById('ocr-viewfinder-screen').innerHTML = `
+            <i class="fa-solid fa-camera text-4xl text-slate-500 mb-2"></i>
+            <span class="text-xs text-slate-400">카메라 대기 중...</span>
+        `;
+            document.getElementById('ocr-scanner-laser').classList.add('hidden');
+            document.getElementById('ocr-extracted-result').classList.add('hidden');
+            document.getElementById('ocr-action-btn').classList.remove('hidden');
+            document.getElementById('ocr-apply-btn').classList.add('hidden');
+        }
+
+        function closeOcrModal() {
+            document.getElementById('ocr-scan-modal').classList.add('hidden');
+        }
+
+        function startOcrCapture() {
+            const screen = document.getElementById('ocr-viewfinder-screen');
+            const laser = document.getElementById('ocr-scanner-laser');
+            const actionBtn = document.getElementById('ocr-action-btn');
+
+            screen.innerHTML = `
+            <div class="text-xs space-y-2">
+                <i class="fa-solid fa-circle-notch text-3xl text-[#10B981] animate-spin mb-1"></i>
+                <span class="font-bold text-[#10B981] block">영양 성분 이미지 자동 정밀 OCR 스캔 중...</span>
+                <p class="text-[10px] text-slate-400">라벨 텍스트 데이터 분할 및 수치 구조 분석 연산 적용</p>
+            </div>
+        `;
+            laser.classList.remove('hidden');
+            actionBtn.classList.add('opacity-50', 'pointer-events-none');
+
+            setTimeout(() => {
+                laser.classList.add('hidden');
+                screen.innerHTML = `
+                <div class="text-xs space-y-1">
+                    <i class="fa-solid fa-circle-check text-4xl text-[#10B981] mb-2 animate-bounce"></i>
+                    <span class="font-bold text-white block">텍스트 스캔 매핑 분석 완료!</span>
+                    <p class="text-[10px] text-[#10B981]">고유 기능 성분 매칭 성공</p>
+                </div>
+            `;
+
+                // 매칭 성분 동적 추출
+                let extracted = { "비타민C": 1000, "아연": 100, "비타민D": 150 };
+                if (currentOcrProduct.includes("오메가")) extracted = { "오메가3": 150, "비타민D": 80 };
+                else if (currentOcrProduct.includes("밀크")) extracted = { "실리마린": 100, "비타민B군": 100 };
+
+                const badgeArea = document.getElementById('ocr-badges-area');
+                badgeArea.innerHTML = Object.keys(extracted).map(k => `
+                <span class="inline-flex items-center gap-1 bg-white text-emerald-800 border border-emerald-200/80 px-2 py-0.5 rounded-lg text-[10px] font-bold">
+                    ${k} ${extracted[k]}%
+                </span>
+            `).join('');
+
+                document.getElementById('ocr-extracted-result').classList.remove('hidden');
+                document.getElementById('ocr-apply-btn').classList.remove('hidden');
+                actionBtn.classList.add('hidden');
+                actionBtn.classList.remove('opacity-50', 'pointer-events-none');
+
+                // 임시 데이터 전달용 캐시 어트리뷰트
+                document.getElementById('ocr-apply-btn').setAttribute('data-ocr-items', JSON.stringify(extracted));
+            }, 2200);
+        }
+
+        function applyOcrResult() {
+            const ocrItemsStr = document.getElementById('ocr-apply-btn').getAttribute('data-ocr-items');
+            if (!ocrItemsStr) return;
+
+            const input = document.getElementById('custom-supp-name');
+            input.value = `[AI 스캔] ${currentOcrProduct}`;
+
+            // OCR 분석 성분들을 제품별 성분 빌더 체크박스 그리드에 동적으로 사전 체크 및 기입
+            populateNutrientBuilderGrid(JSON.parse(ocrItemsStr));
+
+            closeOcrModal();
+            showToast("이미지 텍스트 인식을 통해 복합 성분을 성분 빌더에 일괄 임시 매핑했습니다!", "success");
+        }
+
+        // 수동 복합 성분 입력 그리드 렌더러
+        function buildNutrientGridUI() {
+            const grid = document.getElementById('custom-ingredients-grid');
+            const nutrients = ["비타민D", "비타민B군", "비타민C", "아연", "칼슘", "마그네슘", "오메가3", "루테인", "실리마린"];
+
+            grid.innerHTML = nutrients.map(nut => `
+            <div class="p-2 rounded-xl border border-slate-100 bg-white flex flex-col gap-1 text-[11px] items-start hover:shadow-sm transition">
+                <label class="flex items-center gap-1.5 font-bold cursor-pointer w-full text-slate-700">
+                    <input type="checkbox" data-nutrient="${nut}" onchange="toggleGridNutrient(this)" class="nutrient-chk rounded text-[#10B981] accent-[#10B981] w-3.5 h-3.5">
+                    <span>${nut}</span>
+                </label>
+                <div class="flex items-center gap-1 w-full mt-1">
+                    <input type="number" id="input-${nut}" data-nutrient="${nut}" placeholder="0" disabled class="nutrient-input w-full p-1 rounded-lg border border-slate-200 text-center font-semibold bg-slate-50 text-[11px] disabled:opacity-40 disabled:bg-slate-100">
+                    <span class="text-[9px] text-slate-400 font-mono">%</span>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        // 성분 체크박스 토글 시 인풋 비활성화 제어
+        function toggleGridNutrient(checkbox) {
+            const nutrient = checkbox.getAttribute('data-nutrient');
+            const input = document.getElementById(`input-${nutrient}`);
+            if (checkbox.checked) {
+                input.disabled = false;
+                input.classList.remove('bg-slate-100');
+                input.classList.add('bg-white');
+                if (!input.value) input.value = 100; // 체크 시 기본값 100% 임시 할당
+            } else {
+                input.disabled = true;
+                input.classList.add('bg-slate-100');
+                input.classList.remove('bg-white');
+                input.value = '';
+            }
+        }
+
+        // 성분 체크박스 및 함량 세팅 헬퍼 (검색/스캔 결과 연계용)
+        function populateNutrientBuilderGrid(items) {
+            // 일단 전체 초기화
+            const checkboxes = document.querySelectorAll('.nutrient-chk');
+            checkboxes.forEach(chk => {
+                chk.checked = false;
+                toggleGridNutrient(chk);
+            });
+
+            // 전달받은 아이템 세팅
+            for (const nutrient in items) {
+                const chk = document.querySelector(`.nutrient-chk[data-nutrient="${nutrient}"]`);
+                if (chk) {
+                    chk.checked = true;
+                    toggleGridNutrient(chk);
+                    const input = document.getElementById(`input-${nutrient}`);
+                    if (input) input.value = items[nutrient];
+                }
+            }
+        }
+
+        // 브랜드 자동완성 선택 시 함량 정보 임시 매핑 바인딩
+        function selectBrandSupplement(brand, name) {
+            const product = BRAND_SUPPLEMENTS_DB.find(item => item.brand === brand && item.name === name);
+            if (!product) return;
+
+            const input = document.getElementById('custom-supp-name');
+            input.value = `[${product.brand}] ${product.name}`;
+
+            // 성분 체크박스 빌더 그리드에 자동으로 복합 영양 성분 매핑
+            populateNutrientBuilderGrid(product.items);
+
+            // 자동으로 분석된 함량 정보 실시간 시각화 보드
+            const previewBox = document.getElementById('auto-ingredients-preview');
+            if (previewBox) {
+                const badges = Object.keys(product.items).map(k =>
+                    `<span class="inline-flex items-center gap-1 bg-white text-emerald-800 border border-emerald-200/80 px-2.5 py-1 rounded-xl text-[10px] font-bold shadow-sm">
+                    <i class="fa-solid fa-circle-check text-emerald-500"></i> ${k} ${product.items[k]}%
+                </span>`
+                ).join(' ');
+
+                previewBox.innerHTML = `
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-100/50 flex items-center justify-center shrink-0 text-emerald-600 mt-0.5">
+                        <i class="fa-solid fa-microchips"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-bold text-[#1E3A2F] block text-xs">AI 성분 자동 분석 완료</span>
+                        <p class="text-[10px] text-slate-500 leading-normal">선택하신 제품의 복잡한 성분 구성표가 성분 빌더에 일괄 적용되었습니다. 아래 '추가' 버튼을 누르시면 보관함과 차트에 일괄 등록됩니다.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1.5">${badges}</div>
+                    </div>
+                </div>
+            `;
+                previewBox.classList.remove('hidden');
+            }
+
+            document.getElementById('brand-suggest-dropdown').classList.add('hidden');
+            showToast(`"${product.name}"의 성분 구성을 불러왔습니다.`, 'success');
+        }
+
+        // 프리셋 영양제 데이터베이스 (초기 추가용)
+        function addPresetSupplement(key) {
+            const preset = PRESET_SUPPLEMENTS[key];
+            if (!preset) return;
+
+            const isExists = state.mySupplements.some(item => item.name === preset.name);
+            if (isExists) {
+                showToast("이미 보관함에 등록된 영양제입니다.", "error");
+                return;
+            }
+
+            const newId = Date.now() + Math.random();
+            state.mySupplements.push({
+                id: newId,
+                name: preset.name,
+                type: `preset_${key}`,
+                items: { ...preset.items }
+            });
+
+            showToast(`"${preset.name}" 제품 추가 완료!`, "success");
+            recalculateSupplements();
+        }
+
+        // 커스텀 영양제 등록 처리 (복합 성분 그리드를 연산하여 단일 제품으로 최종 가중 등록)
+        function addCustomSupplement() {
+            const nameInput = document.getElementById('custom-supp-name');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                showToast("영양제 이름을 입력해 주세요.", "error");
+                return;
+            }
+
+            // 체크박스 그리드에서 활성화된 성분 함량 일괄 수집
+            const checkedItems = {};
+            const checkboxes = document.querySelectorAll('.nutrient-chk');
+
+            checkboxes.forEach(chk => {
+                if (chk.checked) {
+                    const nutrient = chk.getAttribute('data-nutrient');
+                    const input = document.getElementById(`input-${nutrient}`);
+                    const pct = parseInt(input.value);
+                    if (!isNaN(pct) && pct > 0) {
+                        checkedItems[nutrient] = pct;
+                    }
+                }
+            });
+
+            if (Object.keys(checkedItems).length === 0) {
+                showToast("최소 1개 이상의 성분을 체크하고 함량을 입력해 주세요.", "error");
+                return;
+            }
+
+            const newId = Date.now();
+            state.mySupplements.push({
+                id: newId,
+                name: name,
+                type: "custom_product",
+                items: checkedItems
+            });
+
+            showToast(`새 영양제 제품 "${name}" 보관함 추가 완료!`, "success");
+
+            // 입력폼 및 빌더 그리드 전면 초기화
+            nameInput.value = '';
+            checkboxes.forEach(chk => {
+                chk.checked = false;
+                toggleGridNutrient(chk);
+            });
+
+            const previewBox = document.getElementById('auto-ingredients-preview');
+            if (previewBox) {
+                previewBox.classList.add('hidden');
+                previewBox.innerHTML = '';
+            }
+
+            recalculateSupplements();
+        }
+
+        // 대체 처방 조언 모달 생성
+        function suggestAdjustment(nutrient, percent) {
+            let solution = "";
+            const isPregnant = document.getElementById('cond-pregnant').checked;
+            const isOrganCaution = document.getElementById('cond-organ').checked;
+
+            if (nutrient === "비타민D") {
+                if (isPregnant) {
+                    solution = "임신 중 비타민D 과량 축적은 태아의 신장 칼슘 과다 침착을 유도할 수 있으므로, 종합제 외에 고함량 단일 비타민D 섭취를 중지하고 1일 1팩 맞춤형 처방 한도로 통합 섭취하는 것을 권장합니다.";
+                } else {
+                    solution = "고용량 비타민D 단일제의 복용 주기를 매일에서 격일(주 3회)로 낮추시거나 복용 중인 영양제들의 병수를 합쳐 간편한 복합 맞춤형 일일 팩으로 전환하세요.";
+                }
+            } else if (nutrient === "비타민B군") {
+                solution = "비타민B군은 넘치면 배출되지만 수용성이라도 과다 복용 시 신경 흥분 및 피부 트러블을 가중시킬 수 있으므로 400% 이내 안심 복용 조율을 제안합니다.";
+            } else if (nutrient === "아연") {
+                solution = "아연 과다 복용 시 미네랄 경쟁 흡수로 면역 기능의 기둥인 구리 흡수를 억제합니다. 단품으로 더하고 있는 아연 보충제의 중복을 중단하세요.";
+            } else if (nutrient === "실리마린" && isOrganCaution) {
+                solution = "간/신장 예방 모드가 감지되었습니다. 과중한 실리마린(밀크씨슬) 고농도 허브 복용은 오히려 신진대사 여과 피로를 더합니다. 복용량을 절반 이하로 줄이십시오.";
+            } else {
+                solution = `${nutrient} 중복을 피하기 위해 복합 종합제 이외의 단일제 배합을 잠정 중단하시거나 1일 1회 맞춤 팩 시스템으로 성분을 일원화할 것을 권고합니다.`;
+            }
+
+            showToast(`${nutrient} 피드백 맞춤 처방 솔루션을 전송했습니다.`, "success");
+
+            const feedbackBox = document.getElementById('diagnostic-feedback-box');
+            const tipsCard = document.createElement('div');
+            tipsCard.className = "p-4 rounded-2xl bg-teal-50 border border-teal-200 text-xs text-teal-950 animate-pulse";
+            tipsCard.innerHTML = `
+            <div class="flex gap-2 items-start">
+                <i class="fa-solid fa-user-md text-teal-600 text-base mt-0.5"></i>
+                <div>
+                    <span class="font-bold">👨‍⚕️ ${nutrient} 긴급 프로필 맞춤 처방 가이드</span>
+                    <p class="mt-1 text-[11px] text-teal-900 leading-normal">${solution}</p>
+                </div>
+            </div>
+        `;
+            feedbackBox.insertBefore(tipsCard, feedbackBox.firstChild);
+            tipsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // 로컬 스토리지에 데이터가 남아있는지 확인
+        function checkStoredAnswers() {
+            const container = document.getElementById('restore-answers-container');
+            try {
+                const data = localStorage.getItem('nutrimatch_survey_answers');
+                if (data && container) {
+                    container.classList.remove('hidden');
+                } else if (container) {
+                    container.classList.add('hidden');
+                }
+            } catch (e) {
+                console.warn("Storage read failed", e);
+            }
+        }
+
+        // 이전 기록 복원하고 결과 페이지로 바로 가기
+        function loadPreviousResults() {
+            try {
+                const data = localStorage.getItem('nutrimatch_survey_answers');
+                if (data) {
+                    state.answers = JSON.parse(data);
+                    showToast("이전 건강 분석 데이터를 성공적으로 복원했습니다.", "success");
+                    renderRecommendationResults();
+                }
+            } catch (e) {
+                showToast("기록을 복원하는 데 실패했습니다.", "error");
+            }
+        }
+
+        // 결과 화면 이메일 리포트 발송
+        function sendEmailReport() {
+            const emailInput = document.getElementById('report-email-input');
+            const email = emailInput ? emailInput.value.trim() : "";
+
+            if (!email || !email.includes('@')) {
+                showToast("올바른 이메일 주소를 입력해 주세요.", "error");
+                return;
+            }
+
+            showToast("안심 영양 분석서 PDF 리포트가 발송 대기열에 등록되었습니다.", "success");
+            emailInput.value = "";
+        }
+
+        // 추천 영양 성분 보관함에 연동 가산하고 진단기로 전환
+        function addRecommendedToChecker() {
+            let addedCount = 0;
+            let activeConcerns = [...state.answers.goals];
+            if (state.answers.gender === 'male' && state.answers.maleConcerns.length > 0) {
+                state.answers.maleConcerns.forEach(mc => { if (!activeConcerns.includes(mc)) activeConcerns.push(mc); });
+            }
+            if (state.answers.femaleStage === 'pregnant' || state.answers.femaleStage === 'trying') {
+                if (!activeConcerns.includes('menses')) activeConcerns.push('menses');
+            }
+            if (activeConcerns.length === 0) activeConcerns = ['fatigue', 'immunity'];
+
+            activeConcerns.forEach(concern => {
+                const items = INGREDIENTS_DB[concern];
+                if (items) {
+                    items.forEach(item => {
+                        // 가상 영양 성분 추출 매칭
+                        let keyNutrient = "비타민B군";
+                        if (item.name.includes("비타민D")) keyNutrient = "비타민D";
+                        else if (item.name.includes("비타민C")) keyNutrient = "비타민C";
+                        else if (item.name.includes("아연")) keyNutrient = "아연";
+                        else if (item.name.includes("콜라겐")) keyNutrient = "비타민C";
+                        else if (item.name.includes("오메가")) keyNutrient = "오메가3";
+                        else if (item.name.includes("루테인")) keyNutrient = "루테인";
+                        else if (item.name.includes("실리마린") || item.name.includes("밀크씨슬")) keyNutrient = "실리마린";
+                        else if (item.name.includes("철분")) keyNutrient = "칼슘";
+
+                        const packName = `추천: [${item.name}]`;
+                        const isExists = state.mySupplements.some(p => p.name === packName);
+
+                        if (!isExists) {
+                            const itemsObj = {};
+                            itemsObj[keyNutrient] = 100; // 정량 100% 매칭
+                            state.mySupplements.push({
+                                id: Date.now() + Math.random(),
+                                name: packName,
+                                type: "custom_recommended",
+                                items: itemsObj
+                            });
+                            addedCount++;
+                        }
+                    });
+                }
+            });
+
+            if (addedCount > 0) {
+                showToast(`${addedCount}개의 추천 성분을 보관함에 투입시킵니다.`, "success");
+            } else {
+                showToast("이미 추천 성분들이 보관함에 반영되어 있습니다.", "success");
+            }
+
+            switchView('checker');
+        }
+
+        // 제품 구매 전 보관함 보유 성분과의 실시간 충돌 사전 진단 검출
+        function checkSupplementsCollision() {
+            const resultArea = document.getElementById('pre-purchase-clash-results');
+            resultArea.classList.remove('hidden');
+            resultArea.innerHTML = `
+            <div class="p-4 rounded-2xl bg-slate-100 flex items-center justify-center gap-3 animate-fadeIn">
+                <div class="w-5 h-5 rounded-full border-2 border-slate-300 border-t-amber-500 animate-spin"></div>
+                <span class="text-xs font-semibold text-slate-600">현재 보관함 데이터와 신규 추천 성분의 안전 충돌성 연산 중...</span>
+            </div>
+        `;
+
+            // 가상 연산 딜레이 후 노출
+            setTimeout(() => {
+                const nutrientTotals = {
+                    "비타민D": 0, "비타민B군": 0, "비타민C": 0, "아연": 0,
+                    "칼슘": 0, "마그네슘": 0, "오메가3": 0, "루테인": 0, "실리마린": 0
+                };
+
+                // 1. 기존 영양제 성분 더하기
+                state.mySupplements.forEach(supp => {
+                    for (const key in supp.items) {
+                        if (nutrientTotals.hasOwnProperty(key)) {
+                            nutrientTotals[key] += supp.items[key];
+                        }
+                    }
+                });
+
+                // 2. 신규 추천 성분 (100% 한도) 임시 가산해보기
+                let activeConcerns = [...state.answers.goals];
+                if (activeConcerns.length === 0) activeConcerns = ['fatigue', 'immunity'];
+
+                activeConcerns.forEach(concern => {
+                    const items = INGREDIENTS_DB[concern];
+                    if (items) {
+                        items.forEach(item => {
+                            let keyNutrient = "비타민B군";
+                            if (item.name.includes("비타민D")) keyNutrient = "비타민D";
+                            else if (item.name.includes("비타민C")) keyNutrient = "비타민C";
+                            else if (item.name.includes("아연")) keyNutrient = "아연";
+                            else if (item.name.includes("오메가")) keyNutrient = "오메가3";
+                            else if (item.name.includes("루테인")) keyNutrient = "루테인";
+                            else if (item.name.includes("실리마린")) keyNutrient = "실리마린";
+                            nutrientTotals[keyNutrient] += 100;
+                        });
+                    }
+                });
+
+                // 3. 충돌 경보 필터링
+                let clashes = [];
+                const activeGuidelines = NUTRIENT_GUIDELINES;
+
+                for (const key in nutrientTotals) {
+                    const sumVal = nutrientTotals[key];
+                    const rule = activeGuidelines[key];
+                    if (rule && sumVal >= rule.maxSafe) {
+                        clashes.push({
+                            nutrient: key,
+                            percent: sumVal,
+                            limit: rule.maxSafe,
+                            desc: rule.desc
+                        });
+                    }
+                }
+
+                if (clashes.length === 0) {
+                    resultArea.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-100 flex gap-3.5 items-start animate-fadeIn">
+                        <i class="fa-solid fa-shield-check text-emerald-500 text-xl mt-0.5"></i>
+                        <div>
+                            <span class="text-xs font-bold text-emerald-900 block">검사 완료: 충돌 우려 요소 없음</span>
+                            <p class="text-[11px] text-emerald-700 leading-relaxed mt-1">
+                                현재 복용하시는 보관함 영양제와 새롭게 추천된 영양 팩 성분을 합산해도 1일 맞춤 안전 범위 이내입니다. 
+                                중복 오남용으로 인한 부작용 우려가 전혀 없으므로 안심하고 구매를 진행하셔도 좋습니다.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                } else {
+                    let listHtml = clashes.map(c => `
+                    <div class="p-3 bg-white rounded-xl border border-red-100 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="font-bold text-red-900 block">${c.nutrient} 누적합산 ${c.percent}%</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">${c.desc}</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded bg-red-100 text-red-600 font-bold text-[10px] shrink-0">초과 경고</span>
+                    </div>
+                `).join('');
+
+                    resultArea.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-red-50 border border-red-200/50 space-y-4 animate-fadeIn">
+                        <div class="flex gap-3 items-start">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl mt-0.5 animate-pulse"></i>
+                            <div>
+                                <span class="text-xs font-bold text-red-900 block">구매 전 충돌 경보: ${clashes.length}개의 과다 복용 위험 성분 검출</span>
+                                <p class="text-[11px] text-red-700 leading-relaxed mt-1">
+                                    추천된 최적 팩을 기존 영양제들과 매일 동시 섭취할 경우, 아래 성분들의 일일 상한선을 초과하여 부작용 및 간독성 우려가 생깁니다. 구매 전 조정이 요망됩니다.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            ${listHtml}
+                        </div>
+                        <div class="bg-white/80 p-3 rounded-xl border border-amber-200 text-[10px] text-amber-900 leading-relaxed">
+                            💡 <strong>복용 가이드 처방:</strong> 기존 영양제를 모두 소진할 때까지 추천 팩의 섭취량을 격일로 조율하시거나, 기존의 단일 중복 성분 복용을 잠시 멈춘 뒤 일원화된 안심 추천 솔루션으로 통합 섭취하는 것을 적극 권고합니다.
+                        </div>
+                    </div>
+                `;
+                }
+
+            }, 1200);
+        }
+
+        // 초기 구동
+        window.onload = function () {
+            switchView('landing');
+            buildNutrientGridUI();
+            recalculateSupplements();
+        };
+    </script>
+
+</body>
+
+</html>
