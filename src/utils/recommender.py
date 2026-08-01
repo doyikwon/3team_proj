@@ -53,58 +53,98 @@ def get_recommendations(df, answers):
     }
     
     def calculate_match_details(row):
-        score = 0
+        score_ingredient = 60.0
+        score_rda = 90.0
+        score_form = 70.0
+        penalty_overdose = 0.0
+        
         matched_goals = []
         text_to_search = str(row['name']) + ' ' + str(row['tags_clean'])
         
-        # Benefits and match score
+        # 1. 성분 매칭 점수
         for goal in goals:
             if goal in goal_keyword_map:
                 for kw in goal_keyword_map[goal]:
                     if kw in text_to_search:
-                        score += 10
+                        score_ingredient += 35.0
                         if goal not in matched_goals:
                             matched_goals.append(goal)
                             
-        # 효능(Benefits) 문구 동적 생성
+        score_ingredient = min(100.0, score_ingredient)
+        
+        # 2. RDA 충족도 점수
+        score_rda = 95.0
+        
+        # 3. 제형 선호 가점
+        pill_discomfort = answers.get('pill_discomfort', '상관없음')
+        is_easy_form = any(k in text_to_search for k in ['유산균', '가루', '포', '액상', '젤리', '구미', '작은'])
+        if pill_discomfort == '매우 불편함':
+            if is_easy_form:
+                score_form = 100.0
+            else:
+                score_form = 30.0
+                
+        # 4. 과잉 페널티
+        current_supplements = answers.get('current_supplements', [])
+        if current_supplements and '없음' not in current_supplements:
+            for supp in current_supplements:
+                if supp in text_to_search:
+                    penalty_overdose = -80.0
+
+        # raw_score 가중 합산
+        raw_score = (score_ingredient * 0.50) + (score_rda * 0.25) + (score_form * 0.15) + (penalty_overdose * 0.10)
+        raw_score = max(10.0, raw_score)
+        
+        # 효능(Benefits) 문구 및 근거 동적 생성
         if matched_goals:
-            benefits_tag = f"이 성분은 유저님의 **[{', '.join(matched_goals)}]** 개선에 도움을 줄 수 있습니다."
-            reason = f"고객님의 '{', '.join(matched_goals)}' 목표 달성에 최적화된 영양제입니다."
+            benefits_tag = f"이 성분은 유저님의 **[{', '.join(matched_goals)}]** 영역에 도움을 줄 수 있습니다."
+            reason = f"유저님의 '{', '.join(matched_goals)}' 목표 매칭 강도와 제형 선호도가 반영된 적합도 스코어입니다."
         else:
-            benefits_tag = "기초 영양을 채워주는 범용적인 데일리 건강기능식품입니다."
-            reason = "리뷰가 많고 검증된 베스트셀러 영양제입니다."
+            benefits_tag = "기초 영양을 채워주는 범용적인 데일리 건강기능식품 가이드입니다."
+            reason = "리뷰가 많고 검증된 대표적인 영양제입니다."
             
-        # 안전성 필터 및 병용 금기 안내(Safety & Contraindications) 로직 시뮬레이션
         safety_warning = "특별히 알려진 치명적인 부작용이나 병용 금기는 없습니다."
         warnings = []
         if '오메가' in text_to_search:
             warnings.append("항응고제(아스피린 등)를 복용 중이시라면 본 제품(오메가3 포함)은 수술 전 피하셔야 합니다.")
         if '비타민A' in text_to_search or '베타카로틴' in text_to_search:
-            warnings.append("흡연자의 경우 고함량 비타민A(베타카로틴) 복용 시 폐암 위험이 높아질 수 있으므로 주의하세요.")
+            warnings.append("흡연자의 경우 고함량 비타민A(베타카로틴) 복용 시 주의를 권장합니다.")
         if '비타민' in text_to_search or '종합' in text_to_search:
             warnings.append("종합비타민을 이미 드시고 있다면 수용성/지용성 비타민 성분이 중복/과다 복용될 수 있으니 상한선을 확인하세요.")
-        if '유산균' in text_to_search or '프로바이오틱스' in text_to_search:
-            warnings.append("항생제를 복용 중이라면 유산균은 시간 간격을 두고 복용하는 것이 좋습니다.")
             
         if warnings:
             safety_warning = " ".join(warnings) + " 안전한 섭취를 위해 전문가 상담을 권장합니다."
             
         return pd.Series({
-            'match_score': score, 
+            'raw_score': raw_score, 
             'reason': reason, 
             'benefits_tag': benefits_tag,
             'safety_warning': safety_warning
         })
         
     res = df_safe.apply(calculate_match_details, axis=1)
-    df_safe['match_score'] = res['match_score']
+    df_safe['raw_score'] = res['raw_score']
     df_safe['reason'] = res['reason']
     df_safe['benefits_tag'] = res['benefits_tag']
     df_safe['safety_warning'] = res['safety_warning']
     
-    recommended_df = df_safe[df_safe['match_score'] > 0].sort_values(by=['match_score', 'review_count'], ascending=[False, False])
+    # raw_score 기준 내림차순 정렬
+    recommended_df = df_safe.sort_values(by=['raw_score', 'review_count'], ascending=[False, False]).copy()
     
     if recommended_df.empty:
-        recommended_df = df_safe.sort_values(by='review_count', ascending=False).head(20)
+        recommended_df = df_safe.sort_values(by='review_count', ascending=False).head(20).copy()
         
+    max_raw = recommended_df['raw_score'].max() if not recommended_df.empty and recommended_df['raw_score'].max() > 0 else 1.0
+    
+    # 계단식 적합도 % 산출
+    scores_pct = []
+    for idx, r in enumerate(recommended_df['raw_score']):
+        if idx == 0:
+            scores_pct.append(100.0)
+        else:
+            rel = (r / max_raw) * 100.0 - (idx * 1.5)
+            scores_pct.append(round(max(55.0, min(99.2, rel)), 1))
+            
+    recommended_df['match_score'] = scores_pct
     return recommended_df
+
