@@ -1,9 +1,9 @@
 """
 NutriMatch (NutriFit) 통합 멀티페이지 대시보드 진입점 (app.py)
-작성자: Antigravity
+작성자: Antigravity & 별별
 역할: Streamlit 통합 실행 진입점
  - 페이지 1: "맞춤 진단" (html_app/index.html 전체 렌더링)
- - 페이지 2: "데이터 분석" (팀원 봄이 담당 파이썬 분석 뼈대)
+ - 페이지 2: "데이터 분석" (팀원 봄이 담당 파이썬 분석 및 랭킹 엔진)
 """
 
 import streamlit as st
