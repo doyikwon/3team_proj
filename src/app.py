@@ -50,7 +50,34 @@ def render_custom_care_page():
             margin: 0 auto !important;
         }
         
-        header { display: none !important; }
+        /* 헤더 전체 숨김 대신 상단 장식선만 숨겨 사이드바 펼치기 버튼([data-testid="stSidebarCollapsedControl"]) 표시 보장 */
+        header[data-testid="stHeader"] {
+            background-color: transparent !important;
+            z-index: 9999 !important;
+            height: 3rem !important;
+        }
+
+        [data-testid="stHeaderDecoration"] {
+            display: none !important;
+        }
+
+        /* 사이드바 접기/펼치기 버튼 강제 표시 및 포레스트그린 스타일링 */
+        [data-testid="stSidebarCollapsedControl"],
+        [data-testid="stSidebarCollapseButton"] {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: 10000 !important;
+        }
+
+        [data-testid="stSidebarCollapsedControl"] button,
+        [data-testid="stSidebarCollapseButton"] button,
+        [data-testid="stSidebarCollapsedControl"] span,
+        [data-testid="stSidebarCollapseButton"] span {
+            color: #1E3A2F !important;
+            font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
+        }
+
         footer { display: none !important; }
         
         .stApp { 
