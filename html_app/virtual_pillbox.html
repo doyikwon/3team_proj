@@ -379,6 +379,22 @@
         }
     }
 
+    function togglePillHistory(id, year, month, day) {
+        const item = supplementsState.find(s => s.id === id);
+        if (item) {
+            if (!item.history) item.history = {};
+            const dateKey = `${year}-${month}-${day}`;
+            item.history[dateKey] = !item.history[dateKey];
+            
+            // 로컬 스토리지에 업데이트 반영 (옵션)
+            try {
+                localStorage.setItem('nutrimatch_my_supplements', JSON.stringify(supplementsState));
+            } catch (e) {}
+
+            renderHabitTracker();
+        }
+    }
+
     function togglePillTaken(id) {
         const item = supplementsState.find(s => s.id === id);
         if (item) {
@@ -447,16 +463,16 @@
                         // 복용 시작일 이전 (비활성화 처리)
                         cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100/40 border border-slate-200/50 text-slate-300" title="복용 시작 전"><i class="fa-solid fa-ban text-[8px] opacity-20"></i></div>`;
                     } else if (cellDate < pastThreshold) {
-                        // 과거 (고정된 시드 기반 가짜 데이터 생성)
+                        // 과거 (기본 미복용, 수기 클릭으로 토글 가능)
                         rowTotalDays++;
-                        const seed = supp.id * 100 + day + currentTrackerMonth * 31;
-                        const taken = Math.abs(Math.sin(seed)) > 0.2; // 80% 확률로 섭취
+                        const dateKey = `${currentTrackerYear}-${currentTrackerMonth}-${day}`;
+                        const taken = supp.history && supp.history[dateKey] === true;
                         
                         if (taken) {
                             rowTakenCount++;
-                            cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+                            cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 hover:bg-emerald-400 transition" title="클릭하여 복용 취소"><i class="fa-solid fa-check text-[10px]"></i></div>`;
                         } else {
-                            cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100 text-slate-300"><i class="fa-solid fa-minus text-[10px]"></i></div>`;
+                            cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100 text-slate-300 hover:bg-slate-200 transition" title="클릭하여 복용 체크"><i class="fa-solid fa-plus text-[10px] opacity-50"></i></div>`;
                         }
                     } else if (isToday) {
                         // 오늘 (현재 상태 실시간 반영)
