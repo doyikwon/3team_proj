@@ -119,6 +119,10 @@
                     class="font-medium text-[#10B981] hover:text-[#0f9f6e] flex items-center gap-1.5 transition font-bold">
                     <i class="fa-solid fa-triangle-exclamation"></i> 내 영양제 초과 섭취 체크
                 </a>
+                <a href="#" onclick="const p = window.parent.document; const link = Array.from(p.querySelectorAll('a')).find(e => e.textContent.includes('가상 약통')); if(link) link.click(); else window.parent.location.href='/가상_약통';"
+                    class="font-medium text-slate-600 hover:text-[#1E3A2F] transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-pills text-[#10B981]"></i> 가상 약통
+                </a>
                 <a href="#" onclick="showToast('준비 중인 서비스입니다.')"
                     class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">커뮤니티</a>
             </nav>
