@@ -182,6 +182,44 @@
         </div>
 
     </div>
+
+    <!-- 3. 해빗 트래커 (월별 복용 현황) -->
+    <div class="mt-12 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-300 to-teal-400"></div>
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-check text-[#10B981]"></i> 월별 복용 현황
+                </h3>
+                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">이번 달 나의 건강 관리 달성 기록입니다.</p>
+            </div>
+            <div class="text-sm font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100" id="habit-month-label">
+                8월
+            </div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-2 sm:gap-3 text-center" id="habit-tracker-grid">
+            <!-- 요일 헤더 -->
+            <div class="text-[10px] font-bold text-rose-400 mb-1">일</div>
+            <div class="text-[10px] font-bold text-slate-400 mb-1">월</div>
+            <div class="text-[10px] font-bold text-slate-400 mb-1">화</div>
+            <div class="text-[10px] font-bold text-slate-400 mb-1">수</div>
+            <div class="text-[10px] font-bold text-slate-400 mb-1">목</div>
+            <div class="text-[10px] font-bold text-slate-400 mb-1">금</div>
+            <div class="text-[10px] font-bold text-blue-400 mb-1">토</div>
+            <!-- 달력 셀들이 여기에 렌더링됨 -->
+        </div>
+        
+        <div class="mt-6 flex flex-wrap items-center justify-end gap-3 text-[10px] text-slate-400 font-medium">
+            <span>달성도:</span>
+            <div class="flex items-center gap-1.5">
+                <div class="w-3.5 h-3.5 rounded bg-slate-100"></div> <span class="mr-1">0%</span>
+                <div class="w-3.5 h-3.5 rounded bg-emerald-200"></div> <span class="mr-1">일부 달성</span>
+                <div class="w-3.5 h-3.5 rounded bg-emerald-400"></div> <span class="mr-1">우수</span>
+                <div class="w-3.5 h-3.5 rounded bg-emerald-600 shadow-sm shadow-emerald-400/50"></div> <span>100% 완벽!</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- 토스트 메세지 노드 -->
@@ -321,8 +359,66 @@
         }
     }
 
+    // 해빗 트래커 렌더링 함수
+    function renderHabitTracker() {
+        const grid = document.getElementById('habit-tracker-grid');
+        const monthLabel = document.getElementById('habit-month-label');
+        
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const todayDate = now.getDate();
+        
+        monthLabel.textContent = `${month + 1}월`;
+
+        // 이번 달 1일의 요일 (0: 일, 1: 월, ... 6: 토)
+        const firstDay = new Date(year, month, 1).getDay();
+        // 이번 달의 총 일수
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // 빈 칸(이전 달) 채우기
+        for (let i = 0; i < firstDay; i++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = "aspect-square rounded-xl bg-transparent";
+            grid.appendChild(emptyCell);
+        }
+
+        // 실제 일수 채우기 (과거는 랜덤 목업 데이터)
+        for (let day = 1; day <= daysInMonth; day++) {
+            const cell = document.createElement('div');
+            
+            let bgClass = "bg-slate-100/70 border border-slate-200/50 text-slate-400"; // 기본 (미래 또는 복용 안함)
+            
+            if (day < todayDate) {
+                // 과거: 랜덤으로 달성도 부여 (시연용)
+                const rand = Math.random();
+                if (rand > 0.3) {
+                    bgClass = "bg-emerald-600 text-white font-bold shadow-md shadow-emerald-500/30"; // 100%
+                } else if (rand > 0.1) {
+                    bgClass = "bg-emerald-400 text-emerald-900 font-bold"; // 50~90%
+                } else {
+                    bgClass = "bg-emerald-200 text-emerald-800 font-bold"; // 조금 달성
+                }
+            } else if (day === todayDate) {
+                // 오늘: 현재 supplementsState 기반 계산 필요 (일단 기본 회색 주고 나중에 업데이트 기능 추가 가능)
+                bgClass = "bg-white border-2 border-emerald-400 text-emerald-600 font-black ring-4 ring-emerald-50 relative";
+            }
+
+            cell.className = `aspect-square rounded-xl flex items-center justify-center text-[11px] sm:text-xs transition-all hover:scale-105 cursor-default ${bgClass}`;
+            cell.innerHTML = `<span>${day}</span>`;
+            
+            // 오늘 날짜에 반짝이는 효과 추가
+            if (day === todayDate) {
+                cell.innerHTML += `<div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping"></div><div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white"></div>`;
+            }
+
+            grid.appendChild(cell);
+        }
+    }
+
     window.onload = function() {
         renderVirtualPillbox();
+        renderHabitTracker();
     };
 </script>
 </div>
