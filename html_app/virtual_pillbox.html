@@ -38,8 +38,35 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-8 min-h-screen">
+<body class="bg-[#FAF9F6] min-h-screen">
 
+    <!-- 헤더 네비게이션 (index.html과 동일한 디자인) -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm mb-6">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- 로고 영역 -->
+            <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-[#1E3A2F] flex items-center justify-center text-white">
+                    <i class="fa-solid fa-seedling text-lg text-[#10B981]"></i>
+                </div>
+                <span class="font-serif text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span class="text-[#10B981]">Match</span></span>
+            </a>
+
+            <!-- 네비게이션 메뉴 -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">소개</a>
+                <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">맞춤형 영양제 추천</a>
+                <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition flex items-center gap-1.5 font-bold">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 내 영양제 초과 섭취 체크
+                </a>
+                <a href="#" class="font-medium text-[#10B981] flex items-center gap-1.5 transition font-bold">
+                    <i class="fa-solid fa-pills text-[#10B981]"></i> 가상 약통
+                </a>
+                <a href="#" onclick="alert('준비 중인 서비스입니다.')" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">커뮤니티</a>
+            </nav>
+        </div>
+    </header>
+
+<div class="p-4 sm:p-8">
 <div class="max-w-7xl mx-auto space-y-8">
 
     <!-- 1. 가상 약통 대시보드 메인 헤더 -->
@@ -287,5 +314,6 @@
         renderVirtualPillbox();
     };
 </script>
+</div>
 </body>
 </html>
