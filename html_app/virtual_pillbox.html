@@ -127,8 +127,8 @@
         </div>
     </div>
 
-    <!-- 2. 시간대별 3단계 타임라인 그리드 -->
-    <div class="grid lg:grid-cols-3 gap-8 items-start">
+    <!-- 2. 시간대별 4단계 타임라인 그리드 -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
 
         <!-- STEP 1. 아침 공복 (Amber) -->
         <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-amber-200/80 hover:border-amber-400 transition duration-300 space-y-5 relative">
@@ -147,27 +147,44 @@
             <div id="pillbox-morning-list" class="space-y-3.5 min-h-[160px]"></div>
         </div>
 
-        <!-- STEP 2. 식사 직후 (Emerald) -->
+        <!-- STEP 2. 점심 식후 (Emerald) -->
         <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-emerald-200/80 hover:border-emerald-400 transition duration-300 space-y-5 relative">
             <div class="absolute -top-3 left-6 bg-gradient-to-r from-emerald-600 to-teal-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                <i class="fa-solid fa-utensils"></i> Step 2. 01:00 PM / 07:00 PM
+                <i class="fa-solid fa-utensils"></i> Step 2. 01:00 PM
             </div>
             <div class="flex items-center justify-between border-b border-emerald-100 pb-4 pt-1">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl shadow-inner border border-emerald-200/50">☀️</div>
                     <div>
-                        <h3 class="font-bold text-slate-900 text-base">식사 직후 (점심·저녁)</h3>
-                        <span class="text-[11px] text-emerald-700 font-semibold block">담즙산 연동 지용성 흡수 +300%</span>
+                        <h3 class="font-bold text-slate-900 text-base">점심 식후</h3>
+                        <span class="text-[11px] text-emerald-700 font-semibold block">활력 충전 및 수용성 비타민 흡수</span>
                     </div>
                 </div>
             </div>
-            <div id="pillbox-afternoon-list" class="space-y-3.5 min-h-[160px]"></div>
+            <div id="pillbox-lunch-list" class="space-y-3.5 min-h-[160px]"></div>
         </div>
 
-        <!-- STEP 3. 취침 30분 전 (Indigo) -->
+        <!-- STEP 3. 저녁 식후 (Blue) -->
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-blue-200/80 hover:border-blue-400 transition duration-300 space-y-5 relative">
+            <div class="absolute -top-3 left-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                <i class="fa-solid fa-mug-hot"></i> Step 3. 07:00 PM
+            </div>
+            <div class="flex items-center justify-between border-b border-blue-100 pb-4 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-2xl shadow-inner border border-blue-200/50">🍽️</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">저녁 식후</h3>
+                        <span class="text-[11px] text-blue-700 font-semibold block">담즙산 연동 지용성 흡수 극대화</span>
+                    </div>
+                </div>
+            </div>
+            <div id="pillbox-dinner-list" class="space-y-3.5 min-h-[160px]"></div>
+        </div>
+
+        <!-- STEP 4. 취침 30분 전 (Indigo) -->
         <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-200/80 hover:border-indigo-400 transition duration-300 space-y-5 relative">
             <div class="absolute -top-3 left-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
-                <i class="fa-solid fa-moon"></i> Step 3. 10:00 PM
+                <i class="fa-solid fa-moon"></i> Step 4. 10:00 PM
             </div>
             <div class="flex items-center justify-between border-b border-indigo-100 pb-4 pt-1">
                 <div class="flex items-center gap-3">
@@ -226,8 +243,8 @@
         if (saved) {
             const parsed = JSON.parse(saved);
             supplementsState = parsed.map(supp => {
-                let timeSlot = 'afternoon';
-                let dosage = '1일 1회 1정 (식후)';
+                let timeSlot = 'lunch';
+                let dosage = '1일 1회 1정 (점심 식후)';
                 let priority = 'medium';
 
                 // 성분(이름) 기반 복용 시간 분석 로직
@@ -239,9 +256,13 @@
                     timeSlot = 'evening';
                     dosage = '1일 1회 1정 (취침전)';
                     priority = 'medium';
-                } else if (supp.name.includes('비타민') || supp.name.includes('오메가') || supp.name.includes('밀크씨슬') || supp.name.includes('루테인')) {
-                    timeSlot = 'afternoon';
-                    dosage = '1일 1회 1정 (식후)';
+                } else if (supp.name.includes('오메가') || supp.name.includes('루테인') || supp.name.includes('밀크씨슬')) {
+                    timeSlot = 'dinner';
+                    dosage = '1일 1회 1정 (저녁 식후)';
+                    priority = 'high';
+                } else {
+                    timeSlot = 'lunch';
+                    dosage = '1일 1회 1정 (점심 식후)';
                     priority = 'high';
                 }
 
@@ -274,14 +295,16 @@
     // 가상 약통 렌더링 함수
     function renderVirtualPillbox() {
         const morningList = document.getElementById('pillbox-morning-list');
-        const afternoonList = document.getElementById('pillbox-afternoon-list');
+        const lunchList = document.getElementById('pillbox-lunch-list');
+        const dinnerList = document.getElementById('pillbox-dinner-list');
         const eveningList = document.getElementById('pillbox-evening-list');
         const pctEl = document.getElementById('pillbox-completion-pct');
         const barEl = document.getElementById('pillbox-completion-bar');
         const statusMsgEl = document.getElementById('pillbox-status-msg');
 
         morningList.innerHTML = '';
-        afternoonList.innerHTML = '';
+        lunchList.innerHTML = '';
+        dinnerList.innerHTML = '';
         eveningList.innerHTML = '';
 
         let total = supplementsState.length;
@@ -328,8 +351,9 @@
             `;
 
             if (supp.timeSlot === 'morning') morningList.appendChild(card);
-            else if (supp.timeSlot === 'evening') eveningList.appendChild(card);
-            else afternoonList.appendChild(card);
+            else if (supp.timeSlot === 'lunch') lunchList.appendChild(card);
+            else if (supp.timeSlot === 'dinner') dinnerList.appendChild(card);
+            else eveningList.appendChild(card);
         });
 
         const pct = total > 0 ? Math.round((takenCount / total) * 100) : 0;
