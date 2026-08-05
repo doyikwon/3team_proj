@@ -21,9 +21,15 @@ def render_custom_care_page():
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
         
-        /* 본문 요소 폰트 적용 (Streamlit 내장 아이콘 폰트 제외) */
-        html, body, .stApp, p, div, span, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+        /* 본문 요소 폰트 및 자간 적용 (Streamlit 내장 아이콘 폰트 제외) */
+        html, body, .stApp, p, div, span, button, input, select, textarea {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            letter-spacing: -0.03em !important;
         }
 
         /* Streamlit Material Symbols 및 Icon 폰트 강제 보존 */
