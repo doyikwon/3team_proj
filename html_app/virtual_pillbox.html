@@ -42,9 +42,20 @@
 
     <!-- 헤더 네비게이션 (index.html과 동일한 디자인) -->
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm mb-6">
+        <script>
+            function goToMain() {
+                const p = window.parent.document;
+                const link = Array.from(p.querySelectorAll('a')).find(e => e.textContent.includes('맞춤 진단'));
+                if (link) {
+                    link.click();
+                } else {
+                    window.parent.location.href = '/';
+                }
+            }
+        </script>
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <!-- 로고 영역 -->
-            <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="flex items-center gap-2">
+            <a href="#" onclick="goToMain()" class="flex items-center gap-2">
                 <div class="w-10 h-10 rounded-xl bg-[#1E3A2F] flex items-center justify-center text-white">
                     <i class="fa-solid fa-seedling text-lg text-[#10B981]"></i>
                 </div>
@@ -53,9 +64,9 @@
 
             <!-- 네비게이션 메뉴 -->
             <nav class="hidden md:flex items-center gap-8">
-                <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">소개</a>
-                <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">맞춤형 영양제 추천</a>
-                <a href="#" onclick="window.parent.location.href='/?page=맞춤_진단'" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition flex items-center gap-1.5 font-bold">
+                <a href="#" onclick="goToMain()" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">소개</a>
+                <a href="#" onclick="goToMain()" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">맞춤형 영양제 추천</a>
+                <a href="#" onclick="goToMain()" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition flex items-center gap-1.5 font-bold">
                     <i class="fa-solid fa-triangle-exclamation"></i> 내 영양제 초과 섭취 체크
                 </a>
                 <a href="#" class="font-medium text-[#10B981] flex items-center gap-1.5 transition font-bold">
