@@ -1,9 +1,7 @@
 """
-NutriMatch (NutriFit) 통합 멀티페이지 대시보드 진입점 (app.py)
-작성자: Antigravity & 별별
-역할: Streamlit 통합 실행 진입점
- - 페이지 1: "맞춤 진단" (html_app/index.html 전체 렌더링)
- - 페이지 2: "데이터 분석" (팀원 봄이 담당 파이썬 분석 및 랭킹 엔진)
+NutriMatch 통합 멀티페이지 대시보드 진입점 (app.py)
+ - Pretendard 폰트 시스템 및 정돈된 베이지/포레스트그린 사이드바 톤앤매너 적용
+ - 사이드바-콘텐츠 좌우 대칭 여백 균형 최적화
 """
 
 import streamlit as st
@@ -20,15 +18,44 @@ st.set_page_config(
 def render_custom_care_page():
     st.markdown("""
     <style>
-        .block-container { 
-            padding: 0 !important; 
-            max-width: 100% !important; 
-            margin: 0 !important;
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+        
+        * {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
         }
+
+        /* 메인 컨테이너 여백 및 대칭 배치 (사이드바 간격 28px + 우측 대칭) */
+        .block-container { 
+            padding: 0.75rem 2rem 1.5rem 2rem !important; 
+            max-width: 100% !important; 
+            margin: 0 auto !important;
+        }
+        
         header { display: none !important; }
         footer { display: none !important; }
-        .stApp { background-color: #FAF9F6; }
-        iframe { border: none !important; width: 100% !important; }
+        
+        .stApp { 
+            background-color: #FAF9F6 !important; 
+        }
+        
+        /* 사이드바 대시보드 베이지 & 포레스트 그린 톤앤매너 조화 */
+        [data-testid="stSidebar"] {
+            background-color: #F4F2EC !important;
+            border-right: 1px solid #E5E2D8 !important;
+            padding-top: 1rem !important;
+        }
+        
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+        [data-testid="stSidebar"] span {
+            color: #1E3A2F !important;
+            font-weight: 600 !important;
+        }
+
+        /* iframe full width & 스크롤 유연성 */
+        iframe { 
+            border: none !important; 
+            width: 100% !important; 
+        }
     </style>
     """, unsafe_allow_html=True)
     
@@ -36,7 +63,7 @@ def render_custom_care_page():
     if os.path.exists(html_path):
         with open(html_path, "r", encoding="utf-8", errors="ignore") as f:
             html_data = f.read()
-        components.html(html_data, height=1400, scrolling=True)
+        components.html(html_data, height=1550, scrolling=False)
     else:
         st.error("HTML 대시보드 파일(html_app/index.html)을 찾을 수 없습니다.")
 
@@ -63,7 +90,7 @@ def render_virtual_pillbox_page():
     else:
         st.error("나의 약통 HTML 파일(html_app/virtual_pillbox.html)을 찾을 수 없습니다.")
 
-# Streamlit 최신 st.navigation API 사용 시도
+# Streamlit st.navigation API 구동
 if hasattr(st, "navigation") and hasattr(st, "Page"):
     page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
     page_2 = st.Page("pages/02_Data_Analysis.py", title="데이터 분석", icon="📊")
@@ -72,9 +99,8 @@ if hasattr(st, "navigation") and hasattr(st, "Page"):
     pg = st.navigation([page_1, page_3, page_2])
     pg.run()
 else:
-    # Streamlit pages/ 디렉토리 표준 및 사이드바 탭 폴백
-    st.sidebar.title("🌱 NutriMatch Navigation")
-    menu = st.sidebar.radio("메뉴 이동", ["맞춤 진단", "나의 약통", "데이터 분석"])
+    st.sidebar.title("🌱 NutriMatch")
+    menu = st.sidebar.radio("메뉴 선택", ["맞춤 진단", "나의 약통", "데이터 분석"])
     
     if menu == "맞춤 진단":
         render_custom_care_page()
@@ -86,6 +112,3 @@ else:
             with open(data_analysis_path, "r", encoding="utf-8") as f:
                 code = f.read()
             exec(code)
-        else:
-            st.title("📊 데이터 분석")
-            st.info("💡 데이터 분석 페이지 준비 중입니다. (팀원 봄이 작업 영역)")
