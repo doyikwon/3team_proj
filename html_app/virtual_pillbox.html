@@ -462,26 +462,29 @@
                     if (cellDate < supp.startDate) {
                         // 복용 시작일 이전 (비활성화 처리)
                         cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100/40 border border-slate-200/50 text-slate-300" title="복용 시작 전"><i class="fa-solid fa-ban text-[8px] opacity-20"></i></div>`;
-                    } else if (cellDate < pastThreshold) {
-                        // 과거 (기본 미복용, 수기 클릭으로 토글 가능)
+                    } else {
+                        // 복용 시작일 이후의 달성해야 할 전체 일수 누적 (미래 포함)
                         rowTotalDays++;
-                        const dateKey = `${currentTrackerYear}-${currentTrackerMonth}-${day}`;
-                        const taken = supp.history && supp.history[dateKey] === true;
-                        
-                        if (taken) {
-                            rowTakenCount++;
-                            cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 hover:bg-emerald-400 transition" title="클릭하여 복용 취소"><i class="fa-solid fa-check text-[10px]"></i></div>`;
-                        } else {
-                            cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100 text-slate-300 hover:bg-slate-200 transition" title="클릭하여 복용 체크"><i class="fa-solid fa-plus text-[10px] opacity-50"></i></div>`;
-                        }
-                    } else if (isToday) {
-                        // 오늘 (현재 상태 실시간 반영)
-                        rowTotalDays++;
-                        if (supp.taken) {
-                            rowTakenCount++;
-                            cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-[#10B981] text-white shadow-md shadow-emerald-500/30 ring-2 ring-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
-                        } else {
-                            cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-white border-2 border-emerald-300 text-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+
+                        if (cellDate < pastThreshold) {
+                            // 과거 (기본 미복용, 수기 클릭으로 토글 가능)
+                            const dateKey = `${currentTrackerYear}-${currentTrackerMonth}-${day}`;
+                            const taken = supp.history && supp.history[dateKey] === true;
+                            
+                            if (taken) {
+                                rowTakenCount++;
+                                cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 hover:bg-emerald-400 transition" title="클릭하여 복용 취소"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+                            } else {
+                                cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100 text-slate-300 hover:bg-slate-200 transition" title="클릭하여 복용 체크"><i class="fa-solid fa-plus text-[10px] opacity-50"></i></div>`;
+                            }
+                        } else if (isToday) {
+                            // 오늘 (현재 상태 실시간 반영)
+                            if (supp.taken) {
+                                rowTakenCount++;
+                                cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-[#10B981] text-white shadow-md shadow-emerald-500/30 ring-2 ring-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+                            } else {
+                                cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-white border-2 border-emerald-300 text-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+                            }
                         }
                     }
                     html += cellHtml;
