@@ -8,6 +8,22 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+    
+    * {
+        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+    }
+
+    .block-container { 
+        padding: 1.5rem 2.5rem 2rem 2.5rem !important; 
+        max-width: 100% !important; 
+    }
+    .stApp { background-color: #FAF9F6 !important; }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("📊 데이터 분석")
 st.caption("식품의약품안전처 및 보건복지부 한국인 영양소 섭취기준(KDRI) 기반 분석")
 
