@@ -119,13 +119,12 @@
                     class="font-medium text-[#10B981] hover:text-[#0f9f6e] flex items-center gap-1.5 transition font-bold">
                     <i class="fa-solid fa-triangle-exclamation"></i> 내 영양제 초과 섭취 체크
                 </a>
-                <a href="#" onclick="showToast('준비 중인 서비스입니다.')"
-                    class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">커뮤니티</a>
+                <a href="#" onclick="const p = window.parent.document; const link = Array.from(p.querySelectorAll('a')).find(e => e.textContent.includes('나의 약통') || e.textContent.includes('가상 약통')); if(link) link.click(); else window.parent.location.href='/나의_약통';"
+                    class="font-medium text-slate-600 hover:text-[#1E3A2F] transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-pills text-[#10B981]"></i> 나의 약통
+                </a>
             </nav>
 
-            <!-- 우측 액션 버튼 삭제됨 -->
-            <div class="flex items-center gap-4">
-            </div>
         </div>
     </header>
 
@@ -1246,7 +1245,7 @@
                 budget: '',
                 buyingType: ''
             },
-            mySupplements: [
+            mySupplements: JSON.parse(localStorage.getItem('nutrimatch_my_supplements')) || [
                 { id: 1, name: "얼라이브 종합비타민", type: "preset_multi", items: { "비타민C": 150, "비타민D": 100, "비타민B군": 150, "아연": 100, "칼슘": 30, "마그네슘": 20 } },
                 { id: 2, name: "솔가 고함량 비타민 D3", type: "preset_vitd", items: { "비타민D": 300, "칼슘": 10 } }
             ]
@@ -2695,6 +2694,7 @@
 
         // 내 보유 영양제 리스트 및 차트 동적 연산
         function recalculateSupplements() {
+            localStorage.setItem('nutrimatch_my_supplements', JSON.stringify(state.mySupplements));
             const listContainer = document.getElementById('my-supplements-list');
             const countBadge = document.getElementById('active-supp-count');
             const chartArea = document.getElementById('diagnose-chart-area');

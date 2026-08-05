@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 약통 (Virtual Pillbox Timeline)</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: '#1E3A2F',
+                        mint: '#10B981',
+                        cream: '#FAF9F6'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        serif: ['Lora', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] min-h-screen">
+
+    <!-- 헤더 네비게이션 (index.html과 동일한 디자인) -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm mb-6">
+        <script>
+            function goToMain() {
+                const p = window.parent.document;
+                const link = Array.from(p.querySelectorAll('a')).find(e => e.textContent.includes('맞춤 진단'));
+                if (link) {
+                    link.click();
+                } else {
+                    window.parent.location.href = '/';
+                }
+            }
+        </script>
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- 로고 영역 -->
+            <a href="#" onclick="goToMain()" class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-[#1E3A2F] flex items-center justify-center text-white">
+                    <i class="fa-solid fa-seedling text-lg text-[#10B981]"></i>
+                </div>
+                <span class="font-serif text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span class="text-[#10B981]">Match</span></span>
+            </a>
+
+            <!-- 네비게이션 메뉴 -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#" onclick="goToMain()" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">소개</a>
+                <a href="#" onclick="goToMain()" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">맞춤형 영양제 추천</a>
+                <a href="#" onclick="goToMain()" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition flex items-center gap-1.5 font-bold">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 내 영양제 초과 섭취 체크
+                </a>
+                <a href="#" class="font-medium text-[#10B981] flex items-center gap-1.5 transition font-bold">
+                    <i class="fa-solid fa-pills text-[#10B981]"></i> 나의 약통
+                </a>
+            </nav>
+        </div>
+    </header>
+
+<div class="p-4 sm:p-8">
+<div class="max-w-7xl mx-auto space-y-8">
+
+    <!-- 1. 가상 약통 대시보드 메인 헤더 -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-[#1E3A2F] via-[#162e25] to-slate-900 text-white p-6 sm:p-10 rounded-3xl shadow-2xl border border-emerald-500/20">
+        <!-- 배경 광원 효과 -->
+        <div class="absolute -right-16 -top-16 w-80 h-80 bg-[#10B981]/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-8 space-y-4">
+                <div class="flex items-center gap-2.5 flex-wrap">
+                    <span class="text-xs bg-[#10B981] text-slate-950 font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-lg shadow-emerald-500/30">
+                        <i class="fa-solid fa-pills text-sm"></i> Virtual Pillbox System
+                    </span>
+                    <span class="text-xs bg-white/10 text-emerald-300 font-bold px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-fire text-amber-400"></i> 연속 5일째 100% 복용 성공!
+                    </span>
+                </div>
+                
+                <h2 class="text-2xl sm:text-4xl font-extrabold font-serif tracking-tight leading-tight">
+                    내가 복용 중인 건강식품 <span class="text-[#10B981] underline decoration-emerald-400/50 decoration-wavy underline-offset-8">나의 약통</span>
+                </h2>
+                
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
+                    등록하신 실제 건강식품의 <strong>최적 생체 흡수 타임라인</strong>과 <strong>1일 섭취 기준량</strong>을 모니터링하고 복용 완료를 체크하세요.
+                </p>
+
+                <div class="pt-2">
+                    <button onclick="triggerPwaPushTest()" class="bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 font-bold px-4 py-2.5 rounded-xl text-xs transition flex items-center gap-2">
+                        <i class="fa-solid fa-bell text-amber-400 animate-bounce"></i> PWA 모바일 복용 알림 푸시 테스트
+                    </button>
+                </div>
+            </div>
+
+            <!-- 달성률 프로그레스 위젯 -->
+            <div class="lg:col-span-4 bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl text-center shadow-2xl relative">
+                <span id="today-date-label" class="text-[11px] text-emerald-300 uppercase font-mono font-bold tracking-widest block">오늘 복용 목표 달성률</span>
+                <div id="pillbox-completion-pct" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 my-2 font-serif">
+                    0%
+                </div>
+                <div class="w-full bg-slate-900/60 h-3.5 rounded-full overflow-hidden p-0.5 border border-white/10 shadow-inner">
+                    <div id="pillbox-completion-bar" class="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 h-full rounded-full transition-all duration-700 shadow-md" style="width: 0%;"></div>
+                </div>
+                <p id="pillbox-status-msg" class="text-[11px] text-slate-300 mt-3 font-medium">
+                    오늘 복용 체크가 남아있습니다 💊
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 시간대별 4단계 타임라인 그리드 -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+
+        <!-- STEP 1. 아침 공복 (Amber) -->
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-amber-200/80 hover:border-amber-400 transition duration-300 space-y-5 relative">
+            <div class="absolute -top-3 left-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                <i class="fa-solid fa-sun"></i> Step 1. 08:00 AM
+            </div>
+            <div class="flex items-center justify-between border-b border-amber-100 pb-4 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-2xl shadow-inner border border-amber-200/50">🌅</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">아침 공복</h3>
+                        <span class="text-[11px] text-amber-700 font-semibold block">위산 분비 전 장내 흡수율 극대화</span>
+                    </div>
+                </div>
+            </div>
+            <div id="pillbox-morning-list" class="space-y-3.5 min-h-[160px]"></div>
+        </div>
+
+        <!-- STEP 2. 점심 식후 (Emerald) -->
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-emerald-200/80 hover:border-emerald-400 transition duration-300 space-y-5 relative">
+            <div class="absolute -top-3 left-6 bg-gradient-to-r from-emerald-600 to-teal-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                <i class="fa-solid fa-utensils"></i> Step 2. 01:00 PM
+            </div>
+            <div class="flex items-center justify-between border-b border-emerald-100 pb-4 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl shadow-inner border border-emerald-200/50">☀️</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">점심 식후</h3>
+                        <span class="text-[11px] text-emerald-700 font-semibold block">활력 충전 및 수용성 비타민 흡수</span>
+                    </div>
+                </div>
+            </div>
+            <div id="pillbox-lunch-list" class="space-y-3.5 min-h-[160px]"></div>
+        </div>
+
+        <!-- STEP 3. 저녁 식후 (Blue) -->
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-blue-200/80 hover:border-blue-400 transition duration-300 space-y-5 relative">
+            <div class="absolute -top-3 left-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                <i class="fa-solid fa-mug-hot"></i> Step 3. 07:00 PM
+            </div>
+            <div class="flex items-center justify-between border-b border-blue-100 pb-4 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-2xl shadow-inner border border-blue-200/50">🍽️</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">저녁 식후</h3>
+                        <span class="text-[11px] text-blue-700 font-semibold block">담즙산 연동 지용성 흡수 극대화</span>
+                    </div>
+                </div>
+            </div>
+            <div id="pillbox-dinner-list" class="space-y-3.5 min-h-[160px]"></div>
+        </div>
+
+        <!-- STEP 4. 취침 30분 전 (Indigo) -->
+        <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-200/80 hover:border-indigo-400 transition duration-300 space-y-5 relative">
+            <div class="absolute -top-3 left-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1">
+                <i class="fa-solid fa-moon"></i> Step 4. 10:00 PM
+            </div>
+            <div class="flex items-center justify-between border-b border-indigo-100 pb-4 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-2xl shadow-inner border border-indigo-200/50">🌙</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">취침 30분 전</h3>
+                        <span class="text-[11px] text-indigo-700 font-semibold block">부교감 자극 & 근육 이완 숙면</span>
+                    </div>
+                </div>
+            </div>
+            <div id="pillbox-evening-list" class="space-y-3.5 min-h-[160px]"></div>
+        </div>
+
+    </div>
+
+    <!-- 3. 해빗 트래커 (월별 복용 현황) -->
+    <div class="mt-12 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-300 to-teal-400"></div>
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-check text-[#10B981]"></i> 월별 복용 현황
+                </h3>
+                <p class="text-[11px] sm:text-xs text-slate-500 mt-1">이번 달 나의 건강 관리 달성 기록입니다.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="changeTrackerMonth(-1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition flex items-center justify-center shadow-sm border border-slate-200">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
+                <div class="text-[13px] font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100 min-w-[80px] text-center" id="habit-month-label">
+                    8월
+                </div>
+                <button onclick="changeTrackerMonth(1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition flex items-center justify-center shadow-sm border border-slate-200">
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-emerald-200 scrollbar-track-transparent">
+            <div id="habit-matrix-container" class="min-w-max">
+                <!-- 자바스크립트로 매트릭스가 렌더링됨 -->
+            </div>
+        </div>
+        
+        <div class="mt-6 flex flex-wrap items-center justify-end gap-3 text-[10px] text-slate-400 font-medium">
+            <span>범례:</span>
+            <div class="flex items-center gap-1.5">
+                <div class="w-3.5 h-3.5 rounded bg-slate-50 border border-slate-100"></div> <span class="mr-1">예정</span>
+                <div class="w-3.5 h-3.5 rounded bg-slate-100 flex items-center justify-center text-slate-300"><i class="fa-solid fa-minus text-[8px]"></i></div> <span class="mr-1">미복용</span>
+                <div class="w-3.5 h-3.5 rounded bg-emerald-500 flex items-center justify-center text-white shadow-sm shadow-emerald-500/30"><i class="fa-solid fa-check text-[8px]"></i></div> <span>복용 완료</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 토스트 메세지 노드 -->
+<div id="toast-node" class="hidden fixed bottom-6 right-6 z-50 bg-[#1E3A2F] text-white px-5 py-3.5 rounded-2xl shadow-2xl border-l-4 border-[#10B981] flex items-center gap-3 text-xs font-bold"></div>
+
+<script>
+    // 로컬 스토리지에서 등록된 영양제 목록 불러오기 및 복용 시간 분석
+    let supplementsState = [];
+    try {
+        const saved = localStorage.getItem('nutrimatch_my_supplements');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            supplementsState = parsed.map(supp => {
+                let timeSlot = 'lunch';
+                let dosage = '1일 1회 1정 (점심 식후)';
+                let priority = 'medium';
+
+                // 성분(이름) 기반 복용 시간 분석 로직
+                if (supp.name.includes('유산균') || supp.name.includes('프로바이오틱스') || supp.name.includes('공복')) {
+                    timeSlot = 'morning';
+                    dosage = '1일 1회 1포 (공복)';
+                    priority = 'high';
+                } else if (supp.name.includes('테아닌') || supp.name.includes('마그네슘') || supp.name.includes('칼슘') || supp.name.includes('수면') || supp.name.includes('취침')) {
+                    timeSlot = 'evening';
+                    dosage = '1일 1회 1정 (취침전)';
+                    priority = 'medium';
+                } else if (supp.name.includes('오메가') || supp.name.includes('루테인') || supp.name.includes('밀크씨슬')) {
+                    timeSlot = 'dinner';
+                    dosage = '1일 1회 1정 (저녁 식후)';
+                    priority = 'high';
+                } else {
+                    timeSlot = 'lunch';
+                    dosage = '1일 1회 1정 (점심 식후)';
+                    priority = 'high';
+                }
+
+                // 시작일자 가짜 데이터 생성 (시연용으로 8월 초중순 랜덤 지정)
+                const mockStartDay = (supp.id % 15) + 1;
+                supp.startDate = new Date(2026, 7, mockStartDay); // 2026년 8월
+
+                return {
+                    id: supp.id,
+                    name: supp.name,
+                    brand: "보유 영양제",
+                    timeSlot: timeSlot,
+                    dosage: dosage,
+                    priority: priority,
+                    taken: false
+                };
+            });
+        }
+    } catch(e) {
+        console.error("Failed to parse supplements from localStorage", e);
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast-node');
+        toast.innerHTML = `<i class="fa-solid fa-circle-check text-[#10B981] text-base"></i> ${msg}`;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
+    function triggerPwaPushTest() {
+        showToast("🌅 [PWA 복용 푸시] 아침 공복 유산균 섭취 알림 테스트입니다 💊");
+    }
+
+    // 가상 약통 렌더링 함수
+    function renderVirtualPillbox() {
+        const morningList = document.getElementById('pillbox-morning-list');
+        const lunchList = document.getElementById('pillbox-lunch-list');
+        const dinnerList = document.getElementById('pillbox-dinner-list');
+        const eveningList = document.getElementById('pillbox-evening-list');
+        const pctEl = document.getElementById('pillbox-completion-pct');
+        const barEl = document.getElementById('pillbox-completion-bar');
+        const statusMsgEl = document.getElementById('pillbox-status-msg');
+        const dateLabelEl = document.getElementById('today-date-label');
+
+        if (dateLabelEl) {
+            const todayForLabel = new Date();
+            dateLabelEl.textContent = `오늘 (${todayForLabel.getMonth() + 1}월 ${todayForLabel.getDate()}일) 복용 목표 달성률`;
+        }
+
+        morningList.innerHTML = '';
+        lunchList.innerHTML = '';
+        dinnerList.innerHTML = '';
+        eveningList.innerHTML = '';
+
+        let total = supplementsState.length;
+        let takenCount = 0;
+
+        supplementsState.forEach((supp) => {
+            if (supp.taken) takenCount++;
+
+            let priorityBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white flex items-center gap-1"><i class="fa-solid fa-fire text-[8px]"></i> 필수</span>`;
+            if (supp.priority === 'medium') {
+                priorityBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500 text-white flex items-center gap-1"><i class="fa-solid fa-bolt text-[8px]"></i> 권장</span>`;
+            } else if (supp.priority === 'low') {
+                priorityBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500 text-white flex items-center gap-1"><i class="fa-solid fa-leaf text-[8px]"></i> 선택</span>`;
+            }
+
+            const card = document.createElement('div');
+            card.className = `p-4 rounded-2xl border-2 transition-all duration-300 flex items-center justify-between gap-4 relative overflow-hidden ${
+                supp.taken 
+                    ? 'bg-slate-100/90 border-slate-200 opacity-65 scale-[0.98]' 
+                    : 'bg-white border-slate-200/80 hover:border-emerald-400 hover:shadow-lg'
+            }`;
+
+            card.innerHTML = `
+                <div class="space-y-1.5 flex-grow min-w-0">
+                    <div class="flex items-center gap-2">
+                        ${priorityBadge}
+                        <span class="text-[11px] font-bold text-slate-400">${supp.brand}</span>
+                    </div>
+                    <h4 class="font-extrabold text-sm text-slate-900 truncate ${supp.taken ? 'line-through text-slate-500' : ''}">
+                        ${supp.name}
+                    </h4>
+                    <div class="inline-flex items-center gap-1 text-[10px] font-bold text-[#10B981] bg-emerald-50 px-2.5 py-0.5 rounded-lg border border-emerald-100">
+                        <span>섭취 기준량: <strong>${supp.dosage}</strong></span>
+                    </div>
+                </div>
+
+                <button onclick="togglePillTaken(${supp.id})" class="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center transition ${
+                    supp.taken 
+                        ? 'bg-[#10B981] text-white shadow-md shadow-emerald-500/30' 
+                        : 'bg-slate-100 hover:bg-emerald-50 text-slate-400 hover:text-[#10B981]'
+                }">
+                    <i class="fa-solid ${supp.taken ? 'fa-circle-check text-xl' : 'fa-check text-base'}"></i>
+                </button>
+            `;
+
+            if (supp.timeSlot === 'morning') morningList.appendChild(card);
+            else if (supp.timeSlot === 'lunch') lunchList.appendChild(card);
+            else if (supp.timeSlot === 'dinner') dinnerList.appendChild(card);
+            else eveningList.appendChild(card);
+        });
+
+        const pct = total > 0 ? Math.round((takenCount / total) * 100) : 0;
+        pctEl.textContent = `${pct}%`;
+        barEl.style.width = `${pct}%`;
+
+        if (pct === 100) {
+            statusMsgEl.innerHTML = `<span class="text-emerald-300 font-bold">🎉 오늘 복용 목표 100% 완수!</span>`;
+        } else {
+            statusMsgEl.textContent = `오늘 복용할 건강식품 ${total - takenCount}개가 남았습니다.`;
+        }
+    }
+
+    function togglePillHistory(id, year, month, day) {
+        const item = supplementsState.find(s => s.id === id);
+        if (item) {
+            if (!item.history) item.history = {};
+            const dateKey = `${year}-${month}-${day}`;
+            item.history[dateKey] = !item.history[dateKey];
+            
+            // 로컬 스토리지에 업데이트 반영 (옵션)
+            try {
+                localStorage.setItem('nutrimatch_my_supplements', JSON.stringify(supplementsState));
+            } catch (e) {}
+
+            renderHabitTracker();
+        }
+    }
+
+    function togglePillTaken(id) {
+        const item = supplementsState.find(s => s.id === id);
+        if (item) {
+            item.taken = !item.taken;
+            renderVirtualPillbox();
+            renderHabitTracker(); // 오늘 날짜 체크박스 실시간 반영
+            showToast(item.taken ? `[${item.name}] 복용을 완료했습니다! 🎉` : `복용 체크가 취소되었습니다.`);
+        }
+    }
+
+    const todayDateObj = new Date();
+    let currentTrackerYear = todayDateObj.getFullYear();
+    let currentTrackerMonth = todayDateObj.getMonth();
+
+    function changeTrackerMonth(offset) {
+        currentTrackerMonth += offset;
+        if (currentTrackerMonth < 0) {
+            currentTrackerMonth = 11;
+            currentTrackerYear--;
+        } else if (currentTrackerMonth > 11) {
+            currentTrackerMonth = 0;
+            currentTrackerYear++;
+        }
+        renderHabitTracker();
+    }
+
+    // 해빗 트래커 렌더링 함수 (매트릭스 뷰)
+    function renderHabitTracker() {
+        const matrixContainer = document.getElementById('habit-matrix-container');
+        const monthLabel = document.getElementById('habit-month-label');
+        
+        const isCurrentMonthView = currentTrackerYear === todayDateObj.getFullYear() && currentTrackerMonth === todayDateObj.getMonth();
+        const todayDate = todayDateObj.getDate();
+        
+        monthLabel.textContent = `${currentTrackerYear}년 ${currentTrackerMonth + 1}월`;
+        const daysInMonth = new Date(currentTrackerYear, currentTrackerMonth + 1, 0).getDate();
+
+        // 1. 헤더 (일자 및 달성률) 생성
+        let html = `<div class="flex items-center gap-1 mb-2">
+            <div class="w-32 shrink-0 font-bold text-[11px] text-slate-400 pl-2">내 영양제 목록</div>`;
+        for (let day = 1; day <= daysInMonth; day++) {
+            const isToday = isCurrentMonthView && day === todayDate;
+            html += `<div class="w-7 h-7 flex shrink-0 items-center justify-center text-[10px] font-bold ${isToday ? 'bg-emerald-50 text-emerald-600 rounded-lg ring-1 ring-emerald-200' : 'text-slate-400'}">${day}</div>`;
+        }
+        html += `<div class="w-16 shrink-0 flex items-center justify-end text-[11px] font-bold text-slate-400 pr-2">월 달성률</div></div><div class="space-y-1.5">`;
+
+        // 2. 영양제별 행(Row) 생성
+        if (supplementsState.length === 0) {
+            html += `<div class="text-xs text-slate-400 p-4 text-center">등록된 영양제가 없습니다. 메인 화면에서 추가해주세요.</div>`;
+        } else {
+            supplementsState.forEach(supp => {
+                html += `<div class="flex items-center gap-1 hover:bg-slate-50/50 p-1 rounded-xl transition-colors">
+                    <div class="w-32 shrink-0 text-[11px] font-bold text-slate-700 truncate pl-1 pr-2" title="${supp.name}">${supp.name}</div>`;
+                
+                let rowTakenCount = 0;
+                let rowTotalDays = 0;
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const cellDate = new Date(currentTrackerYear, currentTrackerMonth, day);
+                    const isToday = isCurrentMonthView && day === todayDate;
+                    const pastThreshold = new Date(todayDateObj.getFullYear(), todayDateObj.getMonth(), todayDate);
+
+                    let cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-50 border border-slate-100"></div>`; // 미래
+                    
+                    if (cellDate < supp.startDate) {
+                        // 복용 시작일 이전 (비활성화 처리)
+                        cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100/40 border border-slate-200/50 text-slate-300" title="복용 시작 전"><i class="fa-solid fa-ban text-[8px] opacity-20"></i></div>`;
+                    } else {
+                        // 복용 시작일 이후의 달성해야 할 전체 일수 누적 (미래 포함)
+                        rowTotalDays++;
+
+                        if (cellDate < pastThreshold) {
+                            // 과거 (기본 미복용, 수기 클릭으로 토글 가능)
+                            const dateKey = `${currentTrackerYear}-${currentTrackerMonth}-${day}`;
+                            const taken = supp.history && supp.history[dateKey] === true;
+                            
+                            if (taken) {
+                                rowTakenCount++;
+                                cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 hover:bg-emerald-400 transition" title="클릭하여 복용 취소"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+                            } else {
+                                cellHtml = `<div onclick="togglePillHistory(${supp.id}, ${currentTrackerYear}, ${currentTrackerMonth}, ${day})" class="cursor-pointer w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100 text-slate-300 hover:bg-slate-200 transition" title="클릭하여 복용 체크"><i class="fa-solid fa-plus text-[10px] opacity-50"></i></div>`;
+                            }
+                        } else if (isToday) {
+                            // 오늘 (현재 상태 실시간 반영)
+                            if (supp.taken) {
+                                rowTakenCount++;
+                                cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-[#10B981] text-white shadow-md shadow-emerald-500/30 ring-2 ring-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+                            } else {
+                                cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-white border-2 border-emerald-300 text-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
+                            }
+                        }
+                    }
+                    html += cellHtml;
+                }
+                
+                const pct = rowTotalDays > 0 ? Math.round((rowTakenCount / rowTotalDays) * 100) : 0;
+                html += `<div class="w-16 shrink-0 flex items-center justify-end pr-2 text-[11px] font-black ${pct >= 80 ? 'text-emerald-600' : 'text-slate-500'}">${pct}%</div>`;
+                html += `</div>`;
+            });
+        }
+        
+        html += `</div>`;
+        matrixContainer.innerHTML = html;
+    }
+
+    window.onload = function() {
+        renderVirtualPillbox();
+        renderHabitTracker();
+    };
+</script>
+</div>
+</body>
+</html>

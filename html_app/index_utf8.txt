@@ -1,0 +1,2907 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>돱듃由щℓ移 (NutriMatch) - 媛쒖씤 留욎땄삎 쁺뼇 吏꾨떒 & 뒪留덊듃 耳뼱</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Lora & Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: '#1E3A2F', // Deep Forest Green
+                        mint: '#10B981',   // Mint Emerald
+                        cream: '#FAF9F6',  // Warm Cream Base
+                        warning: '#EF4444', 
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FAF9F6;
+            overflow-x: hidden;
+        }
+        
+        .pulse-emerald {
+            animation: pulse-emerald-animation 2s infinite;
+        }
+        
+        @keyframes pulse-emerald-animation {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .pulse-red {
+            animation: pulse-red-animation 1.5s infinite;
+        }
+        
+        @keyframes pulse-red-animation {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-700 antialiased">
+
+<!-- 뿤뜑 꽕鍮꾧쾶씠뀡 -->
+<header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <!-- 濡쒓퀬 쁺뿭 -->
+        <a href="#" onclick="switchView('landing')" class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-xl bg-[#1E3A2F] flex items-center justify-center text-white">
+                <i class="fa-solid fa-seedling text-lg text-[#10B981]"></i>
+            </div>
+            <span class="font-serif text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span class="text-[#10B981]">Match</span></span>
+        </a>
+
+        <!-- 꽕鍮꾧쾶씠뀡 硫붾돱 -->
+        <nav class="hidden md:flex items-center gap-8">
+            <a href="#" onclick="switchView('landing')" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">냼媛</a>
+            <a href="#" onclick="navigateQuiz()" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">AI 留욎땄 異붿쿇</a>
+            <a href="#" onclick="switchView('checker')" class="font-medium text-[#10B981] hover:text-[#0f9f6e] flex items-center gap-1.5 transition font-bold">
+                <i class="fa-solid fa-triangle-exclamation"></i> 궡 쁺뼇젣 珥덇낵 吏꾨떒
+            </a>
+            <a href="#" onclick="showToast('以鍮 以묒씤 꽌鍮꾩뒪엯땲떎.')" class="font-medium text-slate-600 hover:text-[#1E3A2F] transition">而ㅻㅻ땲떚</a>
+        </nav>
+
+        <!-- 슦痢 븸뀡 踰꾪듉 궘젣맖 -->
+        <div class="flex items-center gap-4">
+        </div>
+    </div>
+</header>
+
+<!-- 넗뒪듃 븣由 而⑦뀒씠꼫 -->
+<div id="custom-toast" class="hidden">
+    <div id="toast-content" class="flex items-center gap-3"></div>
+</div>
+
+<main class="flex-grow">
+    
+    <!-- ==============================================
+         VIEW 1: LANDING VIEW (솃럹씠吏 硫붿씤 솕硫)
+         ============================================== -->
+    <div id="landing-view" class="view-section py-16 sm:py-24 bg-gradient-to-b from-[#FAF9F6] to-white">
+        <div class="max-w-7xl mx-auto px-6 space-y-24">
+            
+            <!-- 엳뼱濡 쁺뿭 -->
+            <div class="grid md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-7 space-y-6">
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-[#10B981] text-xs font-bold tracking-wide">
+                        <i class="fa-solid fa-shield-heart"></i> AI 湲곕컲 1:1 媛쒖씤 留욎땄삎 쁺뼇 耳뼱
+                    </span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A2F] font-serif leading-tight tracking-tight">
+                        뜑 씠긽 꽆寃⑥쭦吏 留덉꽭슂.<br>궡 紐몄뿉 瑗 留욌뒗<br><span class="text-[#10B981]">븞떖 쁺뼇 꽕怨</span>
+                    </h1>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-lg">
+                        蹂듭옟븳 23媛쒖쓽 떊泥 蹂닔 吏蹂 긽깭瑜 셿踰 遺꾩꽍븯뿬 遺옉슜 쐞뿕 0% 닔以쓽 쁺뼇젣 異붿쿇 諛 珥덇낵 以묐났 꽠痍 븘꽣 떆蹂대뱶瑜 젣怨듯빀땲떎.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-3">
+                        <button onclick="startQuiz()" class="bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold px-8 py-4.5 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 text-center text-base">
+                            臾대즺 嫄닿컯 꽕臾 떆옉븯湲 <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+                        </button>
+                        <button onclick="switchView('checker')" class="bg-white border-2 border-slate-200 hover:border-[#10B981] hover:text-[#10B981] text-slate-700 font-bold px-8 py-4.5 rounded-2xl transition duration-300 text-center text-base">
+                            궡 쁺뼇젣 옄媛吏꾨떒 寃궗
+                        </button>
+                    </div>
+                    
+                    <!-- 濡쒖뺄뒪넗由ъ 蹂댁〈 遺덈윭삤湲 듃由ш굅 -->
+                    <div id="restore-answers-container" class="hidden animate-fadeIn p-4 rounded-2xl bg-teal-50 border border-teal-200/60 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-clock-rotate-left text-teal-600 text-lg"></i>
+                            <div>
+                                <span class="text-xs font-bold text-teal-900 block">씠쟾 嫄닿컯 遺꾩꽍 湲곕줉 諛쒓껄</span>
+                                <p class="text-[11px] text-teal-700">怨쇨굅뿉 셿猷뚰븯떊 꽕臾 뜲씠꽣媛 釉뚮씪슦뿉 븞쟾엳 엫떆 蹂닿 以묒엯땲떎.</p>
+                            </div>
+                        </div>
+                        <button onclick="loadPreviousResults()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs py-2 px-4 rounded-xl transition shadow-sm">
+                            씠쟾 異붿쿇 寃곌낵 떎떆蹂닿린
+                        </button>
+                    </div>
+                </div>
+                <div class="md:col-span-5 relative">
+                    <div class="absolute -inset-4 bg-emerald-100/40 rounded-full blur-3xl z-0"></div>
+                    <div class="relative z-10 bg-white p-8 rounded-3xl border border-slate-100 shadow-2xl space-y-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs bg-[#1E3A2F] text-white px-2.5 py-1 rounded font-bold uppercase tracking-wider">AI Medical Filter Verified</span>
+                            <i class="fa-solid fa-heart-pulse text-red-500 animate-pulse text-lg"></i>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100/50 flex gap-3.5">
+                                <i class="fa-solid fa-shield-virus text-[#10B981] text-xl mt-1"></i>
+                                <div>
+                                    <span class="text-xs font-bold text-[#1E3A2F] block">씉뿰옄 듅蹂 븘꽣 깙옱</span>
+                                    <p class="text-[11px] text-slate-500">씉뿰옄쓽 룓븫 쑀諛 솗瑜좎쓣 넂씠뒗 怨좊냽룄 踰좏移대줈떞 꽦遺꾩쓣 옄룞 슦쉶쨌썝泥 李⑤떒빀땲떎.</p>
+                                </div>
+                            </div>
+                            <div class="p-3.5 rounded-2xl bg-amber-50/50 border border-amber-100/50 flex gap-3.5">
+                                <i class="fa-solid fa-capsules text-amber-600 text-xl mt-1"></i>
+                                <div>
+                                    <span class="text-xs font-bold text-amber-800 block">蹂듭슜 빟臾 떆꼫吏 媛誘</span>
+                                    <p class="text-[11px] text-slate-500">怨좏삁븬, 떦눊 諛 빆쓳怨좎젣 꽠痍⑥옄瑜 쐞빐 삁븸 쓳怨 諛⑹ 以묐났 異⑸룎쓣 議곗쑉빀땲떎.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KDRI 뜲씠꽣 異쒖쿂 紐낆떆 -->
+            <div class="mt-12 bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6 animate-fadeIn">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-book-medical"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">怨듭떊젰 엳뒗 援媛 몴以 뜲씠꽣 쟻슜</h4>
+                        <p class="text-sm text-slate-500 mt-1">蹂 꽌鍮꾩뒪뒗 蹂닿굔蹂듭遺 諛 븳援쁺뼇븰쉶뿉꽌 諛쒓컙븳 <strong>2025 븳援씤 쁺뼇냼 꽠痍④린以 (KDRI)</strong> 理쒖떊 넻怨꾩 뿰졊蹂 媛씠뱶씪씤쓣 湲곕컲쑝濡 젙諛븯寃 媛쒖씤蹂 留욎땄 쁺뼇 꽕怨꾨 젣怨듯빀땲떎.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 빑떖 듅吏 슂빟 -->
+            <div class="grid sm:grid-cols-3 gap-8 pt-12 border-t border-slate-100">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-[#10B981]">
+                        <i class="fa-solid fa-chart-bar text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-[#1E3A2F]">23媛 젙諛 떊泥 蹂닔 뿰궛</h3>
+                    <p class="text-xs text-slate-400 leading-normal">꽦蹂, BMI, 닔硫 뙣꽩, 븣젅瑜닿린 諛 留뚯꽦吏덊솚쓣 議고빀븳 떎李⑥썝 異붿쿇 꽕怨꾨 젣怨듯빀땲떎.</p>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-[#10B981]">
+                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-[#1E3A2F]">以묐났쨌삤踰꾨룄利 옄媛吏꾨떒</h3>
+                    <p class="text-xs text-slate-400 leading-normal">쁽옱 癒밸뒗 쁺뼇냼뱾씠 궡 紐 긽깭뿉 쟻빀븳吏 븞쟾 븳怨꾩꽑(Tolerable Upper Intake)쑝濡 議곗쑉빀땲떎.</p>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-[#10B981]">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-[#1E3A2F]">젙諛 븘썐留곹겕 媛寃⑸퉬援</h3>
+                    <p class="text-xs text-slate-400 leading-normal">荑좏뙜, 븘씠뿀釉, 삱由щ툕쁺뿉 뙋留 以묒씤 理쒖쟻쓽 嫄닿컯湲곕뒫떇뭹 援щℓ泥섎줈 吏곸젒 썝뒪넲 媛씠뱶빀땲떎.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==============================================
+         VIEW 2: QUIZ VIEW (꽭遺꾪솕맂 10떒怨 嫄닿컯 꽕臾 럹씠吏)
+         ============================================== -->
+    <div id="quiz-view" class="view-section transition-all duration-300 hidden py-12 bg-[#FAF9F6]">
+        <div class="max-w-3xl mx-auto px-6">
+            <!-- 댁쫰 떒怨 봽濡쒓렇젅뒪 뿤뜑 -->
+            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8">
+                <div class="flex justify-between items-center">
+                    <span id="quiz-step-indicator" class="text-xs sm:text-sm font-bold text-[#1E3A2F] tracking-wide uppercase">룞쓽 븞궡 (Step 0)</span>
+                    <button onclick="switchView('landing')" class="text-slate-400 hover:text-slate-600 text-sm transition">
+                        꽕臾 痍⑥냼 <i class="fa-solid fa-xmark ml-1"></i>
+                    </button>
+                </div>
+                
+                <!-- Progress bar -->
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="quiz-progress" class="bg-gradient-to-r from-[#10B981] to-emerald-400 h-full transition-all duration-300" style="width: 0%;"></div>
+                </div>
+
+                <!-- 댁쫰 뤌 룞쟻 異쒕젰 耳 -->
+                <div id="quiz-content-area" class="min-h-[300px]">
+                    <!-- Step UI뒗 JavaScript뿉꽌 룞쟻쑝濡 鍮뚮뱶 -->
+                </div>
+
+                <!-- 댁쫰 븸뀡 踰꾪듉뱾 -->
+                <div class="flex justify-between items-center pt-6 border-t border-slate-100">
+                    <button id="quiz-prev-btn" onclick="prevQuizStep()" class="text-slate-500 hover:text-[#1E3A2F] font-bold py-3 px-6 rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> 씠쟾 떒怨
+                    </button>
+                    <button id="quiz-next-btn" onclick="nextQuizStep()" class="bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition flex items-center gap-2">
+                        떎쓬 떒怨 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 댁쫰 遺꾩꽍 以 濡쒕뜑 솕硫 -->
+    <div id="quiz-loading-view" class="view-section transition-all duration-300 hidden py-24 bg-[#FAF9F6] text-center">
+        <div class="max-w-md mx-auto px-6 flex flex-col items-center justify-center space-y-8">
+            <div class="relative w-28 h-28 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border-4 border-emerald-100 animate-pulse"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-[#10B981] animate-spin"></div>
+                <i class="fa-solid fa-dna text-4xl text-[#10B981] animate-bounce"></i>
+            </div>
+            <div class="space-y-3">
+                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">AI 젙諛 쑀쟾泥 諛 嫄닿컯 떆裕щ젅씠뀡 媛룞 以</h3>
+                <p id="loading-subtitle" class="text-sm text-slate-500 min-h-[40px] transition-all duration-500">
+                    꽦遺 媛 異⑸룎 뿬遺 젙諛 떆裕щ젅씠뀡 以...
+                </p>
+            </div>
+            <!-- 젙諛 寃닔 濡쒕뵫 긽깭諛 -->
+            <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                <div id="loading-progress" class="bg-[#10B981] h-full rounded-full transition-all duration-1000" style="width: 5%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         VIEW 3: RECOMMENDATION RESULT VIEW (寃곌낵 럹씠吏)
+         ============================================== -->
+    <div id="result-view" class="view-section transition-all duration-300 hidden py-12 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <!-- 寃곌낵 뿤뜑 슂빟 떆蹂대뱶 -->
+            <div class="bg-gradient-to-r from-[#1E3A2F] to-[#142820] rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden mb-12">
+                <div class="absolute -right-24 -bottom-24 w-80 h-80 bg-[#10B981]/10 rounded-full blur-3xl"></div>
+                
+                <div class="relative z-10 grid md:grid-cols-12 gap-8 items-center">
+                    <div class="md:col-span-8 space-y-4">
+                        <span class="text-xs text-[#10B981] font-bold tracking-widest uppercase">AI Clinical Diagnosis Result</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight font-serif"><span id="user-display-name">怨좉컼</span>떂留뚯쓣 쐞븳 븞떖 븯猷 븳 뙥 넄猷⑥뀡</h2>
+                        <p class="text-slate-300 text-sm sm:text-base max-w-xl">
+                            엯젰븯떊 봽濡쒗븘, 씪씠봽뒪씪, 吏덊솚 쑀臾 諛 븣젅瑜닿린瑜 醫낇빀 遺꾩꽍뻽뒿땲떎. 遺옉슜쓣 쉶뵾븳 1:1 留욎땄 꽕怨꾩엯땲떎.
+                        </p>
+                        <!-- BMI 諛곗 異쒕젰遺 -->
+                        <div id="result-bmi-badge" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold">
+                            <!-- JS뿉꽌 룞쟻 엯젰 -->
+                        </div>
+                    </div>
+                    <div class="md:col-span-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-center">
+                        <div class="text-xs text-emerald-400 font-bold uppercase tracking-widest">醫낇빀 留ㅼ튂 떊猶 뒪肄붿뼱</div>
+                        <div class="text-5xl font-extrabold font-serif my-2 text-[#10B981]" id="result-match-score">98.8<span class="text-sm">젏</span></div>
+                        <p class="text-[11px] text-slate-300">븣젅瑜닿린 / 빟臾 異⑸룎 슂씤 셿쟾 李⑤떒 寃利</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 硫붿씤 而⑦뀗痢 쁺뿭: 2떒 諛곗튂 -->
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- 醫뚯륫 쁺뿭: 異붿쿇 뙥 젣뭹 移대뱶 由ъ뒪듃 & 李⑦듃 -->
+                <div class="lg:col-span-8 space-y-8">
+                    
+                    <!-- 듅씠 쓽猷 븣由/寃쎄퀬 떆蹂대뱶 (씉뿰, 븣젅瑜닿린, 留뚯꽦吏덊솚 쓳) -->
+                    <div id="medical-safety-dashboard" class="hidden bg-red-50 border border-red-200/60 rounded-3xl p-6 sm:p-8 space-y-4">
+                        <h3 class="text-sm font-bold text-red-900 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-virus text-red-600 animate-pulse text-lg"></i> AI 湲닿툒 븞쟾꽦 쓽猷 援먯감 븘꽣 諛쒕룞 以
+                        </h3>
+                        <div id="medical-safety-alerts-list" class="space-y-2 text-xs text-red-800 leading-relaxed">
+                            <!-- JS瑜 넻빐 긽솴蹂 븞쟾 議곗튂 諛 寃쎄퀬 뵾뱶諛깆쓣 떎떆媛 젋뜑留 -->
+                        </div>
+                    </div>
+
+                    <!-- 異붿쿇 뙥 由ъ뒪듃 -->
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
+                        <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                            <i class="fa-solid fa-basket-shopping text-[#10B981]"></i> 異붿쿇 쁺뼇냼蹂 떎떆媛 쇅遺 뙋留ㅼ쿂 諛붾줈媛湲
+                        </h3>
+                        
+                        <div id="pharmacist-opinion-container" class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 mb-6 hidden">
+                            <h4 class="font-bold text-emerald-900 flex items-center gap-2 mb-3">
+                                <i class="fa-solid fa-user-doctor"></i> 쟾떞 빟궗쓽 醫낇빀 냼寃ъ꽌
+                            </h4>
+                            <div id="pharmacist-opinion-text" class="text-[13px] text-emerald-800 leading-loose space-y-3 whitespace-pre-line">
+                            </div>
+                        </div>
+
+                        <div id="recommended-products-container" class="space-y-4">
+                            <!-- JS瑜 넻빐 꽑깮맂 怨좊쇱뿉 뵲씪 쁺뼇냼 移대뱶媛 떎떆媛 깮꽦맗땲떎. -->
+                        </div>
+                    </div>
+
+                    <!-- 떎떆媛 湲곗〈 쁺뼇젣쓽 궗쟾 異⑸룎 諛⑹ 吏꾨떒湲 -->
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-shuffle text-amber-500"></i> 援щℓ 쟾 븞떖 寃닔: 湲곗〈 쁺뼇젣 긽샇 異⑸룎 寃궗
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-1">쁽옱 蹂듭슜 쁺뼇젣 蹂닿븿 냽 젣뭹뱾怨쇱쓽 삤궓슜 슦젮瑜 떎떆媛 鍮꾧탳빀땲떎.</p>
+                            </div>
+                            <button onclick="checkSupplementsCollision()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl transition shadow-md flex items-center gap-1.5 shrink-0">
+                                <i class="fa-solid fa-bolt"></i> 떎떆媛 異⑸룎 뿬遺 젙諛 吏꾨떒
+                            </button>
+                        </div>
+                        <div id="pre-purchase-clash-results" class="hidden space-y-3">
+                            <!-- JS뿉꽌 쑀룞쟻쑝濡 異⑸룎 遺꾩꽍 젙蹂 젋뜑留 -->
+                        </div>
+                    </div>
+
+                    <!-- 以묐났/븞쟾 꽠痍⑤웾 諛 李⑦듃 쁺뿭 -->
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                                <i class="fa-solid fa-chart-line text-[#10B981]"></i> 븞떖 쁺뼇꽦遺 1씪 긽샇 蹂듭슜 븞쟾 寃닔 떆蹂대뱶
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">
+                                以묐났 蹂듭슜뿉 뵲瑜 遺옉슜쓣 썝泥 李⑤떒븯湲 쐞빐 NutriMatch AI 遺꾩꽍 뿏吏꾩씠 븯猷 理쒖쟻꽠痍⑤웾(100%)쓣 셿踰 젣뼱뻽뒿땲떎.
+                            </p>
+                            <div class="mt-4 p-4 rounded-xl bg-teal-50 border border-teal-100 flex items-start gap-3">
+                                <i class="fa-solid fa-scale-balanced text-teal-600 mt-0.5 text-lg"></i>
+                                <div>
+                                    <span class="text-sm font-bold text-teal-900 block">븳援씤 쁺뼇냼 꽠痍④린以 (KDRI) 쟻슜 셿猷</span>
+                                    <p class="text-[11px] text-teal-800 leading-relaxed mt-1">
+                                        異붿쿇릺뒗 꽠痍⑤웾怨 李⑦듃쓽 湲곗젏 蹂닿굔蹂듭遺 諛 븳援쁺뼇븰쉶뿉꽌 諛쒓컙븳 理쒖떊 <strong>KDRI 媛씠뱶씪씤</strong>쓣 뵲由낅땲떎. 궗슜옄쓽 <strong>꽦蹂, 뿰졊, 떊吏꾨궗 諛 듅씠 紐 긽깭</strong>뿉 留욎떠 遺옉슜쓣 留됯린 쐞븳 理쒕 븞쟾 긽븳꽑씠 옄룞쑝濡 議곗젅릺뼱 븞쟾븳 꽠痍 湲곗쓣 젣怨듯빀땲떎.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 룞쟻 諛 李⑦듃 而⑦뀒씠꼫 -->
+                        <div id="safety-chart-container" class="space-y-4 pt-4">
+                            <!-- 룞쟻 깮꽦 諛 李⑦듃 옄由 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 슦痢 쁺뿭: 씠硫붿씪 援щ룆 뤌 諛 엯젏紐 援щℓ泥 媛씠뱶 -->
+                <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+                    
+                    <!-- 떊洹 湲곕뒫: 씠硫붿씪濡 由ы룷듃 쟾넚 諛쏆븘蹂닿린 移대뱶 -->
+                    <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 space-y-4">
+                        <div class="space-y-1">
+                            <span class="text-xs text-emerald-500 font-bold uppercase tracking-widest block">PDF Health Report</span>
+                            <h4 class="text-lg font-bold text-slate-800">1:1 留욎땄 쁺뼇 由ы룷듃 씠硫붿씪 諛쒖넚</h4>
+                            <p class="text-xs text-slate-400">옉꽦븯떊 23媛 吏몴 湲곕컲 醫낇빀 遺꾩꽍 꽌瑜섎 씠硫붿씪濡 利됱떆 諛쏆븘 蹂닿빐 蹂댁꽭슂.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <input type="email" id="report-email-input" placeholder="example@email.com" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981]">
+                            <button onclick="sendEmailReport()" class="w-full bg-[#10B981] hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-envelope"></i> 留욎땄 遺꾩꽍 由ы룷듃 諛쏆븘蹂닿린
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 궡 蹂닿븿뿉 異붿쿇 꽦遺 떞怨 1:1 吏꾨떒 뿰怨 踰꾪듉 -->
+                    <div class="bg-gradient-to-r from-teal-900 to-emerald-900 rounded-3xl p-6 text-white shadow-xl space-y-4">
+                        <span class="bg-emerald-500 text-white font-bold text-[9px] px-2 py-0.5 rounded uppercase tracking-wider">Diagnostic Continuity</span>
+                        <h4 class="text-base font-bold">湲곗〈 蹂닿븿뿉 씠 異붿쿇 議고빀 빀궛븯湲</h4>
+                        <p class="text-[11px] text-slate-200 leading-relaxed">
+                            異붿쿇맂 쁺뼇 꽦遺꾨뱾쓣 쁽옱 蹂닿븿뿉 利됱떆 닾엯떆耳, 湲곗〈 쁺뼇젣뱾怨 늻쟻쑝濡 빀궛맂 怨쇰떎 蹂듭슜 긽깭瑜 吏꾨떒湲곕줈 뿰냽 紐⑤땲꽣留곹빀땲떎.
+                        </p>
+                        <button onclick="addRecommendedToChecker()" class="w-full bg-[#10B981] hover:bg-[#0f9f6e] text-white font-bold py-3.5 rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-circle-plus"></i> 궡 蹂닿븿뿉 異붿쿇뙥 엫떆 옣 & 吏꾨떒븯湲
+                        </button>
+                    </div>
+
+                    <!-- 눥븨紐 뒪留덊듃 뒪넗뼱 젙蹂 媛씠뱶 -->
+                    <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 space-y-6">
+                        <div class="space-y-1">
+                            <div class="inline-flex px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#10B981] font-bold text-[10px] uppercase tracking-wide">
+                                윖 쇅遺 뒪넗뼱 理쒖媛 눥븨 룄슦誘
+                            </div>
+                            <h4 class="text-base font-bold text-[#1E3A2F]">뒪留덊듃 뒪넗뼱 醫낇빀 鍮꾧탳</h4>
+                        </div>
+                        
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            荑좏뙜, 삱由щ툕쁺, 븘씠뿀釉뚯쓽 媛 쁺뼇냼蹂 寃깋 븘꽣媛 옄룞쑝濡 깮꽦릺뿀뒿땲떎. 븘슂븯떊 쁺뼇냼 븯떒뿉꽌 썝븯떆뒗 뒪넗뼱쓽 濡쒓퀬瑜 늻瑜대㈃ 留욎땄 젣뭹 寃깋쑝濡 諛붾줈 씠룞빀땲떎.
+                        </p>
+
+                        <!-- 엯젏 梨꾨꼸 二쇱슂 삙깮 젙蹂 -->
+                        <div class="border-y border-slate-100 py-4 space-y-3">
+                            <div class="flex items-center gap-3 text-xs">
+                                <span class="w-16 text-center py-1 rounded bg-[#0074E9] text-white font-bold text-[10px]">荑좏뙜</span>
+                                <span class="text-slate-600 font-medium">슦쉶썝 臾대즺 濡쒖폆諛곗넚 / 깉踰 諛곗넚 蹂댁옣</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-xs">
+                                <span class="w-16 text-center py-1 rounded bg-[#82BA27] text-white font-bold text-[10px]">삱由щ툕쁺</span>
+                                <span class="text-slate-600 font-medium">삤뒛뱶由 利됱떆 諛곗넚 쟻슜 媛뒫</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-xs">
+                                <span class="w-16 text-center py-1 rounded bg-[#4E7E24] text-white font-bold text-[10px]">븘씠뿀釉</span>
+                                <span class="text-slate-600 font-medium">吏곴뎄 쟾臾 紐, 듅蹂 肄붾뱶 븷씤 젣怨</span>
+                            </div>
+                        </div>
+
+                        <!-- 삙깮 슂빟 -->
+                        <div class="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100 space-y-2.5 text-xs text-slate-600">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-info text-[#10B981] mt-0.5"></i>
+                                <span><strong>二쇱쓽궗빆:</strong> 쓽빟뭹씠 븘땶 嫄닿컯湲곕뒫떇뭹씠硫, 엫궛遺굹 듅씠泥댁쭏씤 寃쎌슦 援щℓ 궗씠듃 궡 긽꽭 몴湲 썝猷 꽦遺꾩쓣 솗씤븳 썑 꽠痍⑦븯떆湲 諛붾엻땲떎.</span>
+                            </div>
+                        </div>
+
+                        <button onclick="showToast('븘슂븳 쁺뼇냼 移대뱶쓽 눥븨 踰꾪듉쓣 겢由븯떆硫 媛 뒪넗뼱 럹씠吏濡 븞쟾븯寃 씠룞빀땲떎.', 'success')" class="w-full bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-center flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-magnifying-glass"></i> 궡 留욎땄 눥븨 寃쎈줈 솗씤 셿猷
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         VIEW 4: SUPPLEMENT CHECKER VIEW (궡 쁺뼇젣 珥덇낵 吏꾨떒 솕硫)
+         ============================================== -->
+    <div id="checker-view" class="view-section transition-all duration-300 hidden py-12 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <!-- 긽떒 媛씠뱶 諛 젙蹂 쁺뿭 -->
+            <div class="bg-gradient-to-r from-teal-900 to-emerald-900 text-white p-8 rounded-3xl shadow-xl mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="space-y-2 max-w-2xl">
+                    <span class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Nutrient Overlap Diagnostic</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold font-serif">궡 쁺뼇젣 以묐났쨌怨쇰떎 꽠痍 옄媛吏꾨떒</h2>
+                    <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                        쁽옱 떇긽 쐞 샊 꽌엻옣뿉 蹂닿 以묒씠떊 쁺뼇젣瑜 紐⑸줉뿉 벑濡앺븯꽭슂. 궗슜옄쓽 뿰졊 諛 듅씠 紐 긽깭 봽濡쒗븘뿉 湲곕컲븯뿬 쐞뿕 긽븳꽑(Tolerable Upper Intake Level)쓣 룞쟻쑝濡 蹂寃쏀븯怨 遺옉슜 쐞옣옣븷 諛 媛꾨룆꽦쓣 寃쎄퀬빐 뱶由쎈땲떎.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl text-center">
+                        <div class="text-[10px] text-emerald-300 uppercase font-mono">쁽옱 벑濡앸맂 닔</div>
+                        <div id="active-supp-count" class="text-3xl font-extrabold text-white mt-1">2媛</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 硫붿씤 吏꾨떒 떆蹂대뱶 援ъ“ -->
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- 1. 醫뚯륫: 봽濡쒗븘 븘꽣 諛 궡 쁺뼇젣 愿由 -->
+                <div class="lg:col-span-5 space-y-6">
+                    
+                    <!-- 1:1 留욎땄 吏꾨떒 봽濡쒗븘 븘꽣 쐞젽 -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-5">
+                        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear text-[#10B981]"></i> 윉 1:1 吏꾨떒 쟻슜 봽濡쒗븘 꽕젙
+                        </h3>
+                        <p class="text-[11px] text-slate-400">
+                            쁺뼇븰쟻 븞쟾 긽븳 꽠痍⑥꽑 궗슜옄쓽 뿰졊, 떊吏꾨궗쑉 諛 떊泥 議곌굔뿉 쓽빐 떎瑜닿쾶 怨꾩궛맗땲떎. 紐 긽깭 븘꽣瑜 耳쒕㈃ 떎떆媛꾩쑝濡 李⑦듃 寃쎄퀬꽑씠 蹂룞빀땲떎.
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <label class="block text-[10px] text-slate-400 mb-1">꽦蹂</label>
+                                <select id="checker-gender" onchange="recalculateSupplements()" class="w-full p-3 rounded-xl border border-slate-200 bg-white font-medium">
+                                    <option value="male">궓꽦 (Male)</option>
+                                    <option value="female">뿬꽦 (Female)</option>
+                                    <option value="not_disclosed">쓳떟 븞븿</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-slate-400 mb-1">뿰졊</label>
+                                <select id="checker-age" onchange="recalculateSupplements()" class="w-full p-3 rounded-xl border border-slate-200 bg-white font-medium">
+                                    <option value="under_20">20 誘몃쭔</option>
+                                    <option value="20s">20</option>
+                                    <option value="30s">30</option>
+                                    <option value="40s" selected>40</option>
+                                    <option value="50s">50</option>
+                                    <option value="60s+">60 씠긽</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 pt-3 border-t border-slate-100">
+                            <label class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">듅씠 紐 긽깭 꽑깮 (以묐났 꽕젙 媛뒫)</label>
+                            
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                                    <input type="checkbox" id="cond-pregnant" onchange="recalculateSupplements()" class="w-4 h-4 rounded text-[#10B981] accent-[#10B981]">
+                                    <span>윣 엫떊 삉뒗 닔쑀湲 (鍮꾪誘퍭/떎由щ쭏由 李⑤떒 쓳)</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                                    <input type="checkbox" id="cond-organ" onchange="recalculateSupplements()" class="w-4 h-4 rounded text-[#10B981] accent-[#10B981]">
+                                    <span>슑截 媛/떊옣 湲곕뒫 슦젮 (留덇렇꽕뒛/떎由щ쭏由 蹂댁닔쟻 議곗쑉)</span>
+                                </label>
+                                <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                                    <input type="checkbox" id="cond-sport" onchange="recalculateSupplements()" class="w-4 h-4 rounded text-[#10B981] accent-[#10B981]">
+                                    <span>슒 怨좉컯룄 뒪룷痢 / 寃⑸젹븳 쑁泥 솢룞 (鍮꾪誘 B援/C 븳怨 셿솕)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 쁺뼇젣 異붽븯湲 而⑦듃濡 뙣꼸 (떎젣 쑀紐 젣뭹 鍮좊Ⅸ 異붽) -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-6">
+                        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-folder-plus text-[#10B981]"></i> 쁽옱 癒밸뒗 젣뭹 鍮좊Ⅸ 꽑깮 異붽
+                        </h3>
+                        
+                        <!-- 봽由ъ뀑 洹몃━뱶 -->
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <button onclick="addPresetSupplement('multi')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">뼹씪씠釉 醫낇빀鍮꾪誘</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">鍮꾪誘퍬,D,B援,留덇렇꽕뒛 벑</span>
+                            </button>
+                            <button onclick="addPresetSupplement('vitb')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">꽱듃猷 룷 留</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">B援 솢젰 쐞二 꽦遺 議고빀</span>
+                            </button>
+                            <button onclick="addPresetSupplement('vitd')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">넄媛 鍮꾪誘 D3 2200</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">吏슜꽦 鍮꾪誘퍭 怨좏븿웾</span>
+                            </button>
+                            <button onclick="addPresetSupplement('calmag')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">移쇰쭏뵒 뵆윭뒪</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">移쇱뒛/留덇렇꽕뒛/鍮꾪誘퍭</span>
+                            </button>
+                            <button onclick="addPresetSupplement('omega')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">rTG 삤硫붽3 슱듃씪</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">떇臾쇱꽦 EPA/DHA 100%</span>
+                            </button>
+                            <button onclick="addPresetSupplement('lutein')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">븞援 猷⑦뀒씤吏븘옍떞</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">늿 끂솕 蹂댄샇 솴諛 꽦遺</span>
+                            </button>
+                            <button onclick="addPresetSupplement('zinc')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">怨좊젮떒 鍮꾪誘퍬 1000</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">鍮꾪誘퍬 빆궛솕 떒씪젣</span>
+                            </button>
+                            <button onclick="addPresetSupplement('milk')" class="p-3 bg-slate-50 hover:bg-emerald-50 hover:border-[#10B981] border border-slate-200 rounded-xl text-left text-xs transition duration-200">
+                                <span class="block font-bold text-slate-700">씫넗븦 깮쑀궛洹 怨⑤뱶</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5 block">쑀궛洹 & 硫댁뿭 븘뿰 蹂닿컯</span>
+                            </button>
+                        </div>
+
+                        <!-- 닔룞 而ㅼ뒪 벑濡 쁺뿭 -->
+                        <div class="border-t border-slate-100 pt-5 space-y-4">
+                            <span class="block text-xs font-bold text-slate-700"><i class="fa-solid fa-pen-fancy text-emerald-500"></i> 궡媛 癒밸뒗 떎瑜 떎젣 쁺뼇젣 吏곸젒 벑濡</span>
+                            
+                            <div class="space-y-4">
+                                <div class="relative">
+                                    <label class="block text-[10px] text-slate-400 mb-1">쁺뼇젣 젣議곗궗 諛 젣뭹紐 寃깋</label>
+                                    <input type="text" id="custom-supp-name" oninput="searchBrandSupplements(this.value)" placeholder="삁: 꽱듃猷, 넄媛, 굹슦뫖뱶, 씫넗븦, 怨좊젮떒 寃깋..." class="w-full text-xs px-3.5 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-slate-50/50">
+                                    
+                                    <!-- 떎떆媛 寃깋 옄룞셿꽦 異붿쿇 뱶濡떎슫 -->
+                                    <div id="brand-suggest-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 max-h-48 overflow-y-auto"></div>
+                                </div>
+
+                                <!-- 옄룞쑝濡 遺꾩꽍맂 븿웾 젙蹂 떎떆媛 떆媛곹솕 蹂대뱶 -->
+                                <div id="auto-ingredients-preview" class="hidden p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100 text-xs animate-fadeIn space-y-2">
+                                    <!-- JS뿉꽌 꽑깮 떆 룞쟻쑝濡 븿웾 諛곗 긽꽭 젙蹂대 二쇱엯븯寃 맗땲떎 -->
+                                </div>
+
+                                <!-- 젣뭹蹂 蹂듬났빀 꽦遺 援ъ꽦 鍮뚮뜑 (닔룞 諛 寃깋 옄룞셿꽦 뿰怨) -->
+                                <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-150">
+                                    <label class="block text-[10px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                                        <i class="fa-solid fa-layer-group text-emerald-500"></i> 씠 젣뭹뿉 븿쑀맂 꽦遺 紐⑤몢 泥댄겕 (븿웾 湲곗옱)
+                                    </label>
+                                    
+                                    <div id="custom-ingredients-grid" class="grid grid-cols-2 gap-2 text-xs">
+                                        <!-- 옄諛붿뒪겕由쏀듃濡 씪愿꽦 엳뒗 蹂듯빀 쁺뼇냼 鍮뚮뜑 洹몃━뱶 룞쟻 궫엯 -->
+                                    </div>
+                                </div>
+
+                                <button onclick="addCustomSupplement()" class="w-full py-3 bg-[#1E3A2F] hover:bg-[#142820] text-white text-xs font-bold rounded-xl transition-all shadow-md">
+                                    쐞 援ъ꽦쑝濡 쁺뼇젣 蹂닿븿뿉 異붽 <i class="fa-solid fa-plus ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 벑濡앸맂 굹쓽 蹂듭슜 由ъ뒪듃 -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
+                        <h3 class="text-base font-bold text-slate-800 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-pills text-emerald-500"></i> 蹂듭슜 以묒씤 떎젣 쁺뼇젣 蹂닿븿</span>
+                            <span class="text-xs text-[#10B981] font-semibold">떎떆媛 怨꾩궛</span>
+                        </h3>
+                        
+                        <!-- 由ъ뒪듃 而댄룷꼳듃 -->
+                        <div id="my-supplements-list" class="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
+                            <!-- JS뿉 쓽빐 룞쟻 젋뜑留 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 슦痢: 꽠痍 怨쇰떎 諛 以묐났 紐⑤땲꽣留 떎떆媛 李⑦듃 떆蹂대뱶 -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-100 space-y-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800 font-serif flex items-center gap-2">
+                                    <i class="fa-solid fa-square-poll-horizontal text-emerald-500"></i> 醫낇빀 쁺뼇 꽦遺 꽠痍 遺꾩꽍湲
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-1">
+                                    벑濡앺븳 떎젣 쁺뼇젣 냽 蹂듭옟븳 꽦遺 닔移섎 紐⑤몢 떎떆媛 빀궛븳 늻怨 寃곌낵엯땲떎. (100% = 븯猷 沅뚯옣웾)
+                                </p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full bg-red-50 text-red-500 font-bold text-[10px] border border-red-100 flex items-center gap-1">
+                                <i class="fa-solid fa-triangle-exclamation animate-pulse"></i> 봽濡쒗븘 룞쟻 뿰궛 以
+                            </span>
+                        </div>
+
+                        <!-- 봽濡쒗븘 븘꽣 쟻슜 濡쒓렇 븣由쇳뙋 -->
+                        <div id="checker-profile-status-logs" class="space-y-2 hidden">
+                            <!-- JS뿉 쓽빐 봽濡쒗븘 蹂寃 떆 媛룞 諛 議곗젙 濡쒓렇 슂빟 궫엯 -->
+                        </div>
+
+                        <!-- 꽠痍⑤웾 떎떆媛 룞쟻 李⑦듃 異쒕젰遺 -->
+                        <div id="diagnose-chart-area" class="space-y-4 pt-2">
+                            <!-- JS瑜 넻빐 媛 쁺뼇냼 늻怨 닔移섍 룞쟻 諛 삎깭濡 떎떆媛 媛깆떊맖 -->
+                        </div>
+
+                        <!-- 긽깭 遺꾨쪟 踰붾 -->
+                        <div class="grid grid-cols-3 gap-2.5 bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center text-xs font-semibold">
+                            <div class="flex items-center justify-center gap-1.5 text-slate-500">
+                                <span class="w-3 h-3 rounded-full bg-slate-300"></span> 遺議 (50% 誘몃쭔)
+                            </div>
+                            <div class="flex items-center justify-center gap-1.5 text-emerald-600">
+                                <span class="w-3 h-3 rounded-full bg-[#10B981]"></span> 븞쟾/쟻젙 (50% ~ 150%)
+                            </div>
+                            <div class="flex items-center justify-center gap-1.5 text-red-500">
+                                <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span> 珥덇낵/寃쎄퀎 (150% 씠긽)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 떎떆媛 쁺뼇 吏꾨떒 泥섎갑 諛 AI 뵾뱶諛 硫붾え -->
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 space-y-5">
+                        <h4 class="font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-user-doctor text-[#10B981]"></i> 留욎땄 蹂듭슜 理쒖쟻솕 醫낇빀 由ы룷듃
+                        </h4>
+                        
+                        <div id="diagnostic-feedback-box" class="space-y-3">
+                            <!-- 怨쇰떎 쁺뼇냼 諛쒖깮 떆 븣엺 諛 꽠痍 梨 媛씠뱶 뀓뒪듃 옄룞 궫엯 -->
+                        </div>
+                        
+                        <!-- 寃⑹씪 蹂듭슜 똻 諛 諛고빀 轅똻 -->
+                        <div class="bg-amber-50 border border-amber-200/50 rounded-2xl p-4 flex gap-3 text-xs text-amber-900">
+                            <i class="fa-solid fa-lightbulb text-lg text-amber-500 mt-0.5"></i>
+                            <div>
+                                <span class="font-bold">蹂듭슜 긽샇옉슜 뒪留덊듃 똻:</span>
+                                <p class="text-amber-800 leading-relaxed mt-1 text-[11px]">
+                                    移쇱뒛怨 留덇렇꽕뒛 꽌濡 씉닔 넻濡쒓 媛숈븘 怨좏븿웾씪 븧 1:1 삉뒗 2:1 鍮꾩쑉쓣 꽆吏 븡븘빞 씉닔쑉씠 넂븘吏묐땲떎. 
+                                    吏슜꽦 쁺뼇냼씤 鍮꾪誘퍭, 삤硫붽3뒗 씉닔 슚쑉 利앸瑜 쐞빐 怨듬났蹂대떎뒗 媛湲됱쟻 떇궗 吏곹썑 븿猿 뱶떆뒗 寃껋쓣 沅뚯옣빀땲떎.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- AI OCR 뒪罹 媛긽 移대찓씪 紐⑤떖 (떇빟泥 誘몃컻寃 泥 벑濡앹슜) -->
+<div id="ocr-scan-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-6 relative border border-slate-100 animate-fadeIn">
+        <button onclick="closeOcrModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <div class="space-y-1.5 text-center">
+            <span class="bg-emerald-50 text-emerald-600 font-bold text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">AI OCR Label Scanner</span>
+            <h3 class="text-lg font-bold text-[#1E3A2F]">쁺뼇꽦遺꾪몴 궗吏 뒪罹 벑濡</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">쁺뼇젣 뮮硫댁쓽 '쁺뼇쨌湲곕뒫젙蹂' 몴瑜 궗媛곹삎 븞뿉 留욎떠 珥ъ쁺빐 二쇱꽭슂.</p>
+        </div>
+        <!-- 媛긽 酉고뙆씤뜑 -->
+        <div class="relative bg-slate-950 rounded-2xl aspect-[4/3] overflow-hidden flex flex-col items-center justify-center text-white border border-slate-800">
+            <!-- 媛긽 鍮꾨뵒삤 솕硫 -->
+            <div id="ocr-viewfinder-screen" class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                <i class="fa-solid fa-camera text-4xl text-slate-500 mb-2"></i>
+                <span class="text-xs text-slate-400">移대찓씪 湲 以...</span>
+            </div>
+            <!-- 뒪罹 媛씠뱶 씪씤 -->
+            <div id="ocr-scanner-laser" class="hidden absolute left-4 right-4 top-4 bottom-4 border-2 border-dashed border-[#10B981] rounded-xl flex items-center justify-center">
+                <div class="w-full h-0.5 bg-gradient-to-r from-transparent via-[#10B981] to-transparent shadow-[0_0_10px_#10B981] animate-bounce"></div>
+            </div>
+        </div>
+        <!-- 뒪罹 寃곌낵 誘몃━蹂닿린 (珥덇린 닲源) -->
+        <div id="ocr-extracted-result" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+            <span class="font-bold text-slate-700 block"><i class="fa-solid fa-microchips text-[#10B981]"></i> 異붿텧맂 꽦遺 遺꾩꽍 젙蹂</span>
+            <div class="flex flex-wrap gap-1.5" id="ocr-badges-area"></div>
+        </div>
+        <!-- 紐⑤떖 븸뀡 -->
+        <div class="grid grid-cols-2 gap-3 pt-2">
+            <button id="ocr-action-btn" onclick="startOcrCapture()" class="col-span-2 bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-camera"></i> 궗吏 珥ъ쁺 諛 遺꾩꽍 떆옉
+            </button>
+            <button id="ocr-apply-btn" onclick="applyOcrResult()" class="hidden col-span-2 bg-[#10B981] hover:bg-[#0f9f6e] text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md">
+                쁺뼇 꽦遺 鍮뚮뜑뿉 씪愿 옄룞 留ㅽ븨븯湲
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 뫖꽣 怨듯넻 쁺뿭 -->
+<footer class="bg-[#1E3A2F] text-slate-300 py-16 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 text-sm">
+        <div class="space-y-4">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-[#10B981] flex items-center justify-center text-white">
+                    <i class="fa-solid fa-seedling text-sm"></i>
+                </div>
+                <span class="font-serif text-lg font-bold text-white tracking-tight">NutriMatch</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                돱듃由щℓ移섎뒗 떇빟泥 沅뚯옣 媛씠뱶瑜 以닔븯硫 媛쒖씤쓽 蹂듭슜 뜲씠꽣 遺꾩꽍빐 理쒖긽쓽 삤踰꾨룄利 耳뼱 떆뒪뀥怨 泥쒖뿰 썝猷 쁺뼇 留ㅼ묶 넄猷⑥뀡쓣 꽑궗빀땲떎.
+            </p>
+        </div>
+        
+        <div class="space-y-3">
+            <h5 class="text-white font-bold">꽌鍮꾩뒪 諛 븞떖 耳뼱</h5>
+            <ul class="space-y-2 text-xs text-slate-400">
+                <li><a href="#" onclick="navigateQuiz()" class="hover:text-white transition">AI 臾대즺 꽦遺꾨ℓ移</a></li>
+                <li><a href="#" onclick="switchView('checker')" class="hover:text-white transition">궡 쁺뼇젣 以묐났 꽠痍 寃궗</a></li>
+                <li><a href="#" class="hove    const INGREDIENTS_DB = {
+        fatigue: [
+            { name: "꽱듃猷 硫떚援щ / 엫뙥誘 봽由щ몄뾼", tag: "솢젰 뿉꼫吏", size: "쟻떦븿", detail: "留뚯꽦 뵾濡 쉶蹂듦낵 泥대궡 뿉꼫吏 궗瑜 洹밸솕븯湲 쐞빐 씉닔쑉씠 넂 솢꽦삎 鍮꾪誘 B1, B2, B6媛 怨좏븿웾 諛고빀맂 젣뭹쓣 젣븞빀땲떎.", searchQuery: "鍮꾪誘퍫 肄ㅽ뵆젆뒪", dailyGoalPercent: 100, effect: "깂닔솕臾, 떒諛깆쭏, 吏諛⑹쓣 뿉꼫吏濡 쟾솚븯뒗 궗 怨쇱젙쓽 빑떖 議고슚냼濡 옉슜빀땲떎. 쑁泥 뵾濡, 援щ궡뿼 삁諛, 떊寃쏀넻 셿솕뿉 留ㅼ슦 슚怨쇱쟻엯땲떎.", caution: "怨좎슜웾 鍮꾪誘퍬 룞떆 蹂듭슜 떆 쐞옣 옣븷媛 諛쒖깮븷 닔 엳뼱 떇썑 蹂듭슜쓣 沅뚯옣빀땲떎. 닔슜꽦씠誘濡 痍⑥묠 쟾 蹂듭슜븯硫 닔硫댁쓣 諛⑺빐븷 닔 엳쑝誘濡 삤쟾뿉 꽠痍⑦븯꽭슂. 떦눊빟씠굹 젣궛젣 媛꾧꺽쓣 몢怨 뱶떆뒗 寃껋씠 醫뗭뒿땲떎." },
+            { name: "썒젣빟 肄붿뿏옄엫 Q10", tag: "꽭룷 빆궛솕", size: "옉쓬", detail: "꽭룷 궡 誘명넗肄섎뱶由ъ븘쓽 ATP 뿉꼫吏 깮꽦쓣 珥됱쭊븯뿬 뵾濡쒕 洹쇰낯쟻쑝濡 媛쒖꽑븯怨, 솢꽦궛냼瑜 뼲젣븯뒗 媛뺣젰븳 빆궛솕 꽦遺꾩엯땲떎.", searchQuery: "肄붿뿏옄엫 Q10", dailyGoalPercent: 100, effect: "떖옣 諛 洹쇱쑁 꽭룷쓽 뿉꼫吏 깮꽦쓣 룙怨 젙긽쟻씤 삁븬 쑀吏뿉 湲곗뿬빀땲떎. 끂솕 諛⑹ 솢젰 利앹쭊뿉 빑떖쟻씤 뿭븷쓣 빀땲떎.", caution: "吏슜꽦씠誘濡 諛섎뱶떆 떇썑뿉 吏諛⑹씠 룷븿맂 떇궗 븿猿 뱶뀛빞 씉닔쑉씠 넂뒿땲떎. 怨좏삁븬 빟씠굹 빆쓳怨좎젣(뙆由) 蹂듭슜 떆 빟슚뿉 쁺뼢쓣 以 닔 엳쑝誘濡 二쇱쓽빐빞 빀땲떎." }
+        ],
+        eyes: [
+            { name: "븞援 猷⑦뀒씤吏븘옍떞 誘몃땲", tag: "留앸쭑/솴諛 蹂댄샇", size: "蹂댄넻", detail: "뒪留덊듃룿씠굹 紐⑤땲꽣뿉꽌 諛쒖깮븯뒗 釉붾（씪씠듃濡쒕꽣 留앸쭑쓣 蹂댄샇븯怨, 굹씠媛 뱾硫 媛먯냼븯뒗 솴諛 以묒떖遺 깋냼 諛룄瑜 슚怨쇱쟻쑝濡 梨꾩썙以띾땲떎.", searchQuery: "猷⑦뀒씤 吏븘옍떞", dailyGoalPercent: 100, effect: "솴諛 깋냼 諛룄瑜 쑀吏븯뿬 떆媛 湲곕뒫쓣 媛쒖꽑븯怨, 옄쇅꽑 諛 泥깋愿묒쑝濡 씤븳 떆젰 븯 븞援 궛솕瑜 諛⑹빀땲떎.", caution: "씉뿰옄쓽 寃쎌슦 怨쇰떎 蹂듭슜 떆 룓븫 諛쒕퀝 쐞뿕씠 利앷븷 닔 엳떎뒗 뿰援ш 엳쑝誘濡 沅뚯옣웾(븯猷 20mg)쓣 吏耳쒖빞 빀땲떎. 떇썑 蹂듭슜쓣 沅뚯옣빀땲떎." },
+            { name: "醫낃렐떦 봽濡쒕찓媛 rTG 삤硫붽3", tag: "삁瑜/늿嫄댁“ 耳뼱", size: "議곌툑 겮", detail: "泥대궡 씉닔쑉쓣 넂씤 rTG 삎깭濡 븞援 嫄댁“利 셿솕뒗 臾쇰줎, 늿쓽 誘몄꽭 삁愿 삁븸 닚솚쓣 썝솢븯寃 븯뿬 뵾濡쒕 뜙뼱以띾땲떎.", searchQuery: "rtg 삤硫붽3", dailyGoalPercent: 100, effect: "븞援ъ쓽 嫄댁“븿쓣 셿솕븯怨 留앸쭑 誘몄꽭삁愿쓽 삁뻾쓣 媛쒖꽑빀땲떎. 泥대궡 以묒꽦吏吏 닔移섎 궙異붿뼱 떖삁愿 嫄닿컯뿉룄 긽썡븳 슚怨쇰 蹂댁엯땲떎.", caution: "삁븸 쓳怨좊 諛⑺빐븯誘濡 닔닠쓣 븵몢怨 엳嫄곕굹 븘뒪뵾由, 뙆由 벑 삁쟾 슜빐젣瑜 蹂듭슜 以묒씠씪硫 꽠痍⑤ 以묐떒븯嫄곕굹 쟾臾멸 긽떞씠 븘닔쟻엯땲떎." }
+        ],
+        gut: [
+            { name: "씫넗븦 깮쑀궛洹 怨⑤뱶", tag: "옣궡 쑀씡洹 蹂닿컯", size: "옉쓬", detail: "쐞궛怨 떞利숈궛뿉 궡븘궓븘 옣源뚯 룄떖븯뒗 蹂댁옣洹좎닔媛 넂 쑀궛洹좎쑝濡, 쑀빐洹좎쓣 뼲젣븯怨 옣궡 誘몄깮臾 깮깭怨꾨 嫄닿컯븯寃 蹂듭썝빀땲떎.", searchQuery: "봽濡쒕컮씠삤떛뒪 쑀궛洹", dailyGoalPercent: 100, effect: "쑀씡洹 利앹떇 諛 쑀빐洹 뼲젣濡 諛곕 솢룞쓣 썝솢븯寃 븯怨, 옣踰 硫댁뿭쓣 媛뺥솕븯뿬 븣젅瑜닿린 吏덊솚 삁諛⑹뿉룄 룄쓣 以띾땲떎.", caution: "빆깮젣 븿猿 蹂듭슜 떆 쑀궛洹좎씠 궗硫몃맆 닔 엳쑝誘濡 理쒖냼 2~4떆媛꾩쓽 媛꾧꺽쓣 몢怨 꽠痍⑦빐빞 빀땲떎. 湲곗긽 吏곹썑 怨듬났뿉 異⑸텇븳 臾쇨낵 븿猿 뱶떆뒗 寃껋씠 醫뗭뒿땲떎." }
+        ],
+        skin: [
+            { name: "뿉踰꾩퐳씪寃 엫 鍮꾩삤떞", tag: "뵾遺 깂젰", size: "媛猷/룷", detail: "씪諛 룞臾쇱꽦 肄쒕씪寃먮낫떎 씉닔쑉씠 닔떗 諛 넂 遺꾩옄 렔씠뱶 援ъ“濡, 뵾遺 吏꾪뵾痢듭쓽 닔遺 蹂댁쑀젰쓣 넂씠怨 泥섏쭊 깂젰쓣 냽遺꽣 걣뼱삱젮 以띾땲떎.", searchQuery: "遺꾩옄 肄쒕씪寃", dailyGoalPercent: 100, effect: "吏꾪뵾痢듭쓽 堉덈瑜 삎꽦븯뿬 뵾遺 깂젰쓣 媛쒖꽑븯怨 二쇰쫫쓣 셿솕빀땲떎. 뿰怨④낵 愿젅, 넀넲 諛 紐⑤컻 嫄닿컯뿉룄 湲곗뿬빀땲떎.", caution: "鍮꾪誘퍬 븿猿 꽠痍⑦븯硫 빀꽦뿉 겙 떆꼫吏媛 궔땲떎. 떎留 怨쇰웾 꽠痍 떆 냼솕 遺덈웾씠굹 媛뒪媛 李 닔 엳쑝誘濡 沅뚯옣웾쓣 吏궎꽭슂." },
+            { name: "돱듃由ъ퐫뼱 엳븣猷⑤줎궛", tag: "닔遺 蹂댁땐", size: "蹂댄넻", detail: "옄湲 臾닿쾶쓽 1000諛 닔遺꾩쓣 癒멸툑뒗 엳븣猷⑤줎궛怨 肄쒕씪寃먯쓣 吏꺊븯뒗 뿕씪뒪떞씠 諛고빀릺뼱 洹쇰낯쟻씤 뵾遺 냽떦源쓣 빐寃고빀땲떎.", searchQuery: "엳븣猷⑤줎궛", dailyGoalPercent: 100, effect: "닔遺꾩쓣 걣뼱떦湲곌퀬 쑀吏떆耳 뵾遺 蹂댁뒿쓣 룙怨 嫄댁“븿쓣 諛⑹빀땲떎. 뿕씪뒪떞씠 깂젰留앹쓣 吏吏빐 以띾땲떎.", caution: "泥대궡 닔遺꾩씠 遺議깊븯硫 삤엳젮 뵾遺 諛 닔遺꾩쓣 鍮쇱븮湲 닔 엳쑝誘濡, 蹂듭슜 떆 臾쇱쓣 룊냼蹂대떎 異⑸텇엳 留덉떆뒗 寃껋씠 留ㅼ슦 以묒슂빀땲떎." }
+        ],
+        diet: [
+            { name: "GRN+ 珥덈줉씠 媛瑜댁떆땲븘", tag: "泥댁諛 媛먯냼", size: "蹂댄넻", detail: "HCA(Hydroxycitric Acid) 꽦遺꾩씠 엵뿬 깂닔솕臾쇱씠 泥댁諛⑹쑝濡 쟾솚릺뒗 빑떖 슚냼 옉슜쓣 李⑤떒븯뿬 슚怨쇱쟻씤 泥댁쨷 愿由щ 룙뒿땲떎.", searchQuery: "媛瑜댁떆땲븘", dailyGoalPercent: 100, effect: "깂닔솕臾쇱쓽 吏諛 빀꽦쓣 뼲젣븯뿬 蹂듬 뵾븯吏諛⑷낵 궡옣吏諛⑹쓣 以꾩엯땲떎. 젟떞 샇瑜대が뿉 쁺뼢쓣 二쇱뼱 떇슃 뼲젣뿉룄 룄쓣 以띾땲떎.", caution: "媛 룆꽦 쐞뿕씠 蹂닿퀬맂 諛 엳뼱 媛꾩뿼, 媛꾧꼍솕 벑 媛 吏덊솚 솚옄뒗 젅 蹂듭슜쓣 뵾빐빞 빀땲떎. 떇궗 30遺 쟾 怨듬났 蹂듭슜씠 媛옣 슚怨쇱쟻엯땲떎." },
+            { name: "諛붿씠깉酉고떚 硫뷀洹몃┛ 鍮꾧굔", tag: "泥댁諛/빆궛솕", size: "蹂댄넻", detail: "吏諛 궛솕瑜 珥됱쭊븯뿬 湲곗큹궗웾쓣 넂씠怨, 떇썑 삁以 肄쒕젅뒪뀒濡 媛쒖꽑뿉 룄쓣 二쇰뒗 몴쟻씤 떎씠뼱듃 湲곕뒫꽦 썝猷뚯엯땲떎.", searchQuery: "끃李⑥뭅뀒궓", dailyGoalPercent: 100, effect: "吏諛 꽭룷 遺꾪빐瑜 珥됱쭊븯怨 삁以 肄쒕젅뒪뀒濡ㅼ쓣 궙異λ땲떎. 媛뺣젰븳 빆궛솕 옉슜쑝濡 泥대궡 뿼利 닔移섎 媛먯냼떆궢땲떎.", caution: "移댄럹씤씠 븿쑀릺뼱 엳뼱 移댄럹씤뿉 誘쇨컧븯嫄곕굹 닔硫 옣븷媛 엳뒗 遺, 떖옣 吏덊솚옄뒗 뀅 꽠痍⑤ 뵾빐빞 빀땲떎. 怨듬났 꽠痍 떆 냽벐由쇱씠 諛쒖깮븷 닔 엳뒿땲떎." }
+        ],
+        immunity: [
+            { name: "怨좊젮떒 硫댁뿭 鍮꾪誘", tag: "硫댁뿭젰 媛뺥솕", size: "옉쓬", detail: "젙긽쟻씤 꽭룷 遺꾩뿴怨 硫댁뿭 꽭룷(T꽭룷, 떇꽭룷 벑)쓽 솢꽦쓣 洹밸솕븯뿬 솚젅湲 媛먯뿼 吏덊솚쑝濡쒕꽣 紐몄쓣 媛뺣젰븯寃 蹂댄샇빀땲떎.", searchQuery: "硫댁뿭 븘뿰", dailyGoalPercent: 100, effect: "젙긽쟻씤 꽭룷 遺꾩뿴怨 硫댁뿭 湲곕뒫뿉 븘닔쟻씠硫 媛먭린 삁諛 諛 샇씉湲 媛먯뿼 諛⑹뼱뿉 룄쓣 以띾땲떎.", caution: "泥좊텇씠굹 移쇱뒛 蹂댁땐젣 룞떆 蹂듭슜 떆 꽌濡 씉닔瑜 諛⑺빐븯誘濡 떆媛꾩감瑜 몢怨 뱶꽭슂. 鍮덉냽뿉 怨좎슜웾 蹂듭슜 떆 硫붿뒪爰쇱씠 諛쒖깮븷 닔 엳뒿땲떎." },
+            { name: "怨좊젮떒 鍮꾪誘퍬 1000", tag: "쑀빐궛냼 李⑤떒", size: "議곌툑 겮", detail: "쑀빐 궛냼濡쒕꽣 꽭룷瑜 蹂댄샇븯뒗 1李 諛⑹뼱꽑 뿭븷쓣 븯硫, 泥좊텇 씉닔 珥됱쭊怨 肄쒕씪寃 빀꽦쓣 룄 쟾諛섏쟻씤 떊泥 諛⑹뼱젰쓣 넂엯땲떎.", searchQuery: "鍮꾪誘퍬 1000", dailyGoalPercent: 100, effect: "硫댁뿭 泥닿퀎瑜 利앹쭊떆궎怨 諛붿씠윭뒪 뼲젣瑜 룄슦硫, 肄쒕씪寃 깮꽦 諛 뵾濡 쉶蹂듭뿉 긽썡빀땲떎.", caution: "媛뺥븳 궛꽦씠誘濡 怨듬났뿉 꽠痍 떆 떖븳 쐞옣 옣븷瑜 쑀諛쒗빀땲떎. 怨좎슜웾 꽠痍 떆 떊옣 寃곗꽍 쐞뿕씠 엳뒗 솚옄뒗 二쇱쓽빐빞 빀땲떎." }
+        ],
+        joints: [
+            { name: "醫낃렐떦嫄닿컯 愿젅뿏 MSM", tag: "뿰怨 깂젰 蹂댄샇", size: "議곌툑 겮", detail: "뿰怨 議곗쭅쓣 援ъ꽦븯뒗 빑떖 쑀솴 꽦遺꾩쑝濡, 愿젅 諛 뿰怨⑥쓽 뿼利앹꽦 넻利앹쓣 媛먯냼떆궎怨 六ｋ빰븿쓣 遺뱶읇寃 媛쒖꽑빐 以띾땲떎.", searchQuery: "MSM 떇씠쑀솴", dailyGoalPercent: 100, effect: "뿰怨④낵 씤 議곗쭅쓣 援ъ꽦븯怨 빆뿼利 옉슜쓣 넻빐 愿젅 넻利앹쓣 寃쎄컧떆궎怨 솢룞꽦쓣 媛쒖꽑빀땲떎.", caution: "솴(Sulfur) 븣젅瑜닿린媛 엳뒗 寃쎌슦 諛쒖쭊씠굹 媛젮씠 깮湲 닔 엳뒿땲떎. 뇤 삁瑜섎 利앷떆耳 痍⑥묠 쟾 蹂듭슜 떆 옞씠 븞 삱 닔 엳쑝誘濡 궙뿉 꽠痍⑦븯꽭슂." },
+            { name: "넄媛 鍮꾪誘 D3 2200", tag: "堉 삎꽦/移쇱뒛 씉닔", size: "留ㅼ슦 옉쓬", detail: "뻼鍮쏆쓣 넻빐 빀꽦릺뒗 鍮꾪誘퍭 遺議깆쓣 梨꾩썙 移쇱뒛怨 씤쓽 泥대궡 씉닔瑜 룙怨, 怨⑤떎怨듭쬆 諛쒖깮 쐞뿕쓣 쉷湲곗쟻쑝濡 궙異곗쨳땲떎.", searchQuery: "鍮꾪誘퍭3", dailyGoalPercent: 100, effect: "移쇱뒛 씉닔瑜 룄 堉덉쓽 諛룄瑜 넂씠怨, 硫댁뿭젰쓣 利앹쭊떆耳 媛곸쥌 뿼利 吏덊솚 諛 슦슱媛 媛쒖꽑뿉 룄쓣 以띾땲떎.", caution: "怨쇰떎 蹂듭슜 떆 泥대궡 移쇱뒛 닔移섍 鍮꾩젙긽쟻쑝濡 넂븘吏뒗 怨좎뭡뒛삁利앹쓣 쑀諛쒗빐 떊옣 寃곗꽍씠굹 삁愿 꽍쉶솕媛 삱 닔 엳뒿땲떎. 移쇱뒛젣 怨쇰웾 蹂묒슜 떆 二쇱쓽븯꽭슂." }
+        ],
+        stress: [
+            { name: "븞援嫄닿컯 L-뀒븘땶", tag: "뒪듃젅뒪 湲댁옣 셿솕", size: "蹂댄넻", detail: "끃李⑥뿉 뱾뼱엳뒗 븘誘몃끂궛 꽦遺꾩씠 뇤쓽 븣뙆(慣)뙆 諛쒖깮쓣 珥됱쭊빐 닔硫댁쓣 쑀諛쒗븯吏 븡쑝硫댁꽌룄 湲댁옣怨 뒪듃젅뒪瑜 遺뱶읇寃 셿솕빀땲떎.", searchQuery: "뀒븘땶", dailyGoalPercent: 100, effect: "뇤 떊寃쎌쓣 븞젙떆궎怨 븣뙆뙆瑜 利앷떆耳 遺덉븞媛먯쓣 以꾩뿬以띾땲떎. 吏묒쨷젰 븯 뾾씠 떖由ъ쟻 븞젙쓣 쑀룄빀땲떎.", caution: "빆슦슱젣굹 떊寃 븞젙젣 븿猿 蹂듭슜 떆 議몄쓬씠굹 臾닿린젰쓣 媛以묒떆궗 닔 엳뒿땲떎. 슫쟾 쟾씠굹 젙諛븳 湲곌퀎 議곗옉 쟾뿉뒗 꽠痍⑥뿉 쑀쓽븯꽭슂." },
+            { name: "돱듃由ъ퐫뼱 씫떚 닔硫닿굔媛", tag: "닔硫 吏 媛쒖꽑", size: "옉쓬", detail: "븘湲곌 슦쑀瑜 癒밴퀬 룊삩빐吏뒗 썝由ъ뿉꽌 李⑹븞븳 깮由ы솢꽦 렔씠뱶濡, 떊寃쎌쓣 븞젙떆耳 렪븞븳 닔硫 솚寃쎌쓣 議곗꽦빀땲떎.", searchQuery: "씫떚 닔硫", dailyGoalPercent: 100, effect: "닔硫 엯硫 떆媛꾩쓣 떒異뺥븯怨 닔硫 以 源⑤뒗 슏닔瑜 以꾩뿬 쟾泥댁쟻씤 닔硫댁쓽 吏덉쓣 넂뿬以띾땲떎.", caution: "슦쑀 떒諛깆쭏 媛닔遺꾪빐臾쇱씠誘濡 쑀젣뭹 삉뒗 쑀떦 遺덈궡利앹씠 떖븳 遺꾩씠굹 슦쑀 븣젅瑜닿린媛 엳뒗 遺꾩 꽠痍 쟾 솗씤씠 븘슂빀땲떎." }
+        ],
+        antioxidants: [
+            { name: "굹슦뫖뱶 젅뒆", tag: "꽭룷留 蹂댄샇", size: "蹂댄넻", detail: "솢꽦 궛냼濡 씤븳 DNA 넀긽쓣 諛⑹뼱븯뒗 誘몃웾 誘몃꽕엫 젅뒆怨 吏슜꽦 빆궛솕젣 鍮꾪誘퍮媛 寃고빀븯뿬 꽭룷 끂솕瑜 뒭異λ땲떎.", searchQuery: "젅뒆", dailyGoalPercent: 100, effect: "媛뺣젰븳 빆궛솕 옉슜쑝濡 泥대궡 뿼利앹쓣 뼲젣븯怨 꽭룷留됱쓣 蹂댄샇븯뿬 끂솕 諛⑹ 諛 硫댁뿭 湲곕뒫 쑀吏뿉 븘닔쟻엯땲떎.", caution: "怨좎슜웾 鍮꾪誘퍮뒗 吏삁쓣 諛⑺빐븯誘濡 븘뒪뵾由 벑 빆쓳怨좎젣 以묐났 蹂듭슜쓣 뵾빐빞 븯硫, 닔닠 쟾 꽠痍⑤ 以묐떒빐빞 빀땲떎." }
+        ],
+        menses: [
+            { name: "돱듃由ъ퐫뼱 떖留욎씠苑껋쥌옄쑀", tag: "썡寃쎌쟾 씠긽 긽깭 媛쒖꽑", size: "議곌툑 겮", detail: "뿼利 쑀諛 臾쇱쭏쓣 뼲젣븯뿬 썡寃 쟾 諛쒖깮븯뒗 떊泥댁쟻, 젙떊쟻 遺덊렪븿쓣 떎뒪由ш퀬, 삁以 肄쒕젅뒪뀒濡 媛쒖꽑뿉룄 湲곗뿬븯뒗 떇臾쇱꽦 삤씪엯땲떎.", searchQuery: "媛먮쭏由щ젋궛 떖留욎씠苑", dailyGoalPercent: 100, effect: "봽濡쒖뒪湲뵖 諛몃윴뒪瑜 議곗젅빐 깮由 쟾 利앺썑援(PMS)怨 뵾遺 긽깭(嫄댁“利, 媛젮)瑜 셿솕빀땲떎.", caution: "삁쟾 슜빐젣굹 삁븬빟쓣 蹂듭슜 以묒씤 寃쎌슦 빟臾 슚怨쇰 利앺룺떆궗 닔 엳뒿땲떎. 諛쒖옉꽦 吏덊솚 솚옄뒗 利앹긽쓣 븙솕떆궗 닔 엳쑝땲 二쇱쓽媛 븘슂빀땲떎." },
+            { name: "넄媛 泥좊텇 25", tag: "鍮덊삁 삁諛", size: "옉쓬", detail: "썡寃쎌쑝濡 씤빐 留ㅻ떖 넀떎릺뒗 삁븸 깮꽦쓣 蹂댁땐븯硫, 쐞옣 옣븷 蹂鍮 遺옉슜쓣 理쒖냼솕븳 닚븳 떇臾쇱꽦 泥좊텇 젣젣엯땲떎.", searchQuery: "쑀湲곕냽 泥좊텇젣", dailyGoalPercent: 100, effect: "뿤紐④濡쒕퉰怨 쟻삁援 깮꽦뿉 븘닔쟻씠硫, 泥대궡 궛냼 슫諛섏쓣 썝솢븯寃 븯뿬 뼱吏윭怨 留뚯꽦 뵾濡쒕 媛쒖꽑빀땲떎.", caution: "移쇱뒛, 븘뿰 蹂댁땐젣굹 끃李/而ㅽ뵾(땶, 移댄럹씤) 룞떆 蹂듭슜 떆 씉닔쑉씠 湲됯꺽엳 뼥뼱吏묐땲떎. 떇쟾 怨듬났뿉 삤젋吏 二쇱뒪(鍮꾪誘퍬) 癒뱀쑝硫 媛옣 醫뗭뒿땲떎." }
+        ],
+        hair: [
+            { name: "굹슦뫖뱶 鍮꾩삤떞 5000", tag: "紐⑤컻/몢뵾 뿉꼫吏", size: "蹂댄넻", detail: "耳씪떞 떒諛깆쭏 깮꽦쓣 珥됱쭊븯뒗 닔슜꽦 鍮꾪誘퍫援(鍮꾩삤떞)怨 뼇吏덉쓽 紐④렐 쁺뼇 怨듦툒썝씤 빟슜 留μ＜슚紐④ 寃고빀맂 넄猷⑥뀡엯땲떎.", searchQuery: "鍮꾩삤떞 留μ＜슚紐", dailyGoalPercent: 100, effect: "紐⑤컻쓽 빑떖 援ъ꽦 꽦遺꾩씤 耳씪떞 빀꽦쓣 珥됱쭊븯뿬 紐④렐쓣 듉듉븯寃 븯怨, 넀넲 媛덈씪吏먯쓣 諛⑹빀땲떎.", caution: "뿬뱶由꾩꽦 뵾遺쓽 寃쎌슦 怨좎슜웾 鍮꾩삤떞 꽠痍 떆 듃윭釉붿씠 븙솕맆 닔 엳뒿땲떎. 媛묒긽꽑 湲곕뒫 寃궗(삁븸寃궗) 닔移섏뿉 援먮쓣 以 닔 엳뼱 寃궗 쟾 硫곗튌媛 以묐떒빐빞 빀땲떎." }
+        ],
+        prostate: [
+            { name: "醫낃렐떦嫄닿컯 룜뙏硫뷀넗", tag: "쟾由쎌꽑 嫄닿컯 쑀吏", size: "蹂댄넻", detail: "쟾由쎌꽑 鍮꾨利 쑀諛 슚냼 솢꽦쓣 뼲젣빐 옍눊媛, 빞媛꾨눊 벑 諛곕눊 遺덊렪븿쓣 떎吏덉쟻쑝濡 媛쒖꽑븯뒗 빞옄닔 異붿텧 湲곕뒫꽦 꽦遺꾩엯땲떎.", searchQuery: "룜뙏硫뷀넗 삦肄붿궗", dailyGoalPercent: 100, effect: "쟾由쎌꽑 鍮꾨 利앹긽(鍮덈눊, 옍눊媛, 빞媛꾨눊)쓣 셿솕븯怨 냼蹂 냽룄瑜 媛쒖꽑븯뒗 뜲 긽썡빀땲떎.", caution: "궓꽦 샇瑜대が 궗뿉 쁺뼢쓣 二쇰濡 뿬꽦怨 뼱由곗씠뒗 꽠痍⑦븯吏 븡뒗 寃껋씠 醫뗭뒿땲떎. 빆쓳怨좎젣 蹂듭슜 떆 異쒗삁 쐞뿕씠 利앷븷 닔 엳뒿땲떎." }
+        ],
+        muscle: [
+            { name: "굹슦뫖뱶 L-븘瑜닿린땶 1000", tag: "삁瑜/洹쇱쑁 뿉꼫吏", size: "媛猷/븸긽", detail: "泥대궡 궛솕吏덉냼(NO) 깮꽦쓣 珥됱쭊빐 삁愿쓣 씠셿떆궎怨, 洹쇱쑁쑝濡 媛뒗 궛냼 쁺뼇냼 怨듦툒웾쓣 뒛젮 슫룞 닔뻾 뒫젰쓣 룺諛쒖쟻쑝濡 넂엯땲떎.", searchQuery: "L븘瑜닿린땶", dailyGoalPercent: 100, effect: "삁愿쓣 솗옣떆耳 삁븸 닚솚쓣 珥됱쭊븯怨, 洹쇱쑁쑝濡쒖쓽 궛냼 怨듦툒쓣 뒛젮 슫룞 썑 뵾濡 쉶蹂듦낵 솢젰 利앹쭊쓣 룙뒿땲떎.", caution: "뿤瑜댄럹뒪(援ъ닚룷吏) 諛붿씠윭뒪媛 엳뒗 寃쎌슦 諛붿씠윭뒪 利앹떇쓣 珥됱쭊븷 닔 엳쑝誘濡 諛쒕퀝 떆 蹂듭슜쓣 以묐떒븯꽭슂. 삁븬 媛뺥븯젣 以묐났 떆 삁븬 쐞뿕씠 엳뒿땲떎." }
+        ]
+    };⑤웾 諛고빀맂 젣뭹쓣 젣븞빀땲떎.", searchQuery: "鍮꾪誘퍫 肄ㅽ뵆젆뒪", dailyGoalPercent: 100, effect: "깂닔솕臾, 떒諛깆쭏, 吏諛⑹쓣 뿉꼫吏濡 쟾솚븯뒗 궗 怨쇱젙쓽 빑떖 議고슚냼濡 옉슜빀땲떎. 쑁泥 뵾濡, 援щ궡뿼 삁諛, 떊寃쏀넻 셿솕뿉 留ㅼ슦 슚怨쇱쟻엯땲떎.", caution: "怨좎슜웾 鍮꾪誘퍬 룞떆 蹂듭슜 떆 쐞옣 옣븷媛 諛쒖깮븷 닔 엳뼱 떇썑 蹂듭슜쓣 沅뚯옣빀땲떎. 닔슜꽦씠誘濡 痍⑥묠 쟾 蹂듭슜븯硫 닔硫댁쓣 諛⑺빐븷 닔 엳쑝誘濡 삤쟾뿉 꽠痍⑦븯꽭슂. 떦눊빟씠굹 젣궛젣 媛꾧꺽쓣 몢怨 뱶떆뒗 寃껋씠 醫뗭뒿땲떎." },
+            { name: "肄붿뿏옄엫 Q10", tag: "꽭룷 빆궛솕", size: "옉쓬", detail: "꽭룷 궡 誘명넗肄섎뱶由ъ븘쓽 ATP 뿉꼫吏 깮꽦쓣 珥됱쭊븯뿬 뵾濡쒕 洹쇰낯쟻쑝濡 媛쒖꽑븯怨, 솢꽦궛냼瑜 뼲젣븯뒗 媛뺣젰븳 빆궛솕 꽦遺꾩엯땲떎.", searchQuery: "肄붿뿏옄엫 Q10", dailyGoalPercent: 100, effect: "떖옣 諛 洹쇱쑁 꽭룷쓽 뿉꼫吏 깮꽦쓣 룙怨 젙긽쟻씤 삁븬 쑀吏뿉 湲곗뿬빀땲떎. 끂솕 諛⑹ 솢젰 利앹쭊뿉 빑떖쟻씤 뿭븷쓣 빀땲떎.", caution: "吏슜꽦씠誘濡 諛섎뱶떆 떇썑뿉 吏諛⑹씠 룷븿맂 떇궗 븿猿 뱶뀛빞 씉닔쑉씠 넂뒿땲떎. 怨좏삁븬 빟씠굹 빆쓳怨좎젣(뙆由) 蹂듭슜 떆 빟슚뿉 쁺뼢쓣 以 닔 엳쑝誘濡 二쇱쓽빐빞 빀땲떎." }
+        ],
+        eyes: [
+            { name: "猷⑦뀒씤 吏븘옍떞", tag: "留앸쭑/솴諛 蹂댄샇", size: "蹂댄넻", detail: "뒪留덊듃룿씠굹 紐⑤땲꽣뿉꽌 諛쒖깮븯뒗 釉붾（씪씠듃濡쒕꽣 留앸쭑쓣 蹂댄샇븯怨, 굹씠媛 뱾硫 媛먯냼븯뒗 솴諛 以묒떖遺 깋냼 諛룄瑜 슚怨쇱쟻쑝濡 梨꾩썙以띾땲떎.", searchQuery: "猷⑦뀒씤 吏븘옍떞", dailyGoalPercent: 100, effect: "솴諛 깋냼 諛룄瑜 쑀吏븯뿬 떆媛 湲곕뒫쓣 媛쒖꽑븯怨, 옄쇅꽑 諛 泥깋愿묒쑝濡 씤븳 떆젰 븯 븞援 궛솕瑜 諛⑹빀땲떎.", caution: "씉뿰옄쓽 寃쎌슦 怨쇰떎 蹂듭슜 떆 룓븫 諛쒕퀝 쐞뿕씠 利앷븷 닔 엳떎뒗 뿰援ш 엳쑝誘濡 沅뚯옣웾(븯猷 20mg)쓣 吏耳쒖빞 빀땲떎. 떇썑 蹂듭슜쓣 沅뚯옣빀땲떎." },
+            { name: "rTG 삤硫붽-3", tag: "삁瑜/늿嫄댁“ 耳뼱", size: "議곌툑 겮", detail: "泥대궡 씉닔쑉쓣 넂씤 rTG 삎깭濡 븞援 嫄댁“利 셿솕뒗 臾쇰줎, 늿쓽 誘몄꽭 삁愿 삁븸 닚솚쓣 썝솢븯寃 븯뿬 뵾濡쒕 뜙뼱以띾땲떎.", searchQuery: "rtg 삤硫붽3", dailyGoalPercent: 100, effect: "븞援ъ쓽 嫄댁“븿쓣 셿솕븯怨 留앸쭑 誘몄꽭삁愿쓽 삁뻾쓣 媛쒖꽑빀땲떎. 泥대궡 以묒꽦吏吏 닔移섎 궙異붿뼱 떖삁愿 嫄닿컯뿉룄 긽썡븳 슚怨쇰 蹂댁엯땲떎.", caution: "삁븸 쓳怨좊 諛⑺빐븯誘濡 닔닠쓣 븵몢怨 엳嫄곕굹 븘뒪뵾由, 뙆由 벑 삁쟾 슜빐젣瑜 蹂듭슜 以묒씠씪硫 꽠痍⑤ 以묐떒븯嫄곕굹 쟾臾멸 긽떞씠 븘닔쟻엯땲떎." }
+        ],
+        gut: [
+            { name: "봽濡쒕컮씠삤떛뒪 쑀궛洹", tag: "옣궡 쑀씡洹 蹂닿컯", size: "옉쓬", detail: "쐞궛怨 떞利숈궛뿉 궡븘궓븘 옣源뚯 룄떖븯뒗 蹂댁옣洹좎닔媛 넂 쑀궛洹좎쑝濡, 쑀빐洹좎쓣 뼲젣븯怨 옣궡 誘몄깮臾 깮깭怨꾨 嫄닿컯븯寃 蹂듭썝빀땲떎.", searchQuery: "봽濡쒕컮씠삤떛뒪 쑀궛洹", dailyGoalPercent: 100, effect: "쑀씡洹 利앹떇 諛 쑀빐洹 뼲젣濡 諛곕 솢룞쓣 썝솢븯寃 븯怨, 옣踰 硫댁뿭쓣 媛뺥솕븯뿬 븣젅瑜닿린 吏덊솚 삁諛⑹뿉룄 룄쓣 以띾땲떎.", caution: "빆깮젣 븿猿 蹂듭슜 떆 쑀궛洹좎씠 궗硫몃맆 닔 엳쑝誘濡 理쒖냼 2~4떆媛꾩쓽 媛꾧꺽쓣 몢怨 꽠痍⑦빐빞 빀땲떎. 湲곗긽 吏곹썑 怨듬났뿉 異⑸텇븳 臾쇨낵 븿猿 뱶떆뒗 寃껋씠 醫뗭뒿땲떎." }
+        ],
+        skin: [
+            { name: "遺꾩옄 뵾돩 肄쒕씪寃", tag: "뵾遺 깂젰", size: "媛猷/룷", detail: "씪諛 룞臾쇱꽦 肄쒕씪寃먮낫떎 씉닔쑉씠 닔떗 諛 넂 遺꾩옄 렔씠뱶 援ъ“濡, 뵾遺 吏꾪뵾痢듭쓽 닔遺 蹂댁쑀젰쓣 넂씠怨 泥섏쭊 깂젰쓣 냽遺꽣 걣뼱삱젮 以띾땲떎.", searchQuery: "遺꾩옄 肄쒕씪寃", dailyGoalPercent: 100, effect: "吏꾪뵾痢듭쓽 堉덈瑜 삎꽦븯뿬 뵾遺 깂젰쓣 媛쒖꽑븯怨 二쇰쫫쓣 셿솕빀땲떎. 뿰怨④낵 愿젅, 넀넲 諛 紐⑤컻 嫄닿컯뿉룄 湲곗뿬빀땲떎.", caution: "鍮꾪誘퍬 븿猿 꽠痍⑦븯硫 빀꽦뿉 겙 떆꼫吏媛 궔땲떎. 떎留 怨쇰웾 꽠痍 떆 냼솕 遺덈웾씠굹 媛뒪媛 李 닔 엳쑝誘濡 沅뚯옣웾쓣 吏궎꽭슂." },
+            { name: "엳븣猷⑤줎궛 뿕씪뒪떞", tag: "닔遺 蹂댁땐", size: "蹂댄넻", detail: "옄湲 臾닿쾶쓽 1000諛 닔遺꾩쓣 癒멸툑뒗 엳븣猷⑤줎궛怨 肄쒕씪寃먯쓣 吏꺊븯뒗 뿕씪뒪떞씠 諛고빀릺뼱 洹쇰낯쟻씤 뵾遺 냽떦源쓣 빐寃고빀땲떎.", searchQuery: "엳븣猷⑤줎궛", dailyGoalPercent: 100, effect: "닔遺꾩쓣 걣뼱떦湲곌퀬 쑀吏떆耳 뵾遺 蹂댁뒿쓣 룙怨 嫄댁“븿쓣 諛⑹빀땲떎. 뿕씪뒪떞씠 깂젰留앹쓣 吏吏빐 以띾땲떎.", caution: "泥대궡 닔遺꾩씠 遺議깊븯硫 삤엳젮 뵾遺 諛 닔遺꾩쓣 鍮쇱븮湲 닔 엳쑝誘濡, 蹂듭슜 떆 臾쇱쓣 룊냼蹂대떎 異⑸텇엳 留덉떆뒗 寃껋씠 留ㅼ슦 以묒슂빀땲떎." }
+        ],
+        diet: [
+            { name: "媛瑜댁떆땲븘 罹꾨낫吏븘", tag: "泥댁諛 媛먯냼", size: "蹂댄넻", detail: "HCA(Hydroxycitric Acid) 꽦遺꾩씠 엵뿬 깂닔솕臾쇱씠 泥댁諛⑹쑝濡 쟾솚릺뒗 빑떖 슚냼 옉슜쓣 李⑤떒븯뿬 슚怨쇱쟻씤 泥댁쨷 愿由щ 룙뒿땲떎.", searchQuery: "媛瑜댁떆땲븘", dailyGoalPercent: 100, effect: "깂닔솕臾쇱쓽 吏諛 빀꽦쓣 뼲젣븯뿬 蹂듬 뵾븯吏諛⑷낵 궡옣吏諛⑹쓣 以꾩엯땲떎. 젟떞 샇瑜대が뿉 쁺뼢쓣 二쇱뼱 떇슃 뼲젣뿉룄 룄쓣 以띾땲떎.", caution: "媛 룆꽦 쐞뿕씠 蹂닿퀬맂 諛 엳뼱 媛꾩뿼, 媛꾧꼍솕 벑 媛 吏덊솚 솚옄뒗 젅 蹂듭슜쓣 뵾빐빞 빀땲떎. 떇궗 30遺 쟾 怨듬났 蹂듭슜씠 媛옣 슚怨쇱쟻엯땲떎." },
+            { name: "끃李⑥뭅뀒궓 異붿텧臾", tag: "泥댁諛/빆궛솕", size: "蹂댄넻", detail: "吏諛 궛솕瑜 珥됱쭊븯뿬 湲곗큹궗웾쓣 넂씠怨, 떇썑 삁以 肄쒕젅뒪뀒濡 媛쒖꽑뿉 룄쓣 二쇰뒗 몴쟻씤 떎씠뼱듃 湲곕뒫꽦 썝猷뚯엯땲떎.", searchQuery: "끃李⑥뭅뀒궓", dailyGoalPercent: 100, effect: "吏諛 꽭룷 遺꾪빐瑜 珥됱쭊븯怨 삁以 肄쒕젅뒪뀒濡ㅼ쓣 궙異λ땲떎. 媛뺣젰븳 빆궛솕 옉슜쑝濡 泥대궡 뿼利 닔移섎 媛먯냼떆궢땲떎.", caution: "移댄럹씤씠 븿쑀릺뼱 엳뼱 移댄럹씤뿉 誘쇨컧븯嫄곕굹 닔硫 옣븷媛 엳뒗 遺, 떖옣 吏덊솚옄뒗 뀅 꽠痍⑤ 뵾빐빞 빀땲떎. 怨듬났 꽠痍 떆 냽벐由쇱씠 諛쒖깮븷 닔 엳뒿땲떎." }
+        ],
+        immunity: [
+            { name: "븘뿰 & 硫댁뿭 湲猷⑥뭏", tag: "硫댁뿭젰 媛뺥솕", size: "옉쓬", detail: "젙긽쟻씤 꽭룷 遺꾩뿴怨 硫댁뿭 꽭룷(T꽭룷, 떇꽭룷 벑)쓽 솢꽦쓣 洹밸솕븯뿬 솚젅湲 媛먯뿼 吏덊솚쑝濡쒕꽣 紐몄쓣 媛뺣젰븯寃 蹂댄샇빀땲떎.", searchQuery: "硫댁뿭 븘뿰", dailyGoalPercent: 100, effect: "젙긽쟻씤 꽭룷 遺꾩뿴怨 硫댁뿭 湲곕뒫뿉 븘닔쟻씠硫 媛먭린 삁諛 諛 샇씉湲 媛먯뿼 諛⑹뼱뿉 룄쓣 以띾땲떎.", caution: "泥좊텇씠굹 移쇱뒛 蹂댁땐젣 룞떆 蹂듭슜 떆 꽌濡 씉닔瑜 諛⑺빐븯誘濡 떆媛꾩감瑜 몢怨 뱶꽭슂. 鍮덉냽뿉 怨좎슜웾 蹂듭슜 떆 硫붿뒪爰쇱씠 諛쒖깮븷 닔 엳뒿땲떎." },
+            { name: "鍮꾪誘퍬 빆궛솕젣", tag: "쑀빐궛냼 李⑤떒", size: "議곌툑 겮", detail: "쑀빐 궛냼濡쒕꽣 꽭룷瑜 蹂댄샇븯뒗 1李 諛⑹뼱꽑 뿭븷쓣 븯硫, 泥좊텇 씉닔 珥됱쭊怨 肄쒕씪寃 빀꽦쓣 룄 쟾諛섏쟻씤 떊泥 諛⑹뼱젰쓣 넂엯땲떎.", searchQuery: "鍮꾪誘퍬 1000", dailyGoalPercent: 100, effect: "硫댁뿭 泥닿퀎瑜 利앹쭊떆궎怨 諛붿씠윭뒪 뼲젣瑜 룄슦硫, 肄쒕씪寃 깮꽦 諛 뵾濡 쉶蹂듭뿉 긽썡빀땲떎.", caution: "媛뺥븳 궛꽦씠誘濡 怨듬났뿉 꽠痍 떆 떖븳 쐞옣 옣븷瑜 쑀諛쒗빀땲떎. 怨좎슜웾 꽠痍 떆 떊옣 寃곗꽍 쐞뿕씠 엳뒗 솚옄뒗 二쇱쓽빐빞 빀땲떎." }
+        ],
+        joints: [
+            { name: "MSM 떇씠쑀솴", tag: "뿰怨 깂젰 蹂댄샇", size: "議곌툑 겮", detail: "뿰怨 議곗쭅쓣 援ъ꽦븯뒗 빑떖 쑀솴 꽦遺꾩쑝濡, 愿젅 諛 뿰怨⑥쓽 뿼利앹꽦 넻利앹쓣 媛먯냼떆궎怨 六ｋ빰븿쓣 遺뱶읇寃 媛쒖꽑빐 以띾땲떎.", searchQuery: "MSM 떇씠쑀솴", dailyGoalPercent: 100, effect: "뿰怨④낵 씤 議곗쭅쓣 援ъ꽦븯怨 빆뿼利 옉슜쓣 넻빐 愿젅 넻利앹쓣 寃쎄컧떆궎怨 솢룞꽦쓣 媛쒖꽑빀땲떎.", caution: "솴(Sulfur) 븣젅瑜닿린媛 엳뒗 寃쎌슦 諛쒖쭊씠굹 媛젮씠 깮湲 닔 엳뒿땲떎. 뇤 삁瑜섎 利앷떆耳 痍⑥묠 쟾 蹂듭슜 떆 옞씠 븞 삱 닔 엳쑝誘濡 궙뿉 꽠痍⑦븯꽭슂." },
+            { name: "鍮꾪誘퍭3", tag: "堉 삎꽦/移쇱뒛 씉닔", size: "留ㅼ슦 옉쓬", detail: "뻼鍮쏆쓣 넻빐 빀꽦릺뒗 鍮꾪誘퍭 遺議깆쓣 梨꾩썙 移쇱뒛怨 씤쓽 泥대궡 씉닔瑜 룙怨, 怨⑤떎怨듭쬆 諛쒖깮 쐞뿕쓣 쉷湲곗쟻쑝濡 궙異곗쨳땲떎.", searchQuery: "鍮꾪誘퍭3", dailyGoalPercent: 100, effect: "移쇱뒛 씉닔瑜 룄 堉덉쓽 諛룄瑜 넂씠怨, 硫댁뿭젰쓣 利앹쭊떆耳 媛곸쥌 뿼利 吏덊솚 諛 슦슱媛 媛쒖꽑뿉 룄쓣 以띾땲떎.", caution: "怨쇰떎 蹂듭슜 떆 泥대궡 移쇱뒛 닔移섍 鍮꾩젙긽쟻쑝濡 넂븘吏뒗 怨좎뭡뒛삁利앹쓣 쑀諛쒗빐 떊옣 寃곗꽍씠굹 삁愿 꽍쉶솕媛 삱 닔 엳뒿땲떎. 移쇱뒛젣 怨쇰웾 蹂묒슜 떆 二쇱쓽븯꽭슂." }
+        ],
+        stress: [
+            { name: "L-뀒븘땶", tag: "뒪듃젅뒪 湲댁옣 셿솕", size: "蹂댄넻", detail: "끃李⑥뿉 뱾뼱엳뒗 븘誘몃끂궛 꽦遺꾩씠 뇤쓽 븣뙆(慣)뙆 諛쒖깮쓣 珥됱쭊빐 닔硫댁쓣 쑀諛쒗븯吏 븡쑝硫댁꽌룄 湲댁옣怨 뒪듃젅뒪瑜 遺뱶읇寃 셿솕빀땲떎.", searchQuery: "뀒븘땶", dailyGoalPercent: 100, effect: "뇤 떊寃쎌쓣 븞젙떆궎怨 븣뙆뙆瑜 利앷떆耳 遺덉븞媛먯쓣 以꾩뿬以띾땲떎. 吏묒쨷젰 븯 뾾씠 떖由ъ쟻 븞젙쓣 쑀룄빀땲떎.", caution: "빆슦슱젣굹 떊寃 븞젙젣 븿猿 蹂듭슜 떆 議몄쓬씠굹 臾닿린젰쓣 媛以묒떆궗 닔 엳뒿땲떎. 슫쟾 쟾씠굹 젙諛븳 湲곌퀎 議곗옉 쟾뿉뒗 꽠痍⑥뿉 쑀쓽븯꽭슂." },
+            { name: "씫떚", tag: "닔硫 吏 媛쒖꽑", size: "옉쓬", detail: "븘湲곌 슦쑀瑜 癒밴퀬 룊삩빐吏뒗 썝由ъ뿉꽌 李⑹븞븳 깮由ы솢꽦 렔씠뱶濡, 떊寃쎌쓣 븞젙떆耳 렪븞븳 닔硫 솚寃쎌쓣 議곗꽦빀땲떎.", searchQuery: "씫떚 닔硫", dailyGoalPercent: 100, effect: "닔硫 엯硫 떆媛꾩쓣 떒異뺥븯怨 닔硫 以 源⑤뒗 슏닔瑜 以꾩뿬 쟾泥댁쟻씤 닔硫댁쓽 吏덉쓣 넂뿬以띾땲떎.", caution: "슦쑀 떒諛깆쭏 媛닔遺꾪빐臾쇱씠誘濡 쑀젣뭹 삉뒗 쑀떦 遺덈궡利앹씠 떖븳 遺꾩씠굹 슦쑀 븣젅瑜닿린媛 엳뒗 遺꾩 꽠痍 쟾 솗씤씠 븘슂빀땲떎." }
+        ],
+        antioxidants: [
+            { name: "젅뒆 & 鍮꾪誘퍮", tag: "꽭룷留 蹂댄샇", size: "蹂댄넻", detail: "솢꽦 궛냼濡 씤븳 DNA 넀긽쓣 諛⑹뼱븯뒗 誘몃웾 誘몃꽕엫 젅뒆怨 吏슜꽦 빆궛솕젣 鍮꾪誘퍮媛 寃고빀븯뿬 꽭룷 끂솕瑜 뒭異λ땲떎.", searchQuery: "젅뒆", dailyGoalPercent: 100, effect: "媛뺣젰븳 빆궛솕 옉슜쑝濡 泥대궡 뿼利앹쓣 뼲젣븯怨 꽭룷留됱쓣 蹂댄샇븯뿬 끂솕 諛⑹ 諛 硫댁뿭 湲곕뒫 쑀吏뿉 븘닔쟻엯땲떎.", caution: "怨좎슜웾 鍮꾪誘퍮뒗 吏삁쓣 諛⑺빐븯誘濡 븘뒪뵾由 벑 빆쓳怨좎젣 以묐났 蹂듭슜쓣 뵾빐빞 븯硫, 닔닠 쟾 꽠痍⑤ 以묐떒빐빞 빀땲떎." }
+        ],
+        menses: [
+            { name: "媛먮쭏由щ젋궛 (떖留욎씠苑껋쑀)", tag: "썡寃쎌쟾 씠긽 긽깭 媛쒖꽑", size: "議곌툑 겮", detail: "뿼利 쑀諛 臾쇱쭏쓣 뼲젣븯뿬 썡寃 쟾 諛쒖깮븯뒗 떊泥댁쟻, 젙떊쟻 遺덊렪븿쓣 떎뒪由ш퀬, 삁以 肄쒕젅뒪뀒濡 媛쒖꽑뿉룄 湲곗뿬븯뒗 떇臾쇱꽦 삤씪엯땲떎.", searchQuery: "媛먮쭏由щ젋궛 떖留욎씠苑", dailyGoalPercent: 100, effect: "봽濡쒖뒪湲뵖 諛몃윴뒪瑜 議곗젅빐 깮由 쟾 利앺썑援(PMS)怨 뵾遺 긽깭(嫄댁“利, 媛젮)瑜 셿솕빀땲떎.", caution: "삁쟾 슜빐젣굹 삁븬빟쓣 蹂듭슜 以묒씤 寃쎌슦 빟臾 슚怨쇰 利앺룺떆궗 닔 엳뒿땲떎. 諛쒖옉꽦 吏덊솚 솚옄뒗 利앹긽쓣 븙솕떆궗 닔 엳쑝땲 二쇱쓽媛 븘슂빀땲떎." },
+            { name: "떇臾쇱꽦 븸떚釉 泥좊텇", tag: "鍮덊삁 삁諛", size: "옉쓬", detail: "썡寃쎌쑝濡 씤빐 留ㅻ떖 넀떎릺뒗 삁븸 깮꽦쓣 蹂댁땐븯硫, 쐞옣 옣븷 蹂鍮 遺옉슜쓣 理쒖냼솕븳 닚븳 떇臾쇱꽦 泥좊텇 젣젣엯땲떎.", searchQuery: "쑀湲곕냽 泥좊텇젣", dailyGoalPercent: 100, effect: "뿤紐④濡쒕퉰怨 쟻삁援 깮꽦뿉 븘닔쟻씠硫, 泥대궡 궛냼 슫諛섏쓣 썝솢븯寃 븯뿬 뼱吏윭怨 留뚯꽦 뵾濡쒕 媛쒖꽑빀땲떎.", caution: "移쇱뒛, 븘뿰 蹂댁땐젣굹 끃李/而ㅽ뵾(땶, 移댄럹씤) 룞떆 蹂듭슜 떆 씉닔쑉씠 湲됯꺽엳 뼥뼱吏묐땲떎. 떇쟾 怨듬났뿉 삤젋吏 二쇱뒪(鍮꾪誘퍬) 癒뱀쑝硫 媛옣 醫뗭뒿땲떎." }
+        ],
+        hair: [
+            { name: "鍮꾩삤떞 & 빟슜슚紐", tag: "紐⑤컻/몢뵾 뿉꼫吏", size: "蹂댄넻", detail: "耳씪떞 떒諛깆쭏 깮꽦쓣 珥됱쭊븯뒗 닔슜꽦 鍮꾪誘퍫援(鍮꾩삤떞)怨 뼇吏덉쓽 紐④렐 쁺뼇 怨듦툒썝씤 빟슜 留μ＜슚紐④ 寃고빀맂 넄猷⑥뀡엯땲떎.", searchQuery: "鍮꾩삤떞 留μ＜슚紐", dailyGoalPercent: 100, effect: "紐⑤컻쓽 빑떖 援ъ꽦 꽦遺꾩씤 耳씪떞 빀꽦쓣 珥됱쭊븯뿬 紐④렐쓣 듉듉븯寃 븯怨, 넀넲 媛덈씪吏먯쓣 諛⑹빀땲떎.", caution: "뿬뱶由꾩꽦 뵾遺쓽 寃쎌슦 怨좎슜웾 鍮꾩삤떞 꽠痍 떆 듃윭釉붿씠 븙솕맆 닔 엳뒿땲떎. 媛묒긽꽑 湲곕뒫 寃궗(삁븸寃궗) 닔移섏뿉 援먮쓣 以 닔 엳뼱 寃궗 쟾 硫곗튌媛 以묐떒빐빞 빀땲떎." }
+        ],
+        prostate: [
+            { name: "룜뙏硫뷀넗 濡쒕Ⅴ궛", tag: "쟾由쎌꽑 嫄닿컯 쑀吏", size: "蹂댄넻", detail: "쟾由쎌꽑 鍮꾨利 쑀諛 슚냼 솢꽦쓣 뼲젣빐 옍눊媛, 빞媛꾨눊 벑 諛곕눊 遺덊렪븿쓣 떎吏덉쟻쑝濡 媛쒖꽑븯뒗 빞옄닔 異붿텧 湲곕뒫꽦 꽦遺꾩엯땲떎.", searchQuery: "룜뙏硫뷀넗 삦肄붿궗", dailyGoalPercent: 100, effect: "쟾由쎌꽑 鍮꾨 利앹긽(鍮덈눊, 옍눊媛, 빞媛꾨눊)쓣 셿솕븯怨 냼蹂 냽룄瑜 媛쒖꽑븯뒗 뜲 긽썡빀땲떎.", caution: "궓꽦 샇瑜대が 궗뿉 쁺뼢쓣 二쇰濡 뿬꽦怨 뼱由곗씠뒗 꽠痍⑦븯吏 븡뒗 寃껋씠 醫뗭뒿땲떎. 빆쓳怨좎젣 蹂듭슜 떆 異쒗삁 쐞뿕씠 利앷븷 닔 엳뒿땲떎." }
+        ],
+        muscle: [
+            { name: "L-븘瑜닿린땶 肄ㅽ뵆젆뒪", tag: "삁瑜/洹쇱쑁 뿉꼫吏", size: "媛猷/븸긽", detail: "泥대궡 궛솕吏덉냼(NO) 깮꽦쓣 珥됱쭊빐 삁愿쓣 씠셿떆궎怨, 洹쇱쑁쑝濡 媛뒗 궛냼 쁺뼇냼 怨듦툒웾쓣 뒛젮 슫룞 닔뻾 뒫젰쓣 룺諛쒖쟻쑝濡 넂엯땲떎.", searchQuery: "L븘瑜닿린땶", dailyGoalPercent: 100, effect: "삁愿쓣 솗옣떆耳 삁븸 닚솚쓣 珥됱쭊븯怨, 洹쇱쑁쑝濡쒖쓽 궛냼 怨듦툒쓣 뒛젮 슫룞 썑 뵾濡 쉶蹂듦낵 솢젰 利앹쭊쓣 룙뒿땲떎.", caution: "뿤瑜댄럹뒪(援ъ닚룷吏) 諛붿씠윭뒪媛 엳뒗 寃쎌슦 諛붿씠윭뒪 利앹떇쓣 珥됱쭊븷 닔 엳쑝誘濡 諛쒕퀝 떆 蹂듭슜쓣 以묐떒븯꽭슂. 삁븬 媛뺥븯젣 以묐났 떆 삁븬 쐞뿕씠 엳뒿땲떎." }
+        ]
+    };
+
+    // 넗뒪듃 뙘뾽 뿬띁
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('custom-toast');
+        const toastContent = document.getElementById('toast-content');
+        
+        toast.className = `fixed bottom-5 right-5 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-0 opacity-100 ${
+            type === 'success' ? 'bg-[#1E3A2F] text-white border-l-4 border-[#10B981]' : 'bg-red-900 text-white border-l-4 border-red-500'
+        }`;
+        
+        const icon = type === 'success' 
+            ? '<i class="fa-solid fa-circle-check text-[#10B981] text-xl"></i>' 
+            : '<i class="fa-solid fa-circle-exclamation text-red-500 text-xl"></i>';
+            
+        toastContent.innerHTML = `${icon} <span class="font-medium text-xs sm:text-sm">${message}</span>`;
+        
+        setTimeout(() => {
+            toast.classList.add('translate-y-10', 'opacity-0');
+            setTimeout(() => { toast.className = 'hidden'; }, 300);
+        }, 3500);
+    }
+
+    // 酉 쟾솚 而⑦듃濡ㅻ윭
+    function switchView(viewId) {
+        state.currentView = viewId;
+        
+        // 紐⑤뱺 酉 媛由ш린
+        document.querySelectorAll('.view-section').forEach(section => {
+            section.classList.add('hidden');
+            section.classList.remove('block');
+        });
+        
+        // 寃 酉곕쭔 蹂댁씠湲
+        const activeSection = document.getElementById(`${viewId}-view`);
+        if (activeSection) {
+            activeSection.classList.remove('hidden');
+            activeSection.classList.add('block');
+        }
+        
+        // 珥덇낵 吏꾨떒 솕硫댁쑝濡 吏꾩엯븷 寃쎌슦 뜲씠꽣 떎떆媛 뿰궛
+        if (viewId === 'checker') {
+            recalculateSupplements();
+        }
+        
+        // 솃솕硫댁뿉 蹂듦뎄븷 닔 엳뒗 濡쒖뺄 떟蹂 씠젰씠 엳뒗吏 뙋떒븯뿬 諛곕꼫 젣뼱
+        if (viewId === 'landing') {
+            checkStoredAnswers();
+        }
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    
+    // AI 留욎땄 異붿쿇 씠룞 (湲곗〈 寃곌낵 蹂댁〈)
+    function navigateQuiz() {
+        if (state.currentView === 'result' || state.currentView === 'quiz') return;
+        
+        // 1. 씠誘 댁쫰媛 吏꾪뻾 以묒씠嫄곕굹 셿猷뚮맂 긽깭씤吏 솗씤 (濡쒖뺄 state.answers 寃궗)
+        if (state.answers.goals && state.answers.goals.length > 0) {
+            // 씠誘 寃곌낵媛 젋뜑留 맂 긽깭
+            renderRecommendationResults();
+            return;
+        } else if (state.quizStep > 0 && state.quizStep <= 10) {
+            // 댁쫰 吏꾪뻾 以
+            switchView('quiz');
+            return;
+        }
+        
+        // 2. LocalStorage 뜲씠꽣 솗씤
+        const saved = localStorage.getItem('nutrimatch_survey_answers');
+        if (saved) {
+            loadPreviousResults();
+            return;
+        }
+        
+        // 3. 떎 뾾쑝硫 깉濡 떆옉
+        startQuiz();
+    }
+
+    // 댁쫰 媛쒖떆 븿닔
+    function startQuiz() {
+        state.quizStep = 0; // Step 0 룞쓽遺꽣 떆옉
+        state.agreements = { terms: false, age: false, sensitive: false };
+        state.answers = {
+            gender: '', maleConcerns: [], femaleStage: '', ageGroup: '', height: '', weight: '', bmi: null,
+            exercise: [], sleep: '', diet: '', alcohol: '', caffeine: '', stress: 3,
+            smoking: '', allergies: [], sideEffects: [], customSideEffect: '', conditions: [],
+            goals: [],
+            pillDiscomfort: '', altForm: '', preferredForm: '', buyingValues: [], portability: '', budget: '', buyingType: ''
+        };
+        switchView('quiz');
+        renderQuizStep();
+    }
+
+    // BMI 떎떆媛 怨꾩궛湲
+    function calculateBMIInline() {
+        const hVal = parseFloat(document.getElementById('profile-height')?.value);
+        const wVal = parseFloat(document.getElementById('profile-weight')?.value);
+        const bmiResultBox = document.getElementById('bmi-calc-status');
+
+        if (hVal && wVal && hVal > 100 && wVal > 10) {
+            const hM = hVal / 100;
+            const bmi = (wVal / (hM * hM)).toFixed(1);
+            state.answers.height = hVal;
+            state.answers.weight = wVal;
+            state.answers.bmi = parseFloat(bmi);
+
+            let category = "젙긽泥댁쨷";
+            let color = "text-[#10B981]";
+            if (bmi < 18.5) { category = "泥댁쨷"; color = "text-yellow-600"; }
+            else if (bmi >= 23 && bmi < 25) { category = "怨쇱껜以"; color = "text-amber-600"; }
+            else if (bmi >= 25) { category = "鍮꾨쭔"; color = "text-red-500 animate-pulse"; }
+
+            if (bmiResultBox) {
+                bmiResultBox.innerHTML = `
+                    <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex justify-between items-center text-xs animate-fadeIn">
+                        <div>
+                            <span class="text-slate-400 font-medium">궛異쒕맂 BMI 吏닔</span>
+                            <div class="text-lg font-bold text-[#1E3A2F] mt-0.5">BMI: <span class="${color}">${bmi}</span></div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-white font-bold text-[10px] border border-emerald-200">${category}</span>
+                    </div>
+                `;
+            }
+        } else {
+            if (bmiResultBox) bmiResultBox.innerHTML = '';
+            state.answers.bmi = null;
+        }
+    }
+
+    // 룞쓽 泥댄겕 諛뺤뒪 由ъ뒪꼫
+    function toggleAgreement(key) {
+        state.agreements[key] = !state.agreements[key];
+        const nextBtn = document.getElementById('quiz-next-btn');
+        if (state.agreements.terms && state.agreements.age && state.agreements.sensitive) {
+            nextBtn.classList.remove('opacity-40', 'pointer-events-none');
+        } else {
+            nextBtn.classList.add('opacity-40', 'pointer-events-none');
+        }
+    }
+
+    // 씠쟾 떒怨 議곗옉
+    function prevQuizStep() {
+        if (state.quizStep > 0) {
+            state.quizStep--;
+            renderQuizStep();
+        }
+    }
+
+    // 10떒怨 꽭遺꾪솕뿉 뵲瑜 떎쓬 떒怨 쑀슚꽦 寃궗 諛 遺꾧린泥섎━
+    function nextQuizStep() {
+        if (state.quizStep === 0) {
+            if (!state.agreements.terms || !state.agreements.age || !state.agreements.sensitive) {
+                showToast("紐⑤뱺 븘닔 빟愿 諛 媛쒖씤젙蹂 닔吏묒뿉 룞쓽븯뀛빞 떆옉븷 닔 엳뒿땲떎.", "error");
+                return;
+            }
+        } else if (state.quizStep === 1) {
+            // STEP 1. 꽦蹂 諛 궓/뿬 듅닔 젙蹂
+            if (!state.answers.gender) {
+                showToast("꽦蹂꾩쓣 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+            if (state.answers.gender === 'male' && state.answers.maleConcerns.length === 0) {
+                showToast("理쒖냼 1媛쒖쓽 怨좊 쁺뿭쓣 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+            if (state.answers.gender === 'female' && !state.answers.femaleStage) {
+                showToast("깮븷二쇨린 긽깭瑜 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+        } else if (state.quizStep === 2) {
+            // STEP 2. 뿰졊 & 떊泥 젙蹂(BMI)
+            if (!state.answers.ageGroup) {
+                showToast("뿰졊瑜 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+            const heightInput = document.getElementById('profile-height');
+            const weightInput = document.getElementById('profile-weight');
+            if (!heightInput?.value || !weightInput?.value || isNaN(state.answers.bmi)) {
+                showToast("삱諛붾Ⅸ 떊泥 봽濡쒗븘(궎, 紐몃Т寃)쓣 엯젰븯뿬 BMI 궛異쒖쓣 쑀룄빐 二쇱꽭슂.", "error");
+                return;
+            }
+        } else if (state.quizStep === 3) {
+            // STEP 3. 슫룞 醫낅쪟 諛 닔硫 떆媛
+            if (state.answers.exercise.length === 0) {
+                showToast("媛옣 쑀궗븳 슫룞 삎깭瑜 1媛 씠긽 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+            if (!state.answers.sleep) {
+                showToast("룊洹 닔硫 떆媛꾩쓣 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+        } else if (state.quizStep === 4) {
+            // STEP 4. 떇뒿愿 & 쓬二 鍮덈룄 & 븯猷 移댄럹씤
+            if (!state.answers.diet || !state.answers.alcohol || !state.answers.caffeine) {
+                showToast("떇뒿愿怨 깮솢 湲고샇 젙蹂대 紐⑤몢 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+        } else if (state.quizStep === 5) {
+            // STEP 5. 뒪듃젅뒪닔以
+            if (!state.answers.stress) {
+                showToast("뒪듃젅뒪 닔以쓣 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+        } else if (state.quizStep === 6) {
+            // STEP 6. 씉뿰 뿬遺 & 븣젅瑜닿린 썝猷
+            if (!state.answers.smoking) {
+                showToast("씉뿰 뿬遺瑜 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+            if (state.answers.allergies.length === 0) {
+                showToast("븣젅瑜닿린 쑀諛 썝猷 븘꽣瑜 1媛 씠긽 꽑깮빐 二쇱꽭슂. (뾾쑝硫 '뾾쓬' 겢由)", "error");
+                return;
+            }
+        } else if (state.quizStep === 7) {
+            // STEP 7. 怨쇨굅 遺옉슜 寃쏀뿕 諛 湲곗吏덊솚
+            if (state.answers.sideEffects.length === 0) {
+                showToast("遺옉슜 寃쏀뿕 꽦遺꾩쓣 1媛 씠긽 꽑깮빐 二쇱꽭슂. (뾾쑝硫 '뾾쓬' 겢由)", "error");
+                return;
+            }
+            if (state.answers.conditions.length === 0) {
+                showToast("湲곗吏덊솚 젙蹂대 1媛 씠긽 꽑깮빐 二쇱꽭슂. (뾾쑝硫 '뾾쓬쨌湲고' 겢由)", "error");
+                return;
+            }
+        } else if (state.quizStep === 8) {
+            // STEP 8. 嫄닿컯 怨좊 諛 紐⑺몴 (理쒕 2媛)
+            if (state.answers.goals.length === 0) {
+                showToast("吏묒쨷 媛쒖꽑씠 븘슂븯떊 嫄닿컯 怨좊쇱쓣 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+            if (state.answers.goals.length > 2) {
+                showToast("嫄닿컯 怨좊쇱 理쒕 2媛쒓퉴吏留 꽑깮씠 媛뒫빀땲떎.", "error");
+                return;
+            }
+        } else if (state.quizStep === 9) {
+            // STEP 9. 븣빟 遺덊렪媛 諛 젣삎 꽑샇
+            if (!state.answers.pillDiscomfort || !state.answers.altForm || !state.answers.preferredForm) {
+                showToast("紐⑸꽆源 遺덊렪媛 諛 꽑샇 젣삎 젙蹂대 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+        } else if (state.quizStep === 10) {
+            // STEP 10. 슦꽑媛移, 蹂닿솚寃, 삁궛, 援щℓ諛⑹떇
+            if (state.answers.buyingValues.length === 0) {
+                showToast("理쒖슦꽑 꽑깮 媛移섎 1媛 씠긽 꽑깮빐 二쇱꽭슂.", "error");
+                return;
+            }
+            if (!state.answers.portability || !state.answers.budget || !state.answers.buyingType) {
+                showToast("蹂닿, 삁궛, 援щℓ 諛⑹떇 꽑샇瑜 紐⑤몢 떟蹂빐 二쇱꽭슂.", "error");
+                return;
+            }
+            
+            // 紐⑤뱺 10떒怨 셿猷 -> 뜲씠꽣 쁺援 뒪넗由ъ뿉 諛깆뾽
+            try {
+                localStorage.setItem('nutrimatch_survey_answers', JSON.stringify(state.answers));
+            } catch (e) {
+                console.warn("Storage save failed", e);
+            }
+            
+            // 떆裕щ젅씠뀡 濡쒕뵫 援щ룞
+            runAnalysisLoading();
+            return;
+        }
+
+        state.quizStep++;
+        renderQuizStep();
+    }
+
+    // 蹂듭닔 꽑깮 諛 떒씪 꽑깮 媛怨듦린
+    function toggleMultiSelect(arrayName, value, maxLimit = null) {
+        const idx = state.answers[arrayName].indexOf(value);
+        if (idx > -1) {
+            state.answers[arrayName].splice(idx, 1);
+        } else {
+            if (maxLimit && state.answers[arrayName].length >= maxLimit) {
+                showToast(`씠 빆紐⑹ 理쒕 ${maxLimit}媛쒓퉴吏 꽑깮씠 媛뒫빀땲떎.`, "error");
+                return;
+            }
+            if (value === 'none') {
+                state.answers[arrayName] = ['none'];
+            } else {
+                state.answers[arrayName] = state.answers[arrayName].filter(v => v !== 'none');
+                state.answers[arrayName].push(value);
+            }
+        }
+        renderQuizStep();
+    }
+
+    function setSingleSelect(variableName, value) {
+        state.answers[variableName] = value;
+        renderQuizStep();
+    }
+
+    // 꽭遺꾪솕맂 10떒怨 댁쫰 룞쟻 鍮뚮뜑
+    function renderQuizStep() {
+        const stepInd = document.getElementById('quiz-step-indicator');
+        const progress = document.getElementById('quiz-progress');
+        const container = document.getElementById('quiz-content-area');
+        const prevBtn = document.getElementById('quiz-prev-btn');
+        const nextBtn = document.getElementById('quiz-next-btn');
+
+        stepInd.textContent = `Step ${state.quizStep} of 10`;
+        progress.style.width = `${(state.quizStep / 10) * 100}%`;
+
+        // 씠쟾/떎쓬 떒怨 議곗쑉
+        if (state.quizStep === 0) {
+            prevBtn.classList.add('opacity-40', 'pointer-events-none');
+        } else {
+            prevBtn.classList.remove('opacity-40', 'pointer-events-none');
+        }
+
+        if (state.quizStep === 0) {
+            stepInd.textContent = "룞쓽 븞궡 (Step 0)";
+            if (state.agreements.terms && state.agreements.age && state.agreements.sensitive) {
+                nextBtn.classList.remove('opacity-40', 'pointer-events-none');
+            } else {
+                nextBtn.classList.add('opacity-40', 'pointer-events-none');
+            }
+        } else {
+            nextBtn.classList.remove('opacity-40', 'pointer-events-none');
+        }
+
+        let html = '';
+
+        // --- STEP 0: 씠슜빟愿 룞쓽 ---
+        if (state.quizStep === 0) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-2 text-center py-4 border-b border-slate-100">
+                    <h3 class="text-2xl font-extrabold text-[#1E3A2F] font-serif">떆옉 쟾 씠슜빟愿 諛 젙蹂 룞쓽</h3>
+                    <p class="text-xs text-slate-400">留욎땄 쁺뼇 留ㅼ묶 떆뒪뀥쓣 쐞빐 븞쟾 媛씠뱶瑜 씫뼱二쇱꽭슂.</p>
+                </div>
+                
+                <div class="bg-amber-50 border border-amber-200/50 rounded-2xl p-4.5 text-xs text-amber-900 leading-relaxed space-y-2">
+                    <span class="font-bold block"><i class="fa-solid fa-circle-exclamation text-amber-500"></i> 꽌鍮꾩뒪 젣怨 븞궡 諛 踰뺤쟻 硫댁콉 怨좎</span>
+                    <p class="text-[11px] text-amber-800">
+                        蹂 꽌鍮꾩뒪뒗 쓽븰쟻 移섎즺굹 吏꾨떒쓣 泥댄븯뒗 쓽猷 뻾쐞媛 븘땲硫, 떇뭹쓽빟뭹븞쟾泥 怨듦났뜲씠꽣瑜 湲곕컲쑝濡 븳 쁺뼇 젙蹂 李멸퀬슜 쎇땲뒪 걧젅씠뀡 꽌鍮꾩뒪엯땲떎. 젣븞諛쏆 쁺뼇 꽦遺꾩 湲곗吏덊솚怨 蹂듭슜 빟臾쇱씠 엳뒗 寃쎌슦 쓽궗, 빟궗 벑 쟾臾몄쓽 븘엳 긽떞 썑 蹂듭슜쓣 吏꾪뻾븯떆湲 諛붾엻땲떎.
+                    </p>
+                </div>
+
+                <div class="space-y-3.5 pt-2">
+                    <label class="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                        <input type="checkbox" onchange="toggleAgreement('terms')" ${state.agreements.terms ? 'checked' : ''} class="w-4.5 h-4.5 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div class="space-y-0.5">
+                            <span class="text-slate-800">[븘닔] 꽌鍮꾩뒪 씠슜빟愿 諛 씪諛 媛쒖씤젙蹂 닔吏뫢룹씠슜 룞쓽</span>
+                            <p class="text-[10px] text-slate-400 font-normal">꽌鍮꾩뒪 씠슜 紐⑹쟻 諛 쎒 꽌鍮꾩뒪 씠슜 洹쒖튃뿉 以븯뒗 湲곕낯 씤吏 洹쒖젙엯땲떎.</p>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                        <input type="checkbox" onchange="toggleAgreement('age')" ${state.agreements.age ? 'checked' : ''} class="w-4.5 h-4.5 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div class="space-y-0.5">
+                            <span class="text-slate-800">[븘닔] 留 14꽭 씠긽 씠슜 솗씤</span>
+                            <p class="text-[10px] text-slate-400 font-normal">留 14꽭 誘몃쭔쓽 븘룞 쁺뼇 슂援щ웾씠 긽씠븯뿬 븞쟾긽 씠슜씠 젣븳맗땲떎.</p>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 cursor-pointer transition text-xs font-semibold">
+                        <input type="checkbox" onchange="toggleAgreement('sensitive')" ${state.agreements.sensitive ? 'checked' : ''} class="w-4.5 h-4.5 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div class="space-y-0.5">
+                            <span class="text-slate-800">[븘닔] 嫄닿컯 긽깭 諛 씪씠뒪뒪씪(誘쇨컧젙蹂) 닔吏뫢룹씠슜 룞쓽</span>
+                            <p class="text-[10px] text-slate-400 font-normal">吏덊솚 젙蹂, 븣젅瑜닿린, 씉뿰 뿬遺 벑 留욎땄 젙諛 怨꾩궛뿉 벐씠뒗 誘쇨컧젙蹂 泥섎━뿉 븳 닔吏 룞쓽꽌엯땲떎.</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 1: 꽦蹂 諛 꽦蹂 留욎땄 꽌釉 怨좊 ---
+        else if (state.quizStep === 1) {
+            const isMale = state.answers.gender === 'male';
+            const isFemale = state.answers.gender === 'female';
+
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 1. 깮臾쇳븰쟻 꽦蹂 꽑깮 諛 쟾슜 씪씠봽 쁺뿭</h3>
+                    <p class="text-xs text-slate-400">꽦蹂 듅솕 湲곌 嫄닿컯怨 蹂듭슜 븞쟾 踰붿쐞瑜 留ㅼ묶븯湲 쐞븳 븘닔 愿臾몄엯땲떎.</p>
+                </div>
+                
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold text-slate-500 uppercase">꽦蹂</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="setSingleSelect('gender', 'male')" class="p-4 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center gap-2 ${state.answers.gender === 'male' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <i class="fa-solid fa-mars text-xl text-blue-500"></i>
+                            <span>궓꽦</span>
+                        </button>
+                        <button onclick="setSingleSelect('gender', 'female')" class="p-4 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center gap-2 ${state.answers.gender === 'female' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <i class="fa-solid fa-venus text-xl text-pink-500"></i>
+                            <span>뿬꽦</span>
+                        </button>
+                        <button onclick="setSingleSelect('gender', 'not_disclosed')" class="p-4 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center gap-2 ${state.answers.gender === 'not_disclosed' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <i class="fa-solid fa-user-slash text-xl text-slate-400"></i>
+                            <span>쓳떟 븞 븿</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 궓꽦 쟾슜 꽑깮吏 -->
+                ${isMale ? `
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 animate-fadeIn">
+                    <label class="block text-xs font-bold text-[#1E3A2F]">윒뗢띯셽截 궓꽦 쟾슜 嫄닿컯 吏묒쨷 쁺뿭 (蹂듭닔 꽑깮)</label>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        ${[
+                            { id: 'hair', label: '윊뉍띯셽截 깉紐㉱룸몢뵾 愿由' },
+                            { id: 'prostate', label: '슃截 쟾由쎌꽑 嫄닿컯' },
+                            { id: 'muscle', label: '윊 洹쇱쑁웾 利앷' }
+                        ].map(opt => {
+                            const isSel = state.answers.maleConcerns.includes(opt.id);
+                            return `
+                            <button onclick="toggleMultiSelect('maleConcerns', '${opt.id}')" class="p-3 rounded-xl border font-bold transition ${isSel ? 'border-[#10B981] bg-white text-[#10B981] shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- 뿬꽦 쟾슜 꽑깮吏 -->
+                ${isFemale ? `
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 animate-fadeIn">
+                    <label class="block text-xs font-bold text-[#1E3A2F]">윒뗢띯截 뿬꽦 깮븷二쇨린 떊泥 긽깭 꽑깮 (떒씪 꽑깮)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px] font-bold">
+                        ${[
+                            { id: 'normal', label: '빐떦 뾾쓬' },
+                            { id: 'trying', label: '엫떊 以鍮 以' },
+                            { id: 'pregnant', label: '엫떊 以' },
+                            { id: 'lactating', label: '닔쑀 以' },
+                            { id: 'menopause', label: '룓寃쎄린' }
+                        ].map(opt => {
+                            const isSel = state.answers.femaleStage === opt.id;
+                            return `
+                            <button onclick="setSingleSelect('femaleStage', '${opt.id}')" class="p-2.5 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-white text-[#10B981] shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+            `;
+        }
+
+        // --- STEP 2: 뿰졊 諛 떊泥 移섏닔 (BMI 옄룞솕) ---
+        else if (state.quizStep === 2) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 2. 뿰졊 諛 떊泥 궗 遺꾩꽍</h3>
+                    <p class="text-xs text-slate-400">BMI(泥댁쭏웾 吏닔)瑜 옄룞 뿰궛븯뿬 移쇱뒛 씉닔쑉怨 쁺뼇 諛몃윴뒪瑜 痢≪젙빀땲떎.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase">뿰졊 꽑깮</label>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        ${['20 誘몃쭔', '20', '30', '40', '50', '60 씠긽'].map(age => {
+                            const isSel = state.answers.ageGroup === age;
+                            return `
+                            <button onclick="setSingleSelect('ageGroup', '${age}')" class="py-3.5 rounded-xl border transition text-[11px] font-bold ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${age}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">궎 (cm)</label>
+                        <input type="number" id="profile-height" oninput="calculateBMIInline()" value="${state.answers.height || ''}" placeholder="삁: 175" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">紐몃Т寃 (kg)</label>
+                        <input type="number" id="profile-weight" oninput="calculateBMIInline()" value="${state.answers.weight || ''}" placeholder="삁: 70" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-white">
+                    </div>
+                </div>
+
+                <!-- BMI 떎떆媛 뿰룞諛뺤뒪 -->
+                <div id="bmi-calc-status"></div>
+            </div>
+            `;
+            setTimeout(calculateBMIInline, 50);
+        }
+
+        // --- STEP 3: 슫룞 紐⑹쟻 諛 닔硫 떆媛 ---
+        else if (state.quizStep === 3) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 3. 슫룞 꽦뼢 諛 닔硫 뙣꽩 뙆븙</h3>
+                    <p class="text-xs text-slate-400"> 諛곗텧怨 닔硫 쉶蹂 슚쑉뿉 뿰愿맂 鍮꾪誘퍫援, L-뀒븘땶 냼紐⑥쑉쓣 媛궛빀땲떎.</p>
+                </div>
+
+                <div class="space-y-2.5">
+                    <label class="block text-xs font-bold text-slate-500">윆뗰툘띯셽截 二 슫룞 꽦뼢 諛 紐⑹쟻 (蹂듭닔 꽑깮)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] font-bold">
+                        ${[
+                            { id: 'none', label: '븞 븿 쨌 泥대젰 쑀吏' },
+                            { id: 'cardio', label: '윆 쑀궛냼 슫룞' },
+                            { id: 'strength', label: '윆뗰툘띯셽截 洹쇰젰 빆꽦' },
+                            { id: 'flexibility', label: '윧 슂媛 쨌 肄붿뼱' },
+                            { id: 'hiit', label: '슒 怨좉컯룄 꽌궥' }
+                        ].map(opt => {
+                            const isSel = state.answers.exercise.includes(opt.id);
+                            return `
+                            <button onclick="toggleMultiSelect('exercise', '${opt.id}')" class="p-3 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">윑 룊洹 닔硫 떆媛 꽑깮</label>
+                    <div class="grid grid-cols-3 gap-3 text-xs font-bold">
+                        ${[
+                            { id: 'under_5', label: '윖 5떆媛 誘몃쭔 (遺議)' },
+                            { id: '5-7', label: '룿 5~7떆媛 (쟻젙)' },
+                            { id: 'over_8', label: '윊 8떆媛 씠긽 (異⑸텇)' }
+                        ].map(opt => {
+                            const isSel = state.answers.sleep === opt.id;
+                            return `
+                            <button onclick="setSingleSelect('sleep', '${opt.id}')" class="p-4 rounded-2xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 4: 떇뒿愿, 쓬二 鍮덈룄, 移댄럹씤 꽠꽠痍 ---
+        else if (state.quizStep === 4) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 4. 룊냼 떇뒿愿 諛 씪긽 꽠痍 湲고샇</h3>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500">윥 룊냼 몴쟻씤 떇깮솢 삎깭</label>
+                    <select onchange="setSingleSelect('diet', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                        <option value="">-- 꽑깮빐 二쇱꽭슂 --</option>
+                        <option value="regular" ${state.answers.diet === 'regular' ? 'selected' : ''}>씪諛섏떇 / 洹쒖튃쟻씤 떇궗</option>
+                        <option value="irregular" ${state.answers.diet === 'irregular' ? 'selected' : ''}>媛怨듭떇뭹 / 씤뒪꽩듃 諛 遺덇퇋移숈떇</option>
+                        <option value="meat" ${state.answers.diet === 'meat' ? 'selected' : ''}>쑁떇 쐞二 吏諛⑹쭏 떇뒿愿</option>
+                        <option value="veg" ${state.answers.diet === 'veg' ? 'selected' : ''}>梨꾩떇 쐞二 젙媛덊븳 떇궗 / 媛꾪뿉쟻 떒떇</option>
+                        <option value="vegan" ${state.answers.diet === 'vegan' ? 'selected' : ''}>셿踰쏀븳 닚닔 鍮꾧굔 (룞臾 썝猷 李⑤떒)</option>
+                    </select>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">윂 쓬二 鍮덈룄 닔以</label>
+                        <select onchange="setSingleSelect('alcohol', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 꽑깮빐 二쇱꽭슂 --</option>
+                            <option value="none" ${state.answers.alcohol === 'none' ? 'selected' : ''}>쟾 留덉떆吏 븡쓬</option>
+                            <option value="normal" ${state.answers.alcohol === 'normal' ? 'selected' : ''}>蹂댄넻 (二 1쉶 궡쇅 냼웾)</option>
+                            <option value="frequent" ${state.answers.alcohol === 'frequent' ? 'selected' : ''}>옦 닠옄由 (二 2~3쉶 씠긽)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">삎 븯猷 而ㅽ뵾/移댄럹씤 꽠痍⑤웾</label>
+                        <select onchange="setSingleSelect('caffeine', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 꽑깮빐 二쇱꽭슂 --</option>
+                            <option value="0" ${state.answers.caffeine === '0' ? 'selected' : ''}>0옍 (븞 留덉떖)</option>
+                            <option value="1-2" ${state.answers.caffeine === '1-2' ? 'selected' : ''}>1 ~ 2옍</option>
+                            <option value="3" ${state.answers.caffeine === '3' ? 'selected' : ''}>3옍</option>
+                            <option value="4+" ${state.answers.caffeine === '4+' ? 'selected' : ''}>4옍 씠긽 (怨좎뭅럹씤 옄洹)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 5: 뒪듃젅뒪 吏닔 옄媛씤吏 ---
+        else if (state.quizStep === 5) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 5. 留뚯꽦 씪긽 뒪듃젅뒪 씤吏 닔以</h3>
+                    <p class="text-xs text-slate-400">옄쑉떊寃쎄퀎 怨쇳빆吏 셿솕瑜 룙뒗 뀒븘땶, 遺떊 뵾濡 蹂댄샇 쁺뼇냼 留ㅼ묶쓣 議곗젅빀땲떎.</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2.5">
+                    ${[
+                        { val: 1, label: '윜 1떒怨 - 留ㅼ슦 苡뚯쟻븿', desc: '뒪듃젅뒪瑜 嫄곗쓽 뒓겮吏 븡怨 룊삩븳 솢젰씠 쑀吏맖' },
+                        { val: 2, label: '윜 2떒怨 - 臾대궃븿', desc: '媛踰쇱슫 湲댁옣媛먯씠 뱾吏留 뒪뒪濡 愿由ш 닔썡븿' },
+                        { val: 3, label: '윜 3떒怨 - 蹂댄넻', desc: '뾽臾/媛궗 벑쑝濡 씤빐 씠뵲湲 뵾濡쒓컧怨 癒몃━ 臾닿굅쓣 뒓굦' },
+                        { val: 4, label: '윜 4떒怨 - 떎냼 媛뺥븿', desc: '留ㅼ씪 湲댁옣 긽깭媛 怨꾩냽릺硫 吏쒖쬆 諛 媛踰쇱슫 遺덈㈃쓣 寃れ쓬' },
+                        { val: 5, label: '윍 5떒怨 - 븳怨 룄떖', desc: '留뚯꽦 遺덉븞 諛 媛뒾 몢洹쇨굅由, 씪긽쟻씤 臾닿린젰븿뿉 떆떖由' }
+                    ].map(opt => {
+                        const isSel = state.answers.stress === opt.val;
+                        return `
+                        <button onclick="setSingleSelect('stress', ${opt.val})" class="p-4 rounded-2xl border-2 text-left transition flex justify-between items-center ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            <div class="space-y-0.5">
+                                <span class="font-bold text-xs sm:text-sm text-slate-800">${opt.label}</span>
+                                <p class="text-[10px] sm:text-[11px] text-slate-400 font-normal">${opt.desc}</p>
+                            </div>
+                            ${isSel ? '<i class="fa-solid fa-circle-check text-[#10B981] text-lg"></i>' : ''}
+                        </button>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 6: 씉뿰 쑀臾 & 븣젅瑜닿린 쑀諛 썝猷 ---
+        else if (state.quizStep === 6) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-red-500 animate-pulse"></i> STEP 6. 쓽猷 븞쟾 븘꽣 (씉뿰 & 븣젅瑜닿린)</h3>
+                    <p class="text-xs text-red-500/70">떇빟泥 湲곕뒫꽦 諛고빀 쐞뿕 썝猷 옄룞 슦쉶 媛룞쓣 쐞븳 젙蹂 닔吏묒엯땲떎.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500">윓 씉뿰 뿬遺 <span class="text-red-500">*븘닔</span></label>
+                    <div class="grid grid-cols-2 gap-3 text-xs font-bold">
+                        <button onclick="setSingleSelect('smoking', 'no')" class="p-4 rounded-2xl border-2 transition ${state.answers.smoking === 'no' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            윓 鍮꾪씉뿰옄 (빐떦 궗빆 뾾쓬)
+                        </button>
+                        <button onclick="setSingleSelect('smoking', 'yes')" class="p-4 rounded-2xl border-2 transition ${state.answers.smoking === 'yes' ? 'border-red-400 bg-red-50/30 text-red-800' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            윓 씉뿰옄 (룓븫 쑀諛 諛⑹ 踰좏移대줈떞 寃쎈낫 뿰룞)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">윦 湲고뵾븯뒗 븣젅瑜닿린 쑀諛 썝猷 (蹂듭닔 꽑깮)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] sm:text-xs font-semibold">
+                        ${[
+                            { id: 'shrimp', label: '媛묎컖瑜 (寃/깉슦)' },
+                            { id: 'soy', label: '몢 (肄⑷怨 쟾遺)' },
+                            { id: 'gluten', label: '湲猷⑦뀗 (諛 쑀옒)' },
+                            { id: 'dairy', label: '쑀젣뭹 (쑀떦)' },
+                            { id: 'nuts', label: '寃ш낵瑜 (븙肄)' },
+                            { id: 'fish', label: '뼱瑜 (깮꽑삤씪)' },
+                            { id: 'none', label: '쑉 빐떦 궗빆 뾾쓬 (븣젅瑜닿린 臾)' }
+                        ].map(opt => {
+                            const isSel = state.answers.allergies.includes(opt.id);
+                            return `
+                            <button onclick="toggleMultiSelect('allergies', '${opt.id}')" class="p-3 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F] font-bold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 7: 怨쇨굅 遺옉슜 寃쏀뿕 諛 湲곗吏덊솚 ---
+        else if (state.quizStep === 7) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-prescription-bottle text-red-500"></i> STEP 7. 遺옉슜 씠젰 諛 蹂듭슜 빟臾 젏寃</h3>
+                    <p class="text-xs text-red-500/70">쁽옱 뱶떆뒗 蹂묒썝 빟뭹怨쇱쓽 긽샇 옉슜 諛 怨쇨굅 쐞옣 뵾濡 슂씤쓣 諛곗젣빀땲떎.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500">슑截 怨쇨굅 蹂듭슜 떆 냼솕 옣븷, 쐞옣 뵾濡 쑀諛 씠젰 꽦遺 (蹂듭닔 꽑깮)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] font-semibold">
+                        ${[
+                            { id: 'iron', label: '泥좊텇 (냽 뼶옒/蹂鍮)' },
+                            { id: 'omega', label: '삤硫붽3 (鍮꾨┛궡/媛뒪)' },
+                            { id: 'vitc', label: '鍮꾪誘퍬 (냽 벐由)' },
+                            { id: 'probiotics', label: '쑀궛洹 (蹂듬 媛뒪)' },
+                            { id: 'none', label: '쑉 뾾쓬' }
+                        ].map(opt => {
+                            const isSel = state.answers.sideEffects.includes(opt.id);
+                            return `
+                            <button onclick="toggleMultiSelect('sideEffects', '${opt.id}')" class="p-2.5 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F] font-bold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <!-- 湲고 吏곸젒 꽌닠 -->
+                    <div class="pt-1">
+                        <input type="text" placeholder="湲고 怨쇨굅 쐞옣 옣븷굹 꽕궗 쑀諛 쁺뼇냼 湲곗옱 (꽑깮)" oninput="state.answers.customSideEffect = this.value" value="${state.answers.customSideEffect || ''}" class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#10B981] bg-white">
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">윆 쁽옱 寃り퀬 怨꾩떊 吏덊솚 諛 젙湲 蹂듭슜 以묒씤 빟臾 (蹂듭닔 꽑깮)</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold">
+                        ${[
+                            { id: 'bp', label: '怨좏삁븬 (삁븬 議곗젅젣)' },
+                            { id: 'diabetes', label: '떦눊蹂 (삁떦 媛뺥븯젣 蹂듭슜)' },
+                            { id: 'lipids', label: '씠긽吏吏덊삁利 (怨좎삁利 뒪떞 泥섎갑)' },
+                            { id: 'gastro', label: '留뚯꽦 뿭瑜섏꽦 떇룄뿼 / 留뚯꽦 쐞뿼' },
+                            { id: 'bloodclot', label: '삁쟾 吏삁 옣븷 (뙆由/빆쓳怨좎젣 蹂듭슜)' },
+                            { id: 'kidney', label: '媛 湲곕뒫 뵾濡 / 떊옣 뿬怨 옣븷 슦젮' },
+                            { id: 'none', label: '쑉 빐떦 뾾쓬 (吏蹂뫢룸났슜 빟뭹 臾)' }
+                        ].map(opt => {
+                            const isSel = state.answers.conditions.includes(opt.id);
+                            return `
+                            <button onclick="toggleMultiSelect('conditions', '${opt.id}')" class="p-3 rounded-xl border text-left transition ${isSel ? 'border-red-400 bg-red-50/20 text-red-950' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 8: 嫄닿컯 怨좊 諛 紐⑺몴 (Health Goals) ---
+        else if (state.quizStep === 8) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 8. 理쒖슦꽑 嫄닿컯 紐⑺몴 諛 吏묒쨷 怨좊 꽑깮</h3>
+                    <p class="text-xs text-slate-400">媛옣 썝븯떆뒗 紐⑺몴 쁺뿭쓣 **理쒕 2媛** 꽑깮빐 二쇱꽭슂. (媛옣 以묒슂 떒怨)</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-2.5 text-xs">
+                    ${[
+                        { id: 'fatigue', label: '윍 留뚯꽦뵾濡 諛 湲곕젰 옄洹', desc: '돺寃 뵾濡쒓 紐곕젮삤怨 솢젰씠 怨좉컝릺뒗 遺' },
+                        { id: 'eyes', label: '윉 븞援 嫄댁“ 諛 移⑥묠븿', desc: '늿 뵾濡 諛 嫄댁“利 셿솕 씗留앹옄' },
+                        { id: 'gut', label: '끂 옣궡 쑀궛洹 諛 쑀씡洹 젙룉', desc: '媛뒪媛 李④퀬 諛곕씠 遺덇퇋移숈쟻씤 遺' },
+                        { id: 'skin', label: '쑉 뵾遺 깂젰 諛 닔遺 씠꼫酉고떚', desc: '肄쒕씪寃 꽭룷留 珥됱큺븳 蹂댁뒿' },
+                        { id: 'diet', label: '윆 泥댁諛 媛먯냼 諛 媛踰쇱슫 씪씤', desc: '깂닔솕臾 빀꽦 뼲젣 떎씠뼱듃 蹂댁“' },
+                        { id: 'immunity', label: '윖∽툘 硫댁뿭 븘뿰 耳뼱 솢꽦', desc: '옍蹂 移섎젅 洹밸났 諛 硫댁뿭 옣踰 솢꽦' },
+                        { id: 'joints', label: '윦 愿젅 뿰怨 留덉같 셿솕', desc: '堉덉 六ｋ빰븳 愿젅 蹂댄샇 紐⑹쟻' },
+                        { id: 'stress', label: '윧 닔硫 遺덉븞 빐냼 諛 뒪듃젅뒪', desc: '씫떚 諛 뀒븘땶 닕硫 룊삩 쑀룄' },
+                        { id: 'antioxidants', label: '윂 媛뺤씤븳 솢꽦궛냼 李⑤떒', desc: '끂솕 吏뿰 諛 젅뒆 빆궛솕' },
+                        { id: 'menses', label: '윪 깮由щ텋닚 諛 썡寃 遺덉풄媛', desc: '泥좊텇 蹂닿컯 諛 뿬꽦 샇瑜대が 諛몃윴뒪' }
+                    ].map(opt => {
+                        const isSel = state.answers.goals.includes(opt.id);
+                        return `
+                        <button onclick="toggleMultiSelect('goals', '${opt.id}', 2)" class="p-3.5 rounded-2xl border-2 text-left transition flex flex-col gap-1 ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 hover:border-slate-300'}">
+                            <span class="font-bold text-xs sm:text-sm text-slate-800">${opt.label}</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-400 font-normal">${opt.desc}</span>
+                        </button>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 9: 븣빟 遺덊렪媛 諛 젣삎 꽑샇 ---
+        else if (state.quizStep === 9) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 9. 蹂듭슜 렪쓽꽦 諛 꽑샇 媛怨 삎깭</h3>
+                    <p class="text-xs text-slate-400">븣빟 겕湲곕줈 씤븳 궪궡 怨ㅻ 뿬遺瑜 議곗쑉븯怨 꽑샇 삎깭瑜 議고빀땲떎.</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">윊 븣빟 궪궗 븣 紐⑸꽆源 遺덊렪룄</label>
+                        <select onchange="setSingleSelect('pillDiscomfort', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 꽑깮빐 二쇱꽭슂 --</option>
+                            <option value="none" ${state.answers.pillDiscomfort === 'none' ? 'selected' : ''}>遺덊렪븿 뾾쓬 (겙 븣빟룄 냼솕媛뒫)</option>
+                            <option value="extreme" ${state.answers.pillDiscomfort === 'extreme' ? 'selected' : ''}>궪궎湲 遺덊렪븿 (냼삎 븣빟 꽑샇)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">윂 븸긽/遺꾨쭚 젣삎 븞 젣븞 꽑샇</label>
+                        <select onchange="setSingleSelect('altForm', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 꽑깮빐 二쇱꽭슂 --</option>
+                            <option value="small" ${state.answers.altForm === 'small' ? 'selected' : ''}>紐⑸꽆源씠 렪븳 珥덉냼삎 誘몃땲 깭釉붾┸ 젙젣</option>
+                            <option value="gummy" ${state.answers.altForm === 'gummy' ? 'selected' : ''}>留쏆엳寃 뵻쓣 닔 엳뒗 援щ/痢꾩뼱釉 젮由</option>
+                            <option value="liquid" ${state.answers.altForm === 'liquid' ? 'selected' : ''}>씉닔媛 鍮좊Ⅸ 븸긽 빊뵆 뱶留곹겕 삎깭</option>
+                            <option value="powder" ${state.answers.altForm === 'powder' ? 'selected' : ''}>臾 뾾씠룄 긽겮븳 遺꾨쭚 遺꾨쭚 뒪떛</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">윊 씪긽 꽠痍 떆 留쏆씠굹 삎깭 꽑샇</label>
+                    <div class="grid grid-cols-4 gap-2 text-center text-xs font-bold">
+                        ${['젮由', '援щ', '븸긽', '遺꾨쭚'].map(form => {
+                            const isSel = state.answers.preferredForm === form;
+                            return `
+                            <button onclick="setSingleSelect('preferredForm', '${form}')" class="py-3.5 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${form} 罹≪뒓/뒪떛
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- STEP 10: 媛移, 蹂닿솚寃, 삁궛, 援щℓ諛⑹떇 ---
+        else if (state.quizStep === 10) {
+            html = `
+            <div class="space-y-6 animate-fadeIn">
+                <div class="space-y-1">
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 10. 媛移섍 諛 援щℓ 꽦뼢 留욎땄 걧젅씠뀡</h3>
+                    <p class="text-xs text-slate-400">냼鍮 꽦뼢怨 쑕 렪쓽꽦뿉 쟻빀븳 留욎땄 룷옣 諛 븷씤 援щ룄瑜 궛異쒗빀땲떎.</p>
+                </div>
+
+                <div class="space-y-2.5">
+                    <label class="block text-xs font-bold text-slate-500">윊 援щℓ 寃곗젙 떆 理쒖슦꽑 媛移 (理쒕 2媛)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-bold">
+                        ${[
+                            { id: 'dose', label: '윧 꽦遺 븿웾 諛 떆꼫吏' },
+                            { id: 'origin', label: '윐븝툘 썝궛吏 諛 봽由щ몄뾼 썝猷' },
+                            { id: 'noadditives', label: '윁 솕븰 遺삎젣 臾댁꺼媛' },
+                            { id: 'convenience', label: '윉 蹂닿 렪쓽꽦 諛 뵒옄씤' }
+                        ].map(opt => {
+                            const isSel = state.answers.buyingValues.includes(opt.id);
+                            return `
+                            <button onclick="toggleMultiSelect('buyingValues', '${opt.id}', 2)" class="p-3 rounded-xl border transition ${isSel ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F] font-bold' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                                ${opt.label}
+                            </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">윊 二쇰줈 꽠痍⑦븯寃 맆 蹂듭슜 솚寃 삎깭</label>
+                        <select onchange="setSingleSelect('portability', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 꽑깮빐 二쇱꽭슂 --</option>
+                            <option value="bulk" ${state.answers.portability === 'bulk' ? 'selected' : ''}>媛젙/궗臾댁떎 梨낆긽뿉 鍮꾩튂빐몢뒗 쁺뼇젣 蹂 삎깭</option>
+                            <option value="portable" ${state.answers.portability === 'portable' ? 'selected' : ''}>異쒖옣/쇅異쒖씠 옦븘 쑕꽦씠 媛뺥븳 媛쒕퀎 諛遊 뙥 삎깭</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-500">윊 썡 沅뚯옣 닾옄 삁궛 </label>
+                        <select onchange="setSingleSelect('budget', this.value)" class="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-white font-medium">
+                            <option value="">-- 꽑깮빐 二쇱꽭슂 --</option>
+                            <option value="1-3" ${state.answers.budget === '1-3' ? 'selected' : ''}>1留뚯썝 ~ 3留뚯썝 (빑떖 쐞二 븣쑑 꽕怨)</option>
+                            <option value="3-5" ${state.answers.budget === '3-5' ? 'selected' : ''}>3留뚯썝 ~ 5留뚯썝 (媛옣 씠긽쟻 議고빀)</option>
+                            <option value="5-10" ${state.answers.budget === '5-10' ? 'selected' : ''}>5留뚯썝 ~ 10留뚯썝 (넗깉 븞떖 媛룞)</option>
+                            <option value="over_10" ${state.answers.budget === 'over_10' ? 'selected' : ''}>10留뚯썝 씠긽 (留덉뒪꽣 븯씠 겢옒뒪)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 pt-2">
+                    <label class="block text-xs font-bold text-slate-500">윖 꽑샇븯뒗 븷씤 諛 援щℓ 뙣꽩</label>
+                    <div class="grid grid-cols-3 gap-2.5 text-xs font-bold">
+                        <button onclick="setSingleSelect('buyingType', 'subscription')" class="p-4 rounded-xl border transition ${state.answers.buyingType === 'subscription' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            윋 留ㅻ떖 옄룞 젙湲 援щ룆
+                        </button>
+                        <button onclick="setSingleSelect('buyingType', 'one_time')" class="p-4 rounded-xl border transition ${state.answers.buyingType === 'one_time' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            윖랃툘 떒嫄 1쉶꽦 씪諛 援щℓ
+                        </button>
+                        <button onclick="setSingleSelect('buyingType', 'any')" class="p-4 rounded-xl border transition ${state.answers.buyingType === 'any' ? 'border-[#10B981] bg-emerald-50/50 text-[#1E3A2F]' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                            쑉 愿怨 뾾쓬 (븷씤쑉 以묒떆)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        container.innerHTML = html;
+    }
+
+    // 댁쫰 遺꾩꽍 以 濡쒕뜑 솕硫
+    function runAnalysisLoading() {
+        switchView('quiz-loading');
+        const loadingSubtitle = document.getElementById('loading-subtitle');
+        const loadingProgress = document.getElementById('loading-progress');
+        
+        const steps = [
+            { pct: 15, text: "떊泥 吏덈웾 吏닔(BMI) 諛 궗 硫댁쟻 궛젙 以..." },
+            { pct: 40, text: "씉뿰 뿬遺 湲곕컲 怨좊냽룄 諛쒖븫 臾쇱쭏 쉶뵾 슦쉶 븘꽣 옉룞 以..." },
+            { pct: 70, text: "湲곗吏덊솚 諛 蹂듭슜 빟臾(빆쓳怨좎젣 벑) 援먯감 蹂듭슜 긽샇옉슜 寃異 以..." },
+            { pct: 90, text: "븣젅瑜닿린 媛怨 썝猷 썝泥 븘꽣留 吏꾪뻾 以..." },
+            { pct: 100, text: "媛쒖씤솕 理쒖쟻 븞쟾 쁺뼇뙥 濡쒕뱶留 꽕怨 셿猷!" }
+        ];
+        
+        let currentStepIdx = 0;
+        
+        const interval = setInterval(() => {
+            if (currentStepIdx < steps.length) {
+                loadingProgress.style.width = `${steps[currentStepIdx].pct}%`;
+                loadingSubtitle.textContent = steps[currentStepIdx].text;
+                currentStepIdx++;
+            } else {
+                clearInterval(interval);
+                renderRecommendationResults();
+            }
+        }, 850);
+    }
+
+    // 遺꾩꽍 寃곌낵瑜 솕硫댁뿉 젋뜑留곹븯怨 눥븨紐 옄룞 寃깋 뿰룞 쟻슜
+    function renderRecommendationResults() {
+        switchView('result');
+        
+        const nameNode = document.getElementById('user-display-name');
+        const bmiBadgeNode = document.getElementById('result-bmi-badge');
+        const scoreNode = document.getElementById('result-match-score');
+        const medicalDashboard = document.getElementById('medical-safety-dashboard');
+        const medicalAlertsList = document.getElementById('medical-safety-alerts-list');
+
+        // 궓꽦/뿬꽦 깮븷二쇨린 紐낆묶 議곗쑉
+        let profileText = state.answers.gender === 'male' ? '궓꽦' : (state.answers.gender === 'female' ? '뿬꽦' : '怨좉컼');
+        if (state.answers.gender === 'female' && state.answers.femaleStage) {
+            const stages = { 'trying': '엫떊 以鍮', 'pregnant': '엫떊 以', 'lactating': '닔쑀 以', 'menopause': '룓寃쎄린' };
+            if (stages[state.answers.femaleStage]) {
+                profileText += ` (${stages[state.answers.femaleStage]})`;
+            }
+        }
+        nameNode.textContent = `${profileText} `;
+
+        // BMI 諛곗 뱶濡쒖엵
+        if (state.answers.bmi) {
+            bmiBadgeNode.className = "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold";
+            bmiBadgeNode.innerHTML = `<i class="fa-solid fa-weight-scale text-emerald-400"></i> BMI: ${state.answers.bmi} (떊옣 ${state.answers.height}cm / 泥댁쨷 ${state.answers.weight}kg)`;
+        } else {
+            bmiBadgeNode.className = "hidden";
+        }
+
+        // 泥댄겕 由ъ뒪꼫 諛 湲곗 議곌굔 룞湲고솕
+        const checkerGender = document.getElementById('checker-gender');
+        const checkerAge = document.getElementById('checker-age');
+        if (checkerGender && state.answers.gender) {
+            checkerGender.value = state.answers.gender;
+        }
+        if (checkerAge && state.answers.ageGroup) {
+            const mappedAge = { '20 誘몃쭔': 'under_20', '20': '20s', '30': '30s', '40': '40s', '50': '50s', '60 씠긽': '60s+' };
+            if (mappedAge[state.answers.ageGroup]) checkerAge.value = mappedAge[state.answers.ageGroup];
+        }
+
+        // 쐞뿕 슂씤 媛먯 떆 硫붾뵒而 븘꽣 떆蹂대뱶 濡쒕뱶
+        medicalDashboard.classList.add('hidden');
+        medicalAlertsList.innerHTML = '';
+        let matchScore = 98.8; // 湲곕낯 留ㅼ튂 뒪肄붿뼱
+        let medicalAlerts = [];
+
+        // 1. 씉뿰 쐞뿕援 븘꽣 쟻슜
+        if (state.answers.smoking === 'yes') {
+            matchScore -= 5;
+            medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[以묒슂 - 씉뿰 븘꽣 옉룞]:</strong> 씉뿰옄뒗 怨좏븿웾 踰좏移대줈떞 븿쑀 떆 룓븫 諛쒕퀝瑜좎쓣 利앷떆궢땲떎. 씠뿉 留욎떠 솢꽦삎 泥쒖뿰 泥 鍮꾪誘 諛 솴諛 븘뒪옍떞쑝濡 泥 泥섎갑븯뿬 異붿쿇 젣뭹쓣 셿쟾 젙젣뻽뒿땲떎.</span>
+                </li>
+            `);
+        }
+
+        // 2. 빆쓳怨좎젣 吏덊솚 븘꽣 쟻슜
+        if (state.answers.conditions.includes('bloodclot')) {
+            matchScore -= 6;
+            medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[二쇱쓽 - 빆쓳怨좎젣 빟臾 긽샇옉슜]:</strong> 뙆由 벑 삁쟾 슜빐젣瑜 뱶떆뒗 遺꾩 삁뻾 利앹쭊 紐⑹쟻 of 怨좊냽룄 삤硫붽3굹 鍮꾪誘퍮 蹂듭슜 떆 吏삁 옣븷瑜 媛以묒떆궢땲떎. 蹂 諛고빀 빐떦 꽦遺꾩쓣 湲곗 꽠痍 븳룄 씠궡濡 븞쟾 젣뼱뻽뒿땲떎.</span>
+                </li>
+            `);
+            // 泥댁빱 泥댄겕諛뺤뒪룄 뿰룞
+            document.getElementById('cond-organ').checked = true;
+        }
+
+        // 3. 엫떊遺 븘꽣 쟻슜
+        if (state.answers.femaleStage === 'pregnant') {
+            matchScore -= 3;
+            medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[븞떖 - 엫떊/닔쑀 쟾슜 꽭씠봽媛뱶]:</strong> 깭븘쓽 湲고삎 쑀諛쒖쓣 留됯린 쐞빐 怨쇰룄븳 吏슜꽦 鍮꾪誘 A/D쓽 異뺤쟻쓣 넻젣븯怨, 옄沅 닔異 벑쓣 쑀諛쒗븷 뿼젮媛 엳뒗 뿀釉 異붿텧臾(諛겕뵪뒳 벑) 꽦遺 諛고빀쓣 옄룞 젣嫄고븯怨 뿽궛/泥좊텇쓣 닾엯 꽕怨꾪뻽뒿땲떎.</span>
+                </li>
+            `);
+            document.getElementById('cond-pregnant').checked = true;
+        }
+
+        // 4. 븣젅瑜닿린 삁쇅 쟻슜
+        let filteredAllergies = state.answers.allergies.filter(v => v !== 'none');
+        if (filteredAllergies.length > 0) {
+            matchScore -= (filteredAllergies.length * 1.5);
+            const allergenNames = { shrimp: '媛묎컖瑜', soy: '몢', gluten: '湲猷⑦뀗', dairy: '쑀젣뭹', nuts: '寃ш낵瑜', fish: '뼱瑜' };
+            const detectedList = filteredAllergies.map(a => allergenNames[a] || a).join(', ');
+            medicalAlerts.push(`
+                <li class="flex items-start gap-2 text-red-900 font-medium animate-fadeIn">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-600 mt-1.5 shrink-0"></span>
+                    <span><strong>[븞쟾 - 븣젅瑜닿린 蹂댄샇留]:</strong> ${detectedList} 븣젅瑜닿린媛 媛먯릺뿀뒿땲떎. 異붿쿇맂 쁺뼇냼뒗 떇臾쇱꽦 뿰吏 罹≪뒓 諛 쟾슜 젙젣留뚯쓣 꽑蹂꾪븯뿬 몢쑀 諛 諛 쑀옒 쟾遺꾩쓣 셿踰 諛곗젣 泥섎━뻽뒿땲떎.</span>
+                </li>
+            `);
+        }
+
+        // 寃쎄퀬媛 엳뒗 寃쎌슦 硫붾뵒而 븘꽣 蹂대뱶 媛쒕갑
+        if (medicalAlerts.length > 0) {
+            medicalDashboard.classList.remove('hidden');
+            medicalAlertsList.innerHTML = `<ul class="space-y-2.5">${medicalAlerts.join('')}</ul>`;
+        }
+
+        scoreNode.innerHTML = `${matchScore.toFixed(1)}<span class="text-sm">젏</span>`;
+
+        // 異붿쿇 긽뭹 移대뱶 젋뜑留
+        const listContainer = document.getElementById('recommended-products-container');
+        const chartContainer = document.getElementById('safety-chart-container');
+        const opinionContainer = document.getElementById('pharmacist-opinion-container');
+        const opinionText = document.getElementById('pharmacist-opinion-text');
+        
+        listContainer.innerHTML = '';
+        chartContainer.innerHTML = '';
+
+        // 빑떖 怨좊 痍⑤뱷 (理쒕 2媛)
+        let activeConcerns = [...state.answers.goals];
+        
+        // 궓꽦 듅솕 議곌굔 媛뺤젣 二쇱엯
+        if (state.answers.gender === 'male' && state.answers.maleConcerns.length > 0) {
+            state.answers.maleConcerns.forEach(mc => {
+                if (!activeConcerns.includes(mc)) activeConcerns.push(mc);
+            });
+        }
+
+        // 뿬꽦 깮븷二쇨린 以 엫떊/닔쑀뿉 뵲瑜 뿽궛/泥좊텇 媛뺤젣 異붿쿇 諛고빀 異붽
+        if (state.answers.femaleStage === 'pregnant' || state.answers.femaleStage === 'trying') {
+            if (!activeConcerns.includes('menses')) {
+                activeConcerns.push('menses'); // 泥좊텇 꽦遺꾩씠 궡옣맂 menses 뜲씠꽣 異붽 뿰룞
+            }
+        }
+
+        // 留뚯빟 꽑깮맂 怨좊쇱씠 븘삁 뾾떎硫 뵒뤃듃濡 뵾濡(fatigue) 硫댁뿭(immunity) 젣怨
+        if (activeConcerns.length === 0) {
+            activeConcerns = ['fatigue', 'immunity'];
+        }
+
+        // 빟궗 냼寃ъ꽌 궡슜 룞쟻 깮꽦
+        const goalNames = {
+            fatigue: '留뚯꽦 뵾濡 媛쒖꽑', eyes: '늿 嫄닿컯 蹂댄샇', gut: '옣 嫄닿컯', skin: '뵾遺 誘몄슜',
+            immunity: '硫댁뿭젰 利앹쭊', joints: '愿젅/堉 嫄닿컯', brain: '씤吏젰 媛쒖꽑', diet: '泥댁諛 愿由',
+            menses: '뿬꽦 삁뻾 諛 궗', hair: '紐⑤컻 嫄닿컯', sleep: '닔硫 吏 媛쒖꽑', blood: '삁뻾/삁愿 嫄닿컯',
+            prostate: '쟾由쎌꽑 嫄닿컯', liver: '媛 湲곕뒫 쉶蹂'
+        };
+        const activeGoalTexts = activeConcerns.map(c => goalNames[c] || c).join(', ');
+        
+        let opinionHTML = `븞뀞븯꽭슂. 瑗쇨세븯寃 옉꽦빐二쇱떊 嫄닿컯 꽕臾몄쓣 諛뷀깢쑝濡 留욎땄 쁺뼇 꽕怨꾨 셿猷뚰뻽뒿땲떎.\n\n`;
+        opinionHTML += `쁽옱 뿰졊 泥댁쭏웾吏닔 벑 떊泥 湲곗큹 뜲씠꽣瑜 遺꾩꽍븳 寃곌낵, 쟾諛섏쟻씤 궗 諛몃윴뒪瑜 쑀吏븯硫댁꽌룄 <strong>[${activeGoalTexts}]</strong> 쁺뿭뿉꽌 쟻洹뱀쟻씤 쁺뼇븰쟻 媛쒖엯씠 븘슂빐 蹂댁엯땲떎. 떆以묒뿉뒗 닔留롮 쁺뼇젣媛 議댁옱븯吏留, 臾댁옉젙 醫뗫떎怨 븯뿬 뿬윭 젣뭹쓣 꽎뼱 뱶떆硫 삤엳젮 媛꾧낵 떊옣뿉 遺떞쓣 以 닔 엳怨 꽦遺 媛 異⑸룎씠 諛쒖깮븷 닔 엳뒿땲떎. 뵲씪꽌 쁽옱 嫄닿컯 긽깭 깮솢 뒿愿(쓬二, 씉뿰, 슫룞웾 벑), 湲곗 吏덊솚源뚯 醫낇빀쟻쑝濡 怨좊젮븯뿬 媛옣 븞쟾븯硫댁꽌룄 떆꼫吏瑜 궪 닔 엳뒗 理쒖쟻쓽 꽦遺꾨뱾留 뾼꽑뻽뒿땲떎.\n\n`;
+
+        if (state.answers.smoking === 'yes') {
+            opinionHTML += `듅엳 <strong>씉뿰</strong>쓣 븯떆뒗 寃쎌슦 빆궛솕 愿由ш 븘닔쟻씠吏留, 怨좊냽룄 踰좏移대줈떞씠굹 듅젙 빀꽦 鍮꾪誘퍪 쑀룄泥닿 룷븿맂 젣뭹 삤엳젮 湲곌吏 룓 嫄닿컯뿉 쐞뿕 씤옄濡 옉슜븷 닔 엳떎뒗 엫긽 寃곌낵媛 엳뒿땲떎. 씠뿉 뵲씪 씠踰 異붿쿇 由ъ뒪듃뿉꽌뒗 빐떦 꽦遺꾩쓣 썝泥 李⑤떒븯怨, 븞쟾븯寃 泥대궡 솢꽦 궛냼瑜 젣嫄고븷 닔 엳뒗 <strong>泥 빆궛솕 꽕듃썙겕(鍮꾪誘퍬, 븘뒪옍떞, 젅뒆 벑)</strong> 쐞二쇰줈 옱援ъ꽦븯뒿땲떎.\n\n`;
+        }
+
+        if (state.answers.allergies.length > 0 && !state.answers.allergies.includes('none')) {
+            opinionHTML += `삉븳 옉꽦빐二쇱떊 <strong>븣젅瑜닿린 젙蹂</strong>瑜 諛뷀깢쑝濡 援먯감 諛섏쓳 쐞뿕씠 엳뒗 썝猷(삁: 몢 異붿텧臾, 듅젙 빐議곕쪟 踰좎씠뒪 벑)瑜 셿쟾엳 諛곗젣븳 떇臾쇱꽦 뿉肄 罹≪뒓 諛 븞떖 젙젣留뚯쓣 異붿쿇 紐⑸줉뿉 삱졇뒿땲떎.\n\n`;
+        }
+
+        if (state.answers.pillDiscomfort === 'extreme') {
+            opinionHTML += `룊냼 <strong>겙 븣빟쓣 궪궎湲 뼱젮썙븯떆뒗 젏</strong>쓣 源딆씠 怨듦컧빀땲떎. 쁺뼇젣뒗 留ㅼ씪 袁몄엳 꽠痍⑦빐빞 洹 쓽誘멸 엳쑝誘濡, 蹂듭슜 닚쓳룄瑜 洹밸솕븷 닔 엳룄濡 紐⑸꽆源씠 렪븞븳 珥덉냼삎 젙젣굹 留쏆엳뒗 援щ(젮由), 샊 씉닔쑉씠 넂 븸긽 젣삎 쐞二쇰줈 슦꽑 꽑蹂꾪뻽뒿땲떎.\n\n`;
+        }
+        
+        opinionHTML += `븘옒 젣븞빐 뱶由щ뒗 젣뭹뱾 븿웾 誘몃떖씠嫄곕굹 遺덊븘슂븳 泥④臾쇱씠 留롮 젣뭹 泥좎엳 嫄곕Ⅴ怨, <strong>꽭怨꾩쟻씤 썝猷뚯궗쓽 寃利앸맂 썝猷뚮 궗슜븯硫 떇빟泥 씤利앹쓣 넻怨쇳븳 떊猶곕룄 넂 젣뭹</strong>뱾엯땲떎. 媛 쁺뼇냼뒗 떇썑 30遺 씠궡뿉 異⑸텇븳 臾쇨낵 븿猿 꽠痍⑦븯떎 븣 泥대궡 씉닔쑉씠 媛옣 넂쑝硫, 쐞옣 옣븷瑜 理쒖냼솕븷 닔 엳뒿땲떎. 留뚯빟 쁽옱 泥섎갑諛쏆븘 뱶떆뒗 쟾臾 쓽빟뭹씠 엳떎硫 븘옒쓽 '궡 쁺뼇젣 珥덇낵 吏꾨떒' 꺆뿉꽌 떎떆 븳踰 以묐났 諛 긽샇옉슜 뿬遺瑜 泥댄겕븯떆湲 沅뚯옣빀땲떎. 袁몄븳 꽠痍⑥ 븿猿 媛踰쇱슫 슫룞쓣 蹂묓뻾븯떆硫 썾뵮 뜑 솢湲곗갔 씪긽쓣 릺李얠쑝떎 닔 엳쓣 寃껋엯땲떎. 嫄닿컯븳 궡씪쓣 쓳썝빀땲떎! 윉ⓥ띯슃截`;
+
+        // KDRI 2025 뿰졊蹂 媛씠뱶씪씤 異붽
+        const kdriData = {
+            '10s': { ageStr: '10 꽦옣湲', calcium: '800~1,000mg', vitC: '90~100mg', vitD: '10關g', focus: '怨④꺽 삎꽦怨 꽦옣쓣 쐞븳 移쇱뒛 諛 뿉꼫吏 궗 쁺뼇냼' },
+            '20s': { ageStr: '20 泥뀈湲', calcium: '800mg', vitC: '100mg', vitD: '10關g', focus: '솢諛쒗븳 궗쉶솢룞뿉 뵲瑜 뵾濡 쉶蹂듦낵 빆궛솕 쁺뼇냼' },
+            '30s': { ageStr: '30 꽦씤湲', calcium: '800mg', vitC: '100mg', vitD: '10關g', focus: '泥대젰 쑀吏 諛 뒪듃젅뒪 愿由щ 쐞븳 鍮꾪誘 B援곌낵 誘몃꽕엫' },
+            '40s': { ageStr: '40 以묒옣뀈湲', calcium: '800mg', vitC: '100mg', vitD: '10關g', focus: '궗쑉 븯 諛⑹ 諛 끂솕 삁諛⑹쓣 쐞븳 媛뺣젰븳 빆궛솕젣' },
+            '50s': { ageStr: '50 媛깅뀈湲', calcium: '800mg', vitC: '100mg', vitD: '10關g', focus: '怨⑤룄 媛먯냼 삁諛 諛 떖삁愿 嫄닿컯쓣 쐞븳 移쇱뒛, 鍮꾪誘 D' },
+            '60s': { ageStr: '60 씠긽 끂뀈湲', calcium: '700~800mg', vitC: '100mg', vitD: '15關g', focus: '洹쇨컧냼利 삁諛, 硫댁뿭젰 쑀吏 諛 씤吏 湲곕뒫 蹂댄샇瑜 쐞븳 떒諛깆쭏怨 鍮꾪誘 D' }
+        };
+
+        const kdri = kdriData[state.answers.age];
+        if (kdri) {
+            opinionHTML += `<br><br>윋 <strong>[2025 蹂닿굔蹂듭遺 븳援씤 쁺뼇냼 꽠痍④린以(KDRI) 諛섏쁺]</strong><br>`;
+            opinionHTML += `쉶썝떂怨 媛숈 <strong>${kdri.ageStr}</strong>뿉뒗 <strong>${kdri.focus}</strong> 꽠痍④ 빑떖쟻엯땲떎. 理쒖떊 援媛 꽠痍④린以뿉 뵲瑜대㈃ 빐떦 뿰졊쓽 븯猷 沅뚯옣 꽠痍⑤웾 <strong>移쇱뒛 ${kdri.calcium}, 鍮꾪誘 C ${kdri.vitC}, 鍮꾪誘 D ${kdri.vitD}</strong> 벑엯땲떎. 蹂 留욎땄 꽕怨꾨뒗 씠윭븳 援媛 怨듭씤 湲곗移(EAR, RNI)瑜 뾼寃⑺븯寃 쟻슜븯뿬 怨쇰떎 蹂듭슜뿉 쓽븳 룆꽦쓣 留됯퀬 寃고븤쓣 삁諛⑺븯뒗 븞쟾븳 븿웾쑝濡 援ъ꽦릺뿀뒿땲떎.`;
+        }
+
+        opinionText.innerHTML = opinionHTML;
+        opinionContainer.classList.remove('hidden');
+
+        // 1. 異붿쿇 쁺뼇냼 移대뱶 鍮뚮뜑 猷⑦봽
+        activeConcerns.forEach(concern => {
+            const items = INGREDIENTS_DB[concern];
+            if (items) {
+                items.forEach(item => {
+                    const encodedQuery = encodeURIComponent(item.name);
+                    const coupangLink = `https://www.coupang.com/np/search?q=${encodedQuery}`;
+                    const iherbLink = `https://kr.iherb.com/search?kw=${encodedQuery}`;
+                    const naverLink = `https://search.shopping.naver.com/search/all?query=${encodedQuery}`;
+
+                    // 븣빟 렪쓽꽦 젣삎 議곗젙 뀓뒪듃 泥섎━
+                    let pillFormText = item.size;
+                    let preferredBadge = `<span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-bold border border-emerald-100">沅뚯옣웾 100% 留ㅼ묶</span>`;
+                    
+                    if (state.answers.pillDiscomfort === 'extreme') {
+                        pillFormText = state.answers.altForm ? `${state.answers.altForm} 젣삎쑝濡 議곗젙 異붿쿇` : "냼삎 븣빟 젣삎 쟻슜";
+                        preferredBadge = `<span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-bold border border-blue-100">윊 紐⑸꽆源 媛怨 議곗젙맖</span>`;
+                    }
+
+                    // 씉뿰옄 踰좏移대줈떞/猷⑦뀒씤 꽦遺 二쇱쓽 寃쎄퀬 泥섎━
+                    let itemWarningLabel = "";
+                    if (state.answers.smoking === 'yes' && item.name.includes("猷⑦뀒씤")) {
+                        itemWarningLabel = `
+                            <div class="mt-2.5 p-2.5 rounded-xl bg-amber-50 border border-amber-100 text-[10px] text-amber-700 flex gap-1.5 items-start">
+                                <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                                <span><strong>씉뿰 二쇱쓽 諛고빀:</strong> 移대줈떚끂씠뱶 怨꾩뿴 씉닔瑜 怨좊젮븯뿬 븞떖 泥 븘뒪옍떞 꽦遺 쐞二쇱쓽 젙젣 寃깋씠 븘꽣 泥섎━릺뿀뒿땲떎.</span>
+                            </div>
+                        `;
+                    }
+
+                    let extraInfoBlock = "";
+                    if (item.effect && item.caution) {
+                        extraInfoBlock = `
+                            <div class="mt-4 p-4 bg-[#F8FAFC] rounded-xl space-y-3 border border-slate-100">
+                                <div>
+                                    <h5 class="text-[13px] font-bold text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-microscope text-blue-500"></i> 쁺뼇젣 二쇱슂 슚뒫 諛 옉슜 湲곗쟾</h5>
+                                    <p class="text-[13px] text-slate-600 mt-1 leading-relaxed">${item.effect}</p>
+                                </div>
+                                <div class="pt-3 border-t border-slate-200">
+                                    <h5 class="text-[13px] font-bold text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-500"></i> 蹂듭슜 떆 二쇱쓽궗빆 諛 以묐났 湲덇린</h5>
+                                    <p class="text-[13px] text-slate-600 mt-1 leading-relaxed">${item.caution}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = "p-5 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white hover:shadow-md transition-all flex flex-col gap-4 animate-fadeIn";
+                    card.innerHTML = `
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div class="flex gap-4 items-start">
+                                <div class="w-12 h-12 rounded-xl bg-white text-[#10B981] shadow-inner border border-slate-100 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-capsules"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h4 class="font-bold text-slate-800 text-sm sm:text-base">${item.name}</h4>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-100/60 border border-emerald-200 text-[#1E3A2F] text-[9px] font-bold">${item.tag}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 leading-normal">${item.detail}</p>
+                                    ${itemWarningLabel}
+                                    ${extraInfoBlock}
+                                </div>
+                            </div>
+                            <div class="flex sm:flex-col items-start sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-slate-200/50 pt-3 sm:pt-0 text-xs">
+                                <span class="text-slate-400 sm:mb-1">젣삎 겕湲: <strong class="text-slate-600">${pillFormText}</strong></span>
+                                ${preferredBadge}
+                            </div>
+                        </div>
+
+                        <!-- 쇅遺 뒪넗뼱 鍮좊Ⅸ 씠룞 踰꾪듉 紐⑥쓬 -->
+                        <div class="grid grid-cols-3 gap-2.5 pt-3 border-t border-slate-200/50">
+                            <a href="${coupangLink}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#0074E9] hover:bg-[#005ec1] text-white font-bold text-xs shadow-sm transition">
+                                <i class="fa-solid fa-shopping-cart text-[11px]"></i> 荑좏뙜 寃깋
+                            </a>
+                            <a href="${iherbLink}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#4E7E24] hover:bg-[#3d651a] text-white font-bold text-xs shadow-sm transition">
+                                <i class="fa-solid fa-leaf text-[11px]"></i> 븘씠뿀釉 吏곴뎄
+                            </a>
+                            <a href="${naverLink}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 py-3 rounded-xl bg-[#03C75A] hover:bg-[#02A64B] text-white font-bold text-xs shadow-sm transition">
+                                <i class="fa-solid fa-store text-[11px]"></i> 꽕씠踰 눥븨
+                            </a>
+                        </div>
+                    `;
+                    listContainer.appendChild(card);
+                });
+            }
+        });
+
+        // 2. 룞쟻 븞쟾 꽠痍⑤웾 諛 李⑦듃 젋뜑留
+        activeConcerns.forEach(concern => {
+            const chartData = SAFE_INTAKE_VALUES[concern];
+            if (chartData) {
+                chartData.forEach(barItem => {
+                    let adjustedPct = barItem.pct;
+                    let noticeLabel = "븞쟾 諛고빀 닔移";
+
+                    // 슫룞 긽깭굹 떊泥 긽깭뿉 뵲瑜 떆媛 븞쟾 뜲씠꽣꽑 긽샇 蹂댁젙
+                    if (state.answers.exercise.includes('hiit') && barItem.name.includes("鍮꾪誘 B1")) {
+                        adjustedPct = 100;
+                        noticeLabel = "뿉꼫吏 寃⑸젹 냼紐 留욎땄 蹂댁젙 닔移";
+                    }
+
+                    const barRow = document.createElement('div');
+                    barRow.className = "space-y-2 animate-fadeIn";
+                    barRow.innerHTML = `
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-700">${barItem.name} <span class="font-normal text-slate-400">(${barItem.unit})</span></span>
+                            <span class="font-mono font-bold text-[#10B981]">沅뚯옣웾 ${adjustedPct}% 젙빀 留ㅼ묶</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-6 rounded-full overflow-hidden relative shadow-inner border border-slate-200/50">
+                            <div class="bg-gradient-to-r ${barItem.color} h-full rounded-full flex items-center justify-end pr-3 transition-all duration-1000" style="width: ${adjustedPct}%">
+                                <span class="text-[9px] text-white font-extrabold tracking-wider">${noticeLabel}</span>
+                            </div>
+                        </div>
+                    `;
+                    chartContainer.appendChild(barRow);
+                });
+            }
+        });
+    }
+
+    // 궡 蹂댁쑀 쁺뼇젣 由ъ뒪듃 諛 李⑦듃 룞쟻 뿰궛
+    function recalculateSupplements() {
+        const listContainer = document.getElementById('my-supplements-list');
+        const countBadge = document.getElementById('active-supp-count');
+        const chartArea = document.getElementById('diagnose-chart-area');
+        const feedbackBox = document.getElementById('diagnostic-feedback-box');
+        const logsBox = document.getElementById('checker-profile-status-logs');
+
+        countBadge.textContent = `${state.mySupplements.length}媛`;
+
+        listContainer.innerHTML = '';
+        chartArea.innerHTML = '';
+        feedbackBox.innerHTML = '';
+        logsBox.innerHTML = '';
+        logsBox.classList.add('hidden');
+
+        if (state.mySupplements.length === 0) {
+            listContainer.innerHTML = `
+                <div class="text-center py-10 text-slate-400 text-xs flex flex-col items-center gap-2">
+                    <i class="fa-solid fa-box-open text-4xl text-slate-300"></i>
+                    <span>벑濡앸맂 쁺뼇젣媛 뾾뒿땲떎.<br>쐞쓽 異붿쿇 쁺뼇냼굹 떎瑜 빆紐⑹쓣 異붽빐 蹂댁꽭슂.</span>
+                </div>
+            `;
+            chartArea.innerHTML = `
+                <div class="text-center py-16 text-slate-400 text-xs">
+                    쁺뼇젣瑜 蹂닿븿뿉 異붽븯硫 떎떆媛 븿웾 遺꾩꽍 李⑦듃媛 몴떆맗땲떎.
+                </div>
+            `;
+            feedbackBox.innerHTML = `
+                <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100 text-xs text-center text-emerald-800">
+                    <i class="fa-solid fa-circle-check text-base mb-1.5 block"></i>
+                    쁽옱 怨쇰떎 蹂듭슜 以묒씤 쁺뼇 꽦遺꾩씠 뾾뒿땲떎. 븘二 븞쟾븳 떇긽엯땲떎!
+                </div>
+            `;
+            return;
+        }
+
+        // 蹂댁쑀 쁺뼇젣 移대뱶 젋뜑留
+        state.mySupplements.forEach((supp) => {
+            const card = document.createElement('div');
+            card.className = "p-3.5 bg-slate-50 border border-slate-200/60 rounded-2xl hover:bg-white transition-all flex justify-between items-center animate-fadeIn";
+            
+            const itemBadges = Object.keys(supp.items).map(k => `
+                <span class="text-[9px] bg-slate-200/70 text-slate-600 px-1.5 py-0.5 rounded font-medium">${k} ${supp.items[k]}%</span>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="space-y-1 max-w-[80%]">
+                    <span class="font-bold text-xs text-slate-800 block truncate">${supp.name}</span>
+                    <div class="flex flex-wrap gap-1">${itemBadges}</div>
+                </div>
+                <button onclick="removeSupplement(${supp.id})" class="text-slate-400 hover:text-red-500 w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center transition" title="궘젣">
+                    <i class="fa-solid fa-trash-can text-sm"></i>
+                </button>
+            `;
+            listContainer.appendChild(card);
+        });
+
+        const gender = document.getElementById('checker-gender').value;
+        const age = document.getElementById('checker-age').value;
+        const isPregnant = document.getElementById('cond-pregnant').checked;
+        const isOrganCaution = document.getElementById('cond-organ').checked;
+        const isHighSport = document.getElementById('cond-sport').checked;
+
+        const activeGuidelines = JSON.parse(JSON.stringify(NUTRIENT_GUIDELINES));
+        let profileLogs = [];
+
+        // 떎李⑥썝 媛/떊옣 湲곕뒫 蹂댄샇 븳怨 議곗젅
+        if (isOrganCaution) {
+            activeGuidelines["留덇렇꽕뒛"].maxSafe = 80;  
+            activeGuidelines["留덇렇꽕뒛"].danger = 120;  
+            activeGuidelines["留덇렇꽕뒛"].desc += " [媛/떊옣湲곕뒫 븘꽣: 궗 遺떞 셿솕瑜 쐞빐 留덇렇꽕뒛 씪씪 긽븳 二쇱쓽꽑씠 룺 媛뺥솕릺뿀뒿땲떎.]";
+
+            activeGuidelines["떎由щ쭏由"].maxSafe = 60;  
+            activeGuidelines["떎由щ쭏由"].danger = 100; 
+            activeGuidelines["떎由щ쭏由"].desc += " [媛 궗 遺떞 셿솕瑜 쐞빐 諛겕뵪뒳(떎由щ쭏由) 긽븳 꽠痍⑥꽑씠 궙븘議뚯뒿땲떎.]";
+
+            activeGuidelines["븘뿰"].maxSafe = 100;
+            activeGuidelines["븘뿰"].danger = 150;
+
+            profileLogs.push("슑截 <strong>媛/떊옣 湲곕뒫 슦젮:</strong> 빐룆 湲곌 遺떞쓣 諛⑹븯湲 쐞빐 <strong>留덇렇꽕뒛, 떎由щ쭏由, 븘뿰</strong>쓽 긽븳 蹂듭슜 寃쎄퀬 湲곗꽑씠 빟 40% 븯뼢 議곗젙릺뿀뒿땲떎.");
+        }
+
+        // 떎李⑥썝 엫떊/닔쑀 蹂댄샇 븳怨 議곗젅
+        if (isPregnant) {
+            activeGuidelines["鍮꾪誘퍭"].maxSafe = 150; 
+            activeGuidelines["鍮꾪誘퍭"].danger = 220; 
+            activeGuidelines["鍮꾪誘퍭"].desc = "엫궛遺 諛 깭븘 븞쟾쓣 쐞빐 怨좎슜웾 늻쟻쓣 寃쎄퀎빀땲떎.";
+
+            activeGuidelines["떎由щ쭏由"].maxSafe = 30;
+            activeGuidelines["떎由щ쭏由"].danger = 60;
+            activeGuidelines["떎由щ쭏由"].desc = "엫遺 븞쟾꽦 뿰援 誘몃퉬濡 媛湲됱쟻 諛겕뵪뒳 蹂듭슜뒗 二쇱튂쓽 긽떞븯湲곕 沅뚭퀬빀땲떎.";
+
+            profileLogs.push("윣 <strong>엫떊/닔쑀 븞떖 븘꽣:</strong> 깭븘 蹂댄샇瑜 쐞빐 吏슜꽦 <strong>鍮꾪誘퍭</strong> 깭븘 옄沅곸닔異 슦젮媛 엳뒗 <strong>떎由щ쭏由(諛겕뵪뒳)</strong> 븳怨꾩꽑씠 洹밸룄濡 븞쟾븯寃 寃⑹긽릺뿀뒿땲떎.");
+        }
+
+        // 怨좉컯룄 뒪룷痢 븳怨 議곗젅
+        if (isHighSport) {
+            activeGuidelines["鍮꾪誘퍫援"].maxSafe = 450;  
+            activeGuidelines["鍮꾪誘퍫援"].danger = 650;  
+            activeGuidelines["鍮꾪誘퍬"].maxSafe = 800;   
+            activeGuidelines["鍮꾪誘퍬"].danger = 1200;  
+
+            profileLogs.push("슒 <strong>뒪룷痢/怨좉컯룄 뿉꼫吏 諛⑹텧:</strong> 怨 닔遺 諛곗텧씠 寃⑸젹븯뿬 궗媛 鍮좊Ⅸ 닔슜꽦 <strong>鍮꾪誘퍫援, 鍮꾪誘퍬</strong>쓽 理쒖쟻 닔슜 엫怨꾩튂媛 30%~50% 긽뼢 蹂댁젙릺뿀뒿땲떎.");
+        }
+
+        // 2025 KDRI 뿰졊蹂 꽠痍 湲곗 쟻슜
+        if (age === 'under_20') {
+            activeGuidelines["移쇱뒛"].maxSafe = 140; 
+            activeGuidelines["移쇱뒛"].danger = 200;
+            activeGuidelines["移쇱뒛"].desc += " [KDRI 2025: 泥냼뀈湲곕뒗 堉 꽦옣씠 湲됯꺽븳 떆湲곕줈, 移쇱뒛 긽븳 븳怨꾧 꽦씤 鍮 쑀뿰븯寃 쟻슜릺뿀뒿땲떎.]";
+            profileLogs.push("윋 <strong>10 꽦옣湲 KDRI 湲곗:</strong> 怨④꺽 삎꽦쓣 쐞빐 <strong>移쇱뒛</strong>쓽 沅뚯옣 꽠痍 긽븳 븳怨꾩튂媛 긽뼢 議곗젙릺뼱 諛섏쁺릺뿀뒿땲떎.");
+        } else if (age === '20s' || age === '30s' || age === '40s') {
+            activeGuidelines["鍮꾪誘퍫援"].maxSafe = 400; 
+            activeGuidelines["鍮꾪誘퍫援"].desc += " [KDRI 2025: 꽦씤湲곕뒗 솢諛쒗븳 뿉꼫吏 궗 뵾濡 쉶蹂듭쓣 쐞빐 鍮꾪誘 B援곗쓽 긽븳 닔슜移섍 긽뼢 쟻슜릺뿀뒿땲떎.]";
+            activeGuidelines["鍮꾪誘퍬"].maxSafe = 600; 
+            profileLogs.push("윆꺿띯셽截 <strong>20~40 泥옣뀈湲 KDRI 湲곗:</strong> 뿉꼫吏 궗 솢꽦솕瑜 쐞빐 <strong>鍮꾪誘 B援 諛 C</strong>쓽 씪씪 븞쟾 닔슜룺쓣 넂寃 諛섏쁺븯뒿땲떎.");
+        } else if (age === '50s' || age === '60s+') {
+            activeGuidelines["移쇱뒛"].maxSafe = 90; 
+            activeGuidelines["移쇱뒛"].danger = 130;
+            activeGuidelines["移쇱뒛"].desc += " [KDRI 2025: 옣쨌끂뀈痢듭 怨좎슜웾 移쇱뒛쓽 삁愿 꽍쉶솕 슦젮濡 移쇱뒛 긽븳 湲곗(700~800mg)씠 뜑슧 뾼寃⑺븯寃 議곗젅릺뿀뒿땲떎.]";
+
+            activeGuidelines["鍮꾪誘퍭"].maxSafe = 250; 
+            activeGuidelines["鍮꾪誘퍭"].danger = 400;
+            activeGuidelines["鍮꾪誘퍭"].desc += " [KDRI 2025: 洹쇨컧냼利 諛 怨⑤떎怨듭쬆 삁諛⑹쓣 쐞빐 鍮꾪誘 D 沅뚯옣 꽠痍⑤웾(15關g)씠 긽뼢맖뿉 뵲씪 븞쟾 븳怨꾩튂룄 꼻寃 뿀슜맗땲떎.]";
+
+            profileLogs.push("윉디윉 <strong>50 씠긽 KDRI 湲곗:</strong> 끂솕 삁諛⑹쓣 쐞빐 <strong>鍮꾪誘퍭</strong> 븳怨꾩튂뒗 긽뼢 셿솕릺뿀쑝굹, 떖삁愿 遺떞 寃쎄컧쓣 쐞빐 <strong>移쇱뒛</strong> 긽븳 湲곗 뾼寃⑺엳 젣븳릺뿀뒿땲떎.");
+        }
+
+        if (profileLogs.length > 0) {
+            logsBox.classList.remove('hidden');
+            logsBox.innerHTML = `
+                <div class="p-4 rounded-2xl bg-teal-50/50 border border-teal-200/60 text-xs text-teal-900 space-y-1.5 animate-fadeIn">
+                    <span class="font-bold text-teal-800 flex items-center gap-1.5"><i class="fa-solid fa-sliders"></i> 媛쒖씤蹂 議곌굔뿉 뵲瑜 湲곗젏 蹂寃 떎떆媛 異붿쟻</span>
+                    <ul class="list-disc pl-4 space-y-1 text-slate-600 leading-relaxed text-[11px]">
+                        ${profileLogs.map(log => `<li>${log}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        const nutrientTotals = {
+            "鍮꾪誘퍭": 0, "鍮꾪誘퍫援": 0, "鍮꾪誘퍬": 0, "븘뿰": 0,
+            "移쇱뒛": 0, "留덇렇꽕뒛": 0, "삤硫붽3": 0, "猷⑦뀒씤": 0, "떎由щ쭏由": 0
+        };
+
+        state.mySupplements.forEach(supp => {
+            for (const key in supp.items) {
+                if (nutrientTotals.hasOwnProperty(key)) {
+                    nutrientTotals[key] += supp.items[key];
+                }
+            }
+        });
+
+        let warningAlerts = [];
+
+        for (const nutrient in nutrientTotals) {
+            const totalPct = nutrientTotals[nutrient];
+            const rule = activeGuidelines[nutrient]; 
+
+            if (!rule) continue;
+            if (totalPct === 0) continue;
+
+            let statusText = "쟻젙";
+            let statusColor = "bg-gradient-to-r from-emerald-400 to-emerald-500";
+            let alertStyle = "";
+
+            if (totalPct < 50) {
+                statusText = "遺議";
+                statusColor = "bg-gradient-to-r from-slate-400 to-slate-500";
+            } else if (totalPct >= rule.danger) {
+                statusText = "쐞뿕 (珥덇낵)";
+                statusColor = "bg-gradient-to-r from-red-500 to-rose-600 pulse-red";
+                alertStyle = "text-rose-600 font-extrabold";
+                warningAlerts.push({
+                    nutrient: nutrient,
+                    level: 'danger',
+                    percent: totalPct,
+                    desc: rule.desc
+                });
+            } else if (totalPct >= rule.maxSafe) {
+                statusText = "二쇱쓽 (寃쎄퀎)";
+                statusColor = "bg-gradient-to-r from-amber-400 to-amber-500";
+                alertStyle = "text-amber-600 font-bold";
+                warningAlerts.push({
+                    nutrient: nutrient,
+                    level: 'warning',
+                    percent: totalPct,
+                    desc: rule.desc
+                });
+            }
+
+            const chartRow = document.createElement('div');
+            chartRow.className = "space-y-1 animate-fadeIn";
+            
+            const visualProgress = Math.min(totalPct, 150); 
+
+            chartRow.innerHTML = `
+                <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-slate-700">${nutrient}</span>
+                    <span class="font-mono text-[11px] ${alertStyle}">늻쟻 꽠痍: ${totalPct}${rule.unit} (${statusText})</span>
+                </div>
+                <div class="w-full bg-slate-100 h-5.5 rounded-full overflow-hidden relative border border-slate-200/50 shadow-inner">
+                    <div class="${statusColor} h-full rounded-full flex items-center justify-end pr-3 transition-all duration-700" style="width: ${(visualProgress / 150) * 100}%">
+                        <span class="text-[9px] text-white font-extrabold">${totalPct}%</span>
+                    </div>
+                    <div class="absolute top-0 bottom-0 w-0.5 bg-red-400 border-l border-dashed border-red-500" style="left: ${(Math.min(rule.maxSafe, 150) / 150) * 100}%" title="留욎땄 寃쎄퀎 湲곗꽑 (${rule.maxSafe}%)"></div>
+                </div>
+            `;
+            chartArea.appendChild(chartRow);
+        }
+
+        if (warningAlerts.length === 0) {
+            feedbackBox.innerHTML = `
+                <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl text-xs flex gap-3 items-center animate-fadeIn">
+                    <i class="fa-solid fa-circle-check text-xl text-emerald-500"></i>
+                    <div>
+                        <span class="font-bold">蹂듭슜 議고솕 긽깭: 븞쟾븿</span>
+                        <p class="text-[11px] text-emerald-700 mt-1">
+                            쁽옱 以묐났 꽠痍 以묒씤 쁺뼇냼뱾씠 洹븯쓽 뿰졊/紐 긽깭 鍮 뿀슜 踰붿쐞 씠궡뿉 룷吏꾪븯怨 엳뒿땲떎. 븞쟾븯寃 씪긽쟻씤 猷⑦떞쓣 怨꾩냽븯뀛룄 臾대갑빀땲떎.
+                        </p>
+                    </div>
+                </div>
+            `;
+        } else {
+            warningAlerts.forEach(alert => {
+                const alertCard = document.createElement('div');
+                const isDanger = alert.level === 'danger';
+                alertCard.className = `p-4 rounded-2xl border text-xs flex gap-3 items-start animate-fadeIn ${
+                    isDanger ? 'bg-red-50 border-red-200 text-red-900' : 'bg-amber-50 border-amber-200 text-amber-900'
+                }`;
+
+                alertCard.innerHTML = `
+                    <i class="fa-solid ${isDanger ? 'fa-triangle-exclamation text-red-500' : 'fa-circle-exclamation text-amber-500'} text-xl mt-0.5"></i>
+                    <div>
+                        <span class="font-bold">${alert.nutrient} ${alert.percent}% 蹂듭슜 媛먯 (${isDanger ? '쐞뿕' : '二쇱쓽'})</span>
+                        <p class="mt-1 text-[11px] ${isDanger ? 'text-red-700' : 'text-amber-800'} leading-relaxed">${alert.desc}</p>
+                        <div class="mt-2.5 flex gap-2">
+                            <span class="bg-white/80 px-2 py-0.5 rounded border border-slate-200 font-bold text-[9px] cursor-pointer hover:bg-white" onclick="suggestAdjustment('${alert.nutrient}', ${alert.percent})">
+                                윊 뼱뼸寃 議곗젅빐빞 븷吏 븣젮二쇱꽭슂
+                            </span>
+                        </div>
+                    </div>
+                `;
+                feedbackBox.appendChild(alertCard);
+            });
+        }
+    }
+
+    // 궡 쁺뼇젣 젣嫄 빖뱾윭
+    function removeSupplement(id) {
+        state.mySupplements = state.mySupplements.filter(item => item.id !== id);
+        showToast("蹂닿븿뿉꽌 쁺뼇젣瑜 젣쇅뻽뒿땲떎.", "success");
+        recalculateSupplements();
+    }
+
+    // 釉뚮옖뱶 젣뭹 떎떆媛 옄냼 寃깋 諛 븘꽣留 湲곕뒫 (怨듦났 DB & OCR 泥 뿰룞 룷븿)
+    function searchBrandSupplements(query) {
+        const dropdown = document.getElementById('brand-suggest-dropdown');
+        if (!query || query.trim().length < 2) {
+            dropdown.classList.add('hidden');
+            return;
+        }
+        
+        const filtered = BRAND_SUPPLEMENTS_DB.filter(item => 
+            item.name.toLowerCase().includes(query.toLowerCase()) || 
+            item.brand.toLowerCase().includes(query.toLowerCase())
+        );
+
+        if (filtered.length === 0) {
+            // 寃깋 寃곌낵 뾾쓣 븣쓽 쉷湲곗쟻 쎇땲꽌 븞 UI 異쒕젰
+            dropdown.innerHTML = `
+                <div class="p-4 text-center text-xs text-slate-500 space-y-3">
+                    <div class="space-y-1">
+                        <span class="font-bold text-slate-700 block">윍 "${query}"뿉 븳 寃깋 寃곌낵媛 뾾뒿땲떎.</span>
+                        <p class="text-[11px] text-slate-400">NutriMatch쓽 몢 媛吏 씤怨듭뒫 븞떖 슦쉶 벑濡앹쓣 궗슜빐 蹂댁꽭슂.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 pt-1.5">
+                        <button onclick="triggerMfdsSearch('${query}')" class="w-full py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold border border-teal-200 transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-database text-teal-600"></i> 떇빟泥 怨듦났 뜲씠꽣뿉꽌 利됱떆 議고쉶븯湲
+                        </button>
+                        <button onclick="openOcrModal('${query}')" class="w-full py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#1E3A2F] font-bold border border-emerald-200 transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-camera text-emerald-600"></i> 윋 쁺뼇꽦遺꾪몴 궗吏 李띿뼱 벑濡 (AI 뒪罹)
+                        </button>
+                    </div>
+                </div>
+            `;
+            dropdown.classList.remove('hidden');
+            return;
+        }
+
+        dropdown.innerHTML = filtered.map(item => `
+            <div onclick="selectBrandSupplement('${item.brand}', '${item.name}')" class="p-3 hover:bg-slate-50 cursor-pointer text-xs border-b border-slate-100 last:border-0 flex justify-between items-center">
+                <div>
+                    <span class="font-bold text-slate-700 block">${item.name}</span>
+                    <span class="text-[10px] text-slate-400">${item.brand}</span>
+                </div>
+                <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full font-bold">옄룞 遺꾩꽍</span>
+            </div>
+        `).join('');
+        dropdown.classList.remove('hidden');
+    }
+
+    // 떇빟泥 怨듦났 DB 議고쉶 諛 媛긽 뜲씠꽣 留ㅽ븨 깮꽦
+    function triggerMfdsSearch(productName) {
+        const dropdown = document.getElementById('brand-suggest-dropdown');
+        dropdown.innerHTML = `
+            <div class="p-6 text-center text-xs space-y-3">
+                <div class="w-6 h-6 rounded-full border-2 border-slate-200 border-t-[#10B981] animate-spin mx-auto"></div>
+                <span class="font-bold text-teal-800 block">떇뭹쓽빟뭹븞쟾泥 뭹紐⑹젣議곌났怨듬뜲씠꽣留 떎떆媛 룞湲고솕 以...</span>
+                <p class="text-[10px] text-slate-400">떇빟泥섏뿉 蹂닿퀬맂 32,500뿬 媛 湲곕뒫떇뭹 蹂닿퀬꽌 議 以</p>
+            </div>
+        `;
+
+        setTimeout(() => {
+            // 엯젰 궎썙뱶 湲곕컲쑝濡 媛긽쓽 嫄닿컯 꽦遺꾩쓣 쑀異뷀븯뿬 mock 깮꽦
+            let mockNutrients = { "鍮꾪誘퍬": 100 }; // 湲곕낯
+            if (productName.includes("솉궪") || productName.includes("씤궪")) {
+                mockNutrients = { "떎由щ쭏由": 80, "鍮꾪誘퍫援": 50 };
+            } else if (productName.includes("移쇱뒛") || productName.includes("堉")) {
+                mockNutrients = { "移쇱뒛": 100, "鍮꾪誘퍭": 100 };
+            } else if (productName.includes("쑀궛洹") || productName.includes("씫넗") || productName.includes("봽由")) {
+                mockNutrients = { "삤硫붽3": 100, "븘뿰": 50 };
+            } else {
+                // 씪諛 鍮꾪誘쇰쪟 엫쓽 깮꽦
+                mockNutrients = { "鍮꾪誘퍬": 500, "鍮꾪誘퍭": 150, "븘뿰": 80 };
+            }
+
+            // 媛긽 뜲씠꽣踰좎씠뒪뿉 깮꽦맂 뜲씠꽣瑜 異붽븯뿬 쁺援 꽑깮 媛뒫븯寃 븿
+            const mockProduct = {
+                brand: "怨듦났뜲씠꽣 뿰룞",
+                name: productName,
+                items: mockNutrients
+            };
+            BRAND_SUPPLEMENTS_DB.push(mockProduct);
+            selectBrandSupplement(mockProduct.brand, mockProduct.name);
+        }, 1500);
+    }
+
+    // AI OCR 꽦遺 씪踰 뒪罹먮꼫 紐⑤떖 而⑦듃濡
+    let currentOcrProduct = "";
+    function openOcrModal(productName) {
+        currentOcrProduct = productName;
+        document.getElementById('brand-suggest-dropdown').classList.add('hidden');
+        document.getElementById('ocr-scan-modal').classList.remove('hidden');
+        
+        // 媛긽 酉고뙆씤뜑 珥덇린솕
+        document.getElementById('ocr-viewfinder-screen').innerHTML = `
+            <i class="fa-solid fa-camera text-4xl text-slate-500 mb-2"></i>
+            <span class="text-xs text-slate-400">移대찓씪 湲 以...</span>
+        `;
+        document.getElementById('ocr-scanner-laser').classList.add('hidden');
+        document.getElementById('ocr-extracted-result').classList.add('hidden');
+        document.getElementById('ocr-action-btn').classList.remove('hidden');
+        document.getElementById('ocr-apply-btn').classList.add('hidden');
+    }
+
+    function closeOcrModal() {
+        document.getElementById('ocr-scan-modal').classList.add('hidden');
+    }
+
+    function startOcrCapture() {
+        const screen = document.getElementById('ocr-viewfinder-screen');
+        const laser = document.getElementById('ocr-scanner-laser');
+        const actionBtn = document.getElementById('ocr-action-btn');
+
+        screen.innerHTML = `
+            <div class="text-xs space-y-2">
+                <i class="fa-solid fa-circle-notch text-3xl text-[#10B981] animate-spin mb-1"></i>
+                <span class="font-bold text-[#10B981] block">쁺뼇 꽦遺 씠誘몄 옄룞 젙諛 OCR 뒪罹 以...</span>
+                <p class="text-[10px] text-slate-400">씪踰 뀓뒪듃 뜲씠꽣 遺꾪븷 諛 닔移 援ъ“ 遺꾩꽍 뿰궛 쟻슜</p>
+            </div>
+        `;
+        laser.classList.remove('hidden');
+        actionBtn.classList.add('opacity-50', 'pointer-events-none');
+
+        setTimeout(() => {
+            laser.classList.add('hidden');
+            screen.innerHTML = `
+                <div class="text-xs space-y-1">
+                    <i class="fa-solid fa-circle-check text-4xl text-[#10B981] mb-2 animate-bounce"></i>
+                    <span class="font-bold text-white block">뀓뒪듃 뒪罹 留ㅽ븨 遺꾩꽍 셿猷!</span>
+                    <p class="text-[10px] text-[#10B981]">怨좎쑀 湲곕뒫 꽦遺 留ㅼ묶 꽦怨</p>
+                </div>
+            `;
+
+            // 留ㅼ묶 꽦遺 룞쟻 異붿텧
+            let extracted = { "鍮꾪誘퍬": 1000, "븘뿰": 100, "鍮꾪誘퍭": 150 };
+            if (currentOcrProduct.includes("삤硫붽")) extracted = { "삤硫붽3": 150, "鍮꾪誘퍭": 80 };
+            else if (currentOcrProduct.includes("諛겕")) extracted = { "떎由щ쭏由": 100, "鍮꾪誘퍫援": 100 };
+
+            const badgeArea = document.getElementById('ocr-badges-area');
+            badgeArea.innerHTML = Object.keys(extracted).map(k => `
+                <span class="inline-flex items-center gap-1 bg-white text-emerald-800 border border-emerald-200/80 px-2 py-0.5 rounded-lg text-[10px] font-bold">
+                    ${k} ${extracted[k]}%
+                </span>
+            `).join('');
+
+            document.getElementById('ocr-extracted-result').classList.remove('hidden');
+            document.getElementById('ocr-apply-btn').classList.remove('hidden');
+            actionBtn.classList.add('hidden');
+            actionBtn.classList.remove('opacity-50', 'pointer-events-none');
+
+            // 엫떆 뜲씠꽣 쟾떖슜 罹먯떆 뼱듃由щ럭듃
+            document.getElementById('ocr-apply-btn').setAttribute('data-ocr-items', JSON.stringify(extracted));
+        }, 2200);
+    }
+
+    function applyOcrResult() {
+        const ocrItemsStr = document.getElementById('ocr-apply-btn').getAttribute('data-ocr-items');
+        if (!ocrItemsStr) return;
+
+        const input = document.getElementById('custom-supp-name');
+        input.value = `[AI 뒪罹] ${currentOcrProduct}`;
+        
+        // OCR 遺꾩꽍 꽦遺꾨뱾쓣 젣뭹蹂 꽦遺 鍮뚮뜑 泥댄겕諛뺤뒪 洹몃━뱶뿉 룞쟻쑝濡 궗쟾 泥댄겕 諛 湲곗엯
+        populateNutrientBuilderGrid(JSON.parse(ocrItemsStr));
+
+        closeOcrModal();
+        showToast("씠誘몄 뀓뒪듃 씤떇쓣 넻빐 蹂듯빀 꽦遺꾩쓣 꽦遺 鍮뚮뜑뿉 씪愿 엫떆 留ㅽ븨뻽뒿땲떎!", "success");
+    }
+
+    // 닔룞 蹂듯빀 꽦遺 엯젰 洹몃━뱶 젋뜑윭
+    function buildNutrientGridUI() {
+        const grid = document.getElementById('custom-ingredients-grid');
+        const nutrients = ["鍮꾪誘퍭", "鍮꾪誘퍫援", "鍮꾪誘퍬", "븘뿰", "移쇱뒛", "留덇렇꽕뒛", "삤硫붽3", "猷⑦뀒씤", "떎由щ쭏由"];
+        
+        grid.innerHTML = nutrients.map(nut => `
+            <div class="p-2 rounded-xl border border-slate-100 bg-white flex flex-col gap-1 text-[11px] items-start hover:shadow-sm transition">
+                <label class="flex items-center gap-1.5 font-bold cursor-pointer w-full text-slate-700">
+                    <input type="checkbox" data-nutrient="${nut}" onchange="toggleGridNutrient(this)" class="nutrient-chk rounded text-[#10B981] accent-[#10B981] w-3.5 h-3.5">
+                    <span>${nut}</span>
+                </label>
+                <div class="flex items-center gap-1 w-full mt-1">
+                    <input type="number" id="input-${nut}" data-nutrient="${nut}" placeholder="0" disabled class="nutrient-input w-full p-1 rounded-lg border border-slate-200 text-center font-semibold bg-slate-50 text-[11px] disabled:opacity-40 disabled:bg-slate-100">
+                    <span class="text-[9px] text-slate-400 font-mono">%</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 꽦遺 泥댄겕諛뺤뒪 넗湲 떆 씤뭼 鍮꾪솢꽦솕 젣뼱
+    function toggleGridNutrient(checkbox) {
+        const nutrient = checkbox.getAttribute('data-nutrient');
+        const input = document.getElementById(`input-${nutrient}`);
+        if (checkbox.checked) {
+            input.disabled = false;
+            input.classList.remove('bg-slate-100');
+            input.classList.add('bg-white');
+            if (!input.value) input.value = 100; // 泥댄겕 떆 湲곕낯媛 100% 엫떆 븷떦
+        } else {
+            input.disabled = true;
+            input.classList.add('bg-slate-100');
+            input.classList.remove('bg-white');
+            input.value = '';
+        }
+    }
+
+    // 꽦遺 泥댄겕諛뺤뒪 諛 븿웾 꽭똿 뿬띁 (寃깋/뒪罹 寃곌낵 뿰怨꾩슜)
+    function populateNutrientBuilderGrid(items) {
+        // 씪떒 쟾泥 珥덇린솕
+        const checkboxes = document.querySelectorAll('.nutrient-chk');
+        checkboxes.forEach(chk => {
+            chk.checked = false;
+            toggleGridNutrient(chk);
+        });
+
+        // 쟾떖諛쏆 븘씠뀥 꽭똿
+        for (const nutrient in items) {
+            const chk = document.querySelector(`.nutrient-chk[data-nutrient="${nutrient}"]`);
+            if (chk) {
+                chk.checked = true;
+                toggleGridNutrient(chk);
+                const input = document.getElementById(`input-${nutrient}`);
+                if (input) input.value = items[nutrient];
+            }
+        }
+    }
+
+    // 釉뚮옖뱶 옄룞셿꽦 꽑깮 떆 븿웾 젙蹂 엫떆 留ㅽ븨 諛붿씤뵫
+    function selectBrandSupplement(brand, name) {
+        const product = BRAND_SUPPLEMENTS_DB.find(item => item.brand === brand && item.name === name);
+        if (!product) return;
+
+        const input = document.getElementById('custom-supp-name');
+        input.value = `[${product.brand}] ${product.name}`;
+
+        // 꽦遺 泥댄겕諛뺤뒪 鍮뚮뜑 洹몃━뱶뿉 옄룞쑝濡 蹂듯빀 쁺뼇 꽦遺 留ㅽ븨
+        populateNutrientBuilderGrid(product.items);
+
+        // 옄룞쑝濡 遺꾩꽍맂 븿웾 젙蹂 떎떆媛 떆媛곹솕 蹂대뱶
+        const previewBox = document.getElementById('auto-ingredients-preview');
+        if (previewBox) {
+            const badges = Object.keys(product.items).map(k => 
+                `<span class="inline-flex items-center gap-1 bg-white text-emerald-800 border border-emerald-200/80 px-2.5 py-1 rounded-xl text-[10px] font-bold shadow-sm">
+                    <i class="fa-solid fa-circle-check text-emerald-500"></i> ${k} ${product.items[k]}%
+                </span>`
+            ).join(' ');
+
+            previewBox.innerHTML = `
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-100/50 flex items-center justify-center shrink-0 text-emerald-600 mt-0.5">
+                        <i class="fa-solid fa-microchips"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-bold text-[#1E3A2F] block text-xs">AI 꽦遺 옄룞 遺꾩꽍 셿猷</span>
+                        <p class="text-[10px] text-slate-500 leading-normal">꽑깮븯떊 젣뭹쓽 蹂듭옟븳 꽦遺 援ъ꽦몴媛 꽦遺 鍮뚮뜑뿉 씪愿 쟻슜릺뿀뒿땲떎. 븘옒 '異붽' 踰꾪듉쓣 늻瑜댁떆硫 蹂닿븿怨 李⑦듃뿉 씪愿 벑濡앸맗땲떎.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1.5">${badges}</div>
+                    </div>
+                </div>
+            `;
+            previewBox.classList.remove('hidden');
+        }
+
+        document.getElementById('brand-suggest-dropdown').classList.add('hidden');
+        showToast(`"${product.name}"쓽 꽦遺 援ъ꽦쓣 遺덈윭솕뒿땲떎.`, 'success');
+    }
+
+    // 봽由ъ뀑 쁺뼇젣 뜲씠꽣踰좎씠뒪 (珥덇린 異붽슜)
+    function addPresetSupplement(key) {
+        const preset = PRESET_SUPPLEMENTS[key];
+        if (!preset) return;
+
+        const isExists = state.mySupplements.some(item => item.name === preset.name);
+        if (isExists) {
+            showToast("씠誘 蹂닿븿뿉 벑濡앸맂 쁺뼇젣엯땲떎.", "error");
+            return;
+        }
+
+        const newId = Date.now() + Math.random();
+        state.mySupplements.push({
+            id: newId,
+            name: preset.name,
+            type: `preset_${key}`,
+            items: { ...preset.items }
+        });
+
+        showToast(`"${preset.name}" 젣뭹 異붽 셿猷!`, "success");
+        recalculateSupplements();
+    }
+
+    // 而ㅼ뒪 쁺뼇젣 벑濡 泥섎━ (蹂듯빀 꽦遺 洹몃━뱶瑜 뿰궛븯뿬 떒씪 젣뭹쑝濡 理쒖쥌 媛以 벑濡)
+    function addCustomSupplement() {
+        const nameInput = document.getElementById('custom-supp-name');
+        const name = nameInput.value.trim();
+
+        if (!name) {
+            showToast("쁺뼇젣 씠由꾩쓣 엯젰빐 二쇱꽭슂.", "error");
+            return;
+        }
+
+        // 泥댄겕諛뺤뒪 洹몃━뱶뿉꽌 솢꽦솕맂 꽦遺 븿웾 씪愿 닔吏
+        const checkedItems = {};
+        const checkboxes = document.querySelectorAll('.nutrient-chk');
+        
+        checkboxes.forEach(chk => {
+            if (chk.checked) {
+                const nutrient = chk.getAttribute('data-nutrient');
+                const input = document.getElementById(`input-${nutrient}`);
+                const pct = parseInt(input.value);
+                if (!isNaN(pct) && pct > 0) {
+                    checkedItems[nutrient] = pct;
+                }
+            }
+        });
+
+        if (Object.keys(checkedItems).length === 0) {
+            showToast("理쒖냼 1媛 씠긽쓽 꽦遺꾩쓣 泥댄겕븯怨 븿웾쓣 엯젰빐 二쇱꽭슂.", "error");
+            return;
+        }
+
+        const newId = Date.now();
+        state.mySupplements.push({
+            id: newId,
+            name: name,
+            type: "custom_product",
+            items: checkedItems
+        });
+
+        showToast(`깉 쁺뼇젣 젣뭹 "${name}" 蹂닿븿 異붽 셿猷!`, "success");
+
+        // 엯젰뤌 諛 鍮뚮뜑 洹몃━뱶 쟾硫 珥덇린솕
+        nameInput.value = '';
+        checkboxes.forEach(chk => {
+            chk.checked = false;
+            toggleGridNutrient(chk);
+        });
+
+        const previewBox = document.getElementById('auto-ingredients-preview');
+        if (previewBox) {
+            previewBox.classList.add('hidden');
+            previewBox.innerHTML = '';
+        }
+
+        recalculateSupplements();
+    }
+
+    // 泥 泥섎갑 議곗뼵 紐⑤떖 깮꽦
+    function suggestAdjustment(nutrient, percent) {
+        let solution = "";
+        const isPregnant = document.getElementById('cond-pregnant').checked;
+        const isOrganCaution = document.getElementById('cond-organ').checked;
+
+        if (nutrient === "鍮꾪誘퍭") {
+            if (isPregnant) {
+                solution = "엫떊 以 鍮꾪誘퍭 怨쇰웾 異뺤쟻 깭븘쓽 떊옣 移쇱뒛 怨쇰떎 移⑥갑쓣 쑀룄븷 닔 엳쑝誘濡, 醫낇빀젣 쇅뿉 怨좏븿웾 떒씪 鍮꾪誘퍭 꽠痍⑤ 以묒븯怨 1씪 1뙥 留욎땄삎 泥섎갑 븳룄濡 넻빀 꽠痍⑦븯뒗 寃껋쓣 沅뚯옣빀땲떎.";
+            } else {
+                solution = "怨좎슜웾 鍮꾪誘퍭 떒씪젣쓽 蹂듭슜 二쇨린瑜 留ㅼ씪뿉꽌 寃⑹씪(二 3쉶)濡 궙異붿떆嫄곕굹 蹂듭슜 以묒씤 쁺뼇젣뱾쓽 蹂묒닔瑜 빀爾 媛꾪렪븳 蹂듯빀 留욎땄삎 씪씪 뙥쑝濡 쟾솚븯꽭슂.";
+            }
+        } else if (nutrient === "鍮꾪誘퍫援") {
+            solution = "鍮꾪誘퍫援곗 꽆移섎㈃ 諛곗텧릺吏留 닔슜꽦씠씪룄 怨쇰떎 蹂듭슜 떆 떊寃 씎遺 諛 뵾遺 듃윭釉붿쓣 媛以묒떆궗 닔 엳쑝誘濡 400% 씠궡 븞떖 蹂듭슜 議곗쑉쓣 젣븞빀땲떎.";
+        } else if (nutrient === "븘뿰") {
+            solution = "븘뿰 怨쇰떎 蹂듭슜 떆 誘몃꽕엫 寃쎌웳 씉닔濡 硫댁뿭 湲곕뒫쓽 湲곕뫁씤 援щ━ 씉닔瑜 뼲젣빀땲떎. 떒뭹쑝濡 뜑븯怨 엳뒗 븘뿰 蹂댁땐젣쓽 以묐났쓣 以묐떒븯꽭슂.";
+        } else if (nutrient === "떎由щ쭏由" && isOrganCaution) {
+            solution = "媛/떊옣 삁諛 紐⑤뱶媛 媛먯릺뿀뒿땲떎. 怨쇱쨷븳 떎由щ쭏由(諛겕뵪뒳) 怨좊냽룄 뿀釉 蹂듭슜 삤엳젮 떊吏꾨궗 뿬怨 뵾濡쒕 뜑빀땲떎. 蹂듭슜웾쓣 젅諛 씠븯濡 以꾩씠떗떆삤.";
+        } else {
+            solution = `${nutrient} 以묐났쓣 뵾븯湲 쐞빐 蹂듯빀 醫낇빀젣 씠쇅쓽 떒씪젣 諛고빀쓣 옞젙 以묐떒븯떆嫄곕굹 1씪 1쉶 留욎땄 뙥 떆뒪뀥쑝濡 꽦遺꾩쓣 씪썝솕븷 寃껋쓣 沅뚭퀬빀땲떎.`;
+        }
+
+        showToast(`${nutrient} 뵾뱶諛 留욎땄 泥섎갑 넄猷⑥뀡쓣 쟾넚뻽뒿땲떎.`, "success");
+        
+        const feedbackBox = document.getElementById('diagnostic-feedback-box');
+        const tipsCard = document.createElement('div');
+        tipsCard.className = "p-4 rounded-2xl bg-teal-50 border border-teal-200 text-xs text-teal-950 animate-pulse";
+        tipsCard.innerHTML = `
+            <div class="flex gap-2 items-start">
+                <i class="fa-solid fa-user-md text-teal-600 text-base mt-0.5"></i>
+                <div>
+                    <span class="font-bold">윉ⓥ띯슃截 ${nutrient} 湲닿툒 봽濡쒗븘 留욎땄 泥섎갑 媛씠뱶</span>
+                    <p class="mt-1 text-[11px] text-teal-900 leading-normal">${solution}</p>
+                </div>
+            </div>
+        `;
+        feedbackBox.insertBefore(tipsCard, feedbackBox.firstChild);
+        tipsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // 濡쒖뺄 뒪넗由ъ뿉 뜲씠꽣媛 궓븘엳뒗吏 솗씤
+    function checkStoredAnswers() {
+        const container = document.getElementById('restore-answers-container');
+        try {
+            const data = localStorage.getItem('nutrimatch_survey_answers');
+            if (data && container) {
+                container.classList.remove('hidden');
+            } else if (container) {
+                container.classList.add('hidden');
+            }
+        } catch (e) {
+            console.warn("Storage read failed", e);
+        }
+    }
+
+    // 씠쟾 湲곕줉 蹂듭썝븯怨 寃곌낵 럹씠吏濡 諛붾줈 媛湲
+    function loadPreviousResults() {
+        try {
+            const data = localStorage.getItem('nutrimatch_survey_answers');
+            if (data) {
+                state.answers = JSON.parse(data);
+                showToast("씠쟾 嫄닿컯 遺꾩꽍 뜲씠꽣瑜 꽦怨듭쟻쑝濡 蹂듭썝뻽뒿땲떎.", "success");
+                renderRecommendationResults();
+            }
+        } catch (e) {
+            showToast("湲곕줉쓣 蹂듭썝븯뒗 뜲 떎뙣뻽뒿땲떎.", "error");
+        }
+    }
+
+    // 寃곌낵 솕硫 씠硫붿씪 由ы룷듃 諛쒖넚
+    function sendEmailReport() {
+        const emailInput = document.getElementById('report-email-input');
+        const email = emailInput ? emailInput.value.trim() : "";
+        
+        if (!email || !email.includes('@')) {
+            showToast("삱諛붾Ⅸ 씠硫붿씪 二쇱냼瑜 엯젰빐 二쇱꽭슂.", "error");
+            return;
+        }
+
+        showToast("븞떖 쁺뼇 遺꾩꽍꽌 PDF 由ы룷듃媛 諛쒖넚 湲곗뿴뿉 벑濡앸릺뿀뒿땲떎.", "success");
+        emailInput.value = "";
+    }
+
+    // 異붿쿇 쁺뼇 꽦遺 蹂닿븿뿉 뿰룞 媛궛븯怨 吏꾨떒湲곕줈 쟾솚
+    function addRecommendedToChecker() {
+        let addedCount = 0;
+        let activeConcerns = [...state.answers.goals];
+        if (state.answers.gender === 'male' && state.answers.maleConcerns.length > 0) {
+            state.answers.maleConcerns.forEach(mc => { if (!activeConcerns.includes(mc)) activeConcerns.push(mc); });
+        }
+        if (state.answers.femaleStage === 'pregnant' || state.answers.femaleStage === 'trying') {
+            if (!activeConcerns.includes('menses')) activeConcerns.push('menses');
+        }
+        if (activeConcerns.length === 0) activeConcerns = ['fatigue', 'immunity'];
+
+        activeConcerns.forEach(concern => {
+            const items = INGREDIENTS_DB[concern];
+            if (items) {
+                items.forEach(item => {
+                    // 媛긽 쁺뼇 꽦遺 異붿텧 留ㅼ묶
+                    let keyNutrient = "鍮꾪誘퍫援";
+                    if (item.name.includes("鍮꾪誘퍭")) keyNutrient = "鍮꾪誘퍭";
+                    else if (item.name.includes("鍮꾪誘퍬")) keyNutrient = "鍮꾪誘퍬";
+                    else if (item.name.includes("븘뿰")) keyNutrient = "븘뿰";
+                    else if (item.name.includes("肄쒕씪寃")) keyNutrient = "鍮꾪誘퍬";
+                    else if (item.name.includes("삤硫붽")) keyNutrient = "삤硫붽3";
+                    else if (item.name.includes("猷⑦뀒씤")) keyNutrient = "猷⑦뀒씤";
+                    else if (item.name.includes("떎由щ쭏由") || item.name.includes("諛겕뵪뒳")) keyNutrient = "떎由щ쭏由";
+                    else if (item.name.includes("泥좊텇")) keyNutrient = "移쇱뒛";
+
+                    const packName = `異붿쿇: [${item.name}]`;
+                    const isExists = state.mySupplements.some(p => p.name === packName);
+                    
+                    if (!isExists) {
+                        const itemsObj = {};
+                        itemsObj[keyNutrient] = 100; // 젙웾 100% 留ㅼ묶
+                        state.mySupplements.push({
+                            id: Date.now() + Math.random(),
+                            name: packName,
+                            type: "custom_recommended",
+                            items: itemsObj
+                        });
+                        addedCount++;
+                    }
+                });
+            }
+        });
+
+        if (addedCount > 0) {
+            showToast(`${addedCount}媛쒖쓽 異붿쿇 꽦遺꾩쓣 蹂닿븿뿉 닾엯떆궢땲떎.`, "success");
+        } else {
+            showToast("씠誘 異붿쿇 꽦遺꾨뱾씠 蹂닿븿뿉 諛섏쁺릺뼱 엳뒿땲떎.", "success");
+        }
+        
+        switchView('checker');
+    }
+
+    // 젣뭹 援щℓ 쟾 蹂닿븿 蹂댁쑀 꽦遺꾧낵쓽 떎떆媛 異⑸룎 궗쟾 吏꾨떒 寃異
+    function checkSupplementsCollision() {
+        const resultArea = document.getElementById('pre-purchase-clash-results');
+        resultArea.classList.remove('hidden');
+        resultArea.innerHTML = `
+            <div class="p-4 rounded-2xl bg-slate-100 flex items-center justify-center gap-3 animate-fadeIn">
+                <div class="w-5 h-5 rounded-full border-2 border-slate-300 border-t-amber-500 animate-spin"></div>
+                <span class="text-xs font-semibold text-slate-600">쁽옱 蹂닿븿 뜲씠꽣 떊洹 異붿쿇 꽦遺꾩쓽 븞쟾 異⑸룎꽦 뿰궛 以...</span>
+            </div>
+        `;
+
+        // 媛긽 뿰궛 뵜젅씠 썑 끂異
+        setTimeout(() => {
+            const nutrientTotals = {
+                "鍮꾪誘퍭": 0, "鍮꾪誘퍫援": 0, "鍮꾪誘퍬": 0, "븘뿰": 0,
+                "移쇱뒛": 0, "留덇렇꽕뒛": 0, "삤硫붽3": 0, "猷⑦뀒씤": 0, "떎由щ쭏由": 0
+            };
+
+            // 1. 湲곗〈 쁺뼇젣 꽦遺 뜑븯湲
+            state.mySupplements.forEach(supp => {
+                for (const key in supp.items) {
+                    if (nutrientTotals.hasOwnProperty(key)) {
+                        nutrientTotals[key] += supp.items[key];
+                    }
+                }
+            });
+
+            // 2. 떊洹 異붿쿇 꽦遺 (100% 븳룄) 엫떆 媛궛빐蹂닿린
+            let activeConcerns = [...state.answers.goals];
+            if (activeConcerns.length === 0) activeConcerns = ['fatigue', 'immunity'];
+            
+            activeConcerns.forEach(concern => {
+                const items = INGREDIENTS_DB[concern];
+                if (items) {
+                    items.forEach(item => {
+                        let keyNutrient = "鍮꾪誘퍫援";
+                        if (item.name.includes("鍮꾪誘퍭")) keyNutrient = "鍮꾪誘퍭";
+                        else if (item.name.includes("鍮꾪誘퍬")) keyNutrient = "鍮꾪誘퍬";
+                        else if (item.name.includes("븘뿰")) keyNutrient = "븘뿰";
+                        else if (item.name.includes("삤硫붽")) keyNutrient = "삤硫붽3";
+                        else if (item.name.includes("猷⑦뀒씤")) keyNutrient = "猷⑦뀒씤";
+                        else if (item.name.includes("떎由щ쭏由")) keyNutrient = "떎由щ쭏由";
+                        nutrientTotals[keyNutrient] += 100;
+                    });
+                }
+            });
+
+            // 3. 異⑸룎 寃쎈낫 븘꽣留
+            let clashes = [];
+            const activeGuidelines = NUTRIENT_GUIDELINES;
+
+            for (const key in nutrientTotals) {
+                const sumVal = nutrientTotals[key];
+                const rule = activeGuidelines[key];
+                if (rule && sumVal >= rule.maxSafe) {
+                    clashes.push({
+                        nutrient: key,
+                        percent: sumVal,
+                        limit: rule.maxSafe,
+                        desc: rule.desc
+                    });
+                }
+            }
+
+            if (clashes.length === 0) {
+                resultArea.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-100 flex gap-3.5 items-start animate-fadeIn">
+                        <i class="fa-solid fa-shield-check text-emerald-500 text-xl mt-0.5"></i>
+                        <div>
+                            <span class="text-xs font-bold text-emerald-900 block">寃궗 셿猷: 異⑸룎 슦젮 슂냼 뾾쓬</span>
+                            <p class="text-[11px] text-emerald-700 leading-relaxed mt-1">
+                                쁽옱 蹂듭슜븯떆뒗 蹂닿븿 쁺뼇젣 깉濡寃 異붿쿇맂 쁺뼇 뙥 꽦遺꾩쓣 빀궛빐룄 1씪 留욎땄 븞쟾 踰붿쐞 씠궡엯땲떎. 
+                                以묐났 삤궓슜쑝濡 씤븳 遺옉슜 슦젮媛 쟾 뾾쑝誘濡 븞떖븯怨 援щℓ瑜 吏꾪뻾븯뀛룄 醫뗭뒿땲떎.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                let listHtml = clashes.map(c => `
+                    <div class="p-3 bg-white rounded-xl border border-red-100 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="font-bold text-red-900 block">${c.nutrient} 늻쟻빀궛 ${c.percent}%</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">${c.desc}</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded bg-red-100 text-red-600 font-bold text-[10px] shrink-0">珥덇낵 寃쎄퀬</span>
+                    </div>
+                `).join('');
+
+                resultArea.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-red-50 border border-red-200/50 space-y-4 animate-fadeIn">
+                        <div class="flex gap-3 items-start">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl mt-0.5 animate-pulse"></i>
+                            <div>
+                                <span class="text-xs font-bold text-red-900 block">援щℓ 쟾 異⑸룎 寃쎈낫: ${clashes.length}媛쒖쓽 怨쇰떎 蹂듭슜 쐞뿕 꽦遺 寃異</span>
+                                <p class="text-[11px] text-red-700 leading-relaxed mt-1">
+                                    異붿쿇맂 理쒖쟻 뙥쓣 湲곗〈 쁺뼇젣뱾怨 留ㅼ씪 룞떆 꽠痍⑦븷 寃쎌슦, 븘옒 꽦遺꾨뱾쓽 씪씪 긽븳꽑쓣 珥덇낵븯뿬 遺옉슜 諛 媛꾨룆꽦 슦젮媛 깮源곷땲떎. 援щℓ 쟾 議곗젙씠 슂留앸맗땲떎.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            ${listHtml}
+                        </div>
+                        <div class="bg-white/80 p-3 rounded-xl border border-amber-200 text-[10px] text-amber-900 leading-relaxed">
+                            윊 <strong>蹂듭슜 媛씠뱶 泥섎갑:</strong> 湲곗〈 쁺뼇젣瑜 紐⑤몢 냼吏꾪븷 븣源뚯 異붿쿇 뙥쓽 꽠痍⑤웾쓣 寃⑹씪濡 議곗쑉븯떆嫄곕굹, 湲곗〈쓽 떒씪 以묐났 꽦遺 蹂듭슜쓣 옞떆 硫덉텣 뮘 씪썝솕맂 븞떖 異붿쿇 넄猷⑥뀡쑝濡 넻빀 꽠痍⑦븯뒗 寃껋쓣 쟻洹 沅뚭퀬빀땲떎.
+                        </div>
+                    </div>
+                `;
+            }
+
+        }, 1200);
+    }
+
+    // 珥덇린 援щ룞
+    window.onload = function () {
+        switchView('landing');
+        buildNutrientGridUI();
+        recalculateSupplements();
+    };
+</script>
+
+</body>
+</html>
