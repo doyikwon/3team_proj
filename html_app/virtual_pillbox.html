@@ -188,45 +188,46 @@
 <div id="toast-node" class="hidden fixed bottom-6 right-6 z-50 bg-[#1E3A2F] text-white px-5 py-3.5 rounded-2xl shadow-2xl border-l-4 border-[#10B981] flex items-center gap-3 text-xs font-bold"></div>
 
 <script>
-    // 복용 대상 건강식품 샘플 데이터
-    const supplementsState = [
-        { 
-            id: 1, 
-            name: "락토핏 생유산균 골드", 
-            brand: "종근당건강", 
-            timeSlot: "morning", 
-            dosage: "1일 1회 1포 (공복)", 
-            priority: "high", 
-            taken: false 
-        },
-        { 
-            id: 2, 
-            name: "얼라이브 종합비타민", 
-            brand: "네이처스웨이", 
-            timeSlot: "afternoon", 
-            dosage: "1일 1회 1정 (식후)", 
-            priority: "high", 
-            taken: false 
-        },
-        { 
-            id: 3, 
-            name: "초임계 rTG 오메가3", 
-            brand: "스포츠리서치", 
-            timeSlot: "afternoon", 
-            dosage: "1일 1회 1캡슐 (식후)", 
-            priority: "medium", 
-            taken: false 
-        },
-        { 
-            id: 4, 
-            name: "테아닌 안심 릴리프", 
-            brand: "나우푸드", 
-            timeSlot: "evening", 
-            dosage: "1일 1회 1캡슐 (취침전)", 
-            priority: "low", 
-            taken: false 
+    // 로컬 스토리지에서 등록된 영양제 목록 불러오기 및 복용 시간 분석
+    let supplementsState = [];
+    try {
+        const saved = localStorage.getItem('nutrimatch_my_supplements');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            supplementsState = parsed.map(supp => {
+                let timeSlot = 'afternoon';
+                let dosage = '1일 1회 1정 (식후)';
+                let priority = 'medium';
+
+                // 성분(이름) 기반 복용 시간 분석 로직
+                if (supp.name.includes('유산균') || supp.name.includes('프로바이오틱스') || supp.name.includes('공복')) {
+                    timeSlot = 'morning';
+                    dosage = '1일 1회 1포 (공복)';
+                    priority = 'high';
+                } else if (supp.name.includes('테아닌') || supp.name.includes('마그네슘') || supp.name.includes('칼슘') || supp.name.includes('수면') || supp.name.includes('취침')) {
+                    timeSlot = 'evening';
+                    dosage = '1일 1회 1정 (취침전)';
+                    priority = 'medium';
+                } else if (supp.name.includes('비타민') || supp.name.includes('오메가') || supp.name.includes('밀크씨슬') || supp.name.includes('루테인')) {
+                    timeSlot = 'afternoon';
+                    dosage = '1일 1회 1정 (식후)';
+                    priority = 'high';
+                }
+
+                return {
+                    id: supp.id,
+                    name: supp.name,
+                    brand: "보유 영양제",
+                    timeSlot: timeSlot,
+                    dosage: dosage,
+                    priority: priority,
+                    taken: false
+                };
+            });
         }
-    ];
+    } catch(e) {
+        console.error("Failed to parse supplements from localStorage", e);
+    }
 
     function showToast(msg) {
         const toast = document.getElementById('toast-node');
