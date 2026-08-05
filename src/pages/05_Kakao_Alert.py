@@ -7,7 +7,7 @@ import streamlit as st
 # 1. 카카오 디벨로퍼스 설정 정보
 # ==========================================
 # 실제 서비스 시 st.secrets 또는 환경변수로 관리하는 것을 권장합니다.
-KAKAO_REST_API_KEY = st.secrets.get("KAKAO_REST_API_KEY", "YOUR_REST_API_KEY_HERE")
+KAKAO_REST_API_KEY = st.secrets.get("KAKAO_REST_API_KEY", "bb7ce2797d28c596c5a78c8666517b8f")
 REDIRECT_URI = st.secrets.get("REDIRECT_URI", "https://3teamproj.streamlit.app")
 
 # ==========================================
