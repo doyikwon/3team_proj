@@ -113,7 +113,7 @@
 
             <!-- 달성률 프로그레스 위젯 -->
             <div class="lg:col-span-4 bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl text-center shadow-2xl relative">
-                <span class="text-[11px] text-emerald-300 uppercase font-mono font-bold tracking-widest block">오늘 복용 목표 달성률</span>
+                <span id="today-date-label" class="text-[11px] text-emerald-300 uppercase font-mono font-bold tracking-widest block">오늘 복용 목표 달성률</span>
                 <div id="pillbox-completion-pct" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 my-2 font-serif">
                     0%
                 </div>
@@ -313,6 +313,12 @@
         const pctEl = document.getElementById('pillbox-completion-pct');
         const barEl = document.getElementById('pillbox-completion-bar');
         const statusMsgEl = document.getElementById('pillbox-status-msg');
+        const dateLabelEl = document.getElementById('today-date-label');
+
+        if (dateLabelEl) {
+            const todayForLabel = new Date();
+            dateLabelEl.textContent = `오늘 (${todayForLabel.getMonth() + 1}월 ${todayForLabel.getDate()}일) 복용 목표 달성률`;
+        }
 
         morningList.innerHTML = '';
         lunchList.innerHTML = '';
