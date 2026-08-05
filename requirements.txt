@@ -1,3 +1,5 @@
 streamlit
 pandas
 numpy
+fastapi>=0.112.0
+starlette>=0.37.2
