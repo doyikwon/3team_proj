@@ -68,18 +68,25 @@ if hasattr(st, "navigation") and hasattr(st, "Page"):
     page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
     page_2 = st.Page("pages/02_Data_Analysis.py", title="데이터 분석", icon="📊")
     page_3 = st.Page(render_virtual_pillbox_page, title="나의 약통", icon="💊")
+    page_4 = st.Page("pages/05_Kakao_Alert.py", title="카카오 알림 연동", icon="💬")
     
-    pg = st.navigation([page_1, page_3, page_2])
+    pg = st.navigation([page_1, page_3, page_2, page_4])
     pg.run()
 else:
     # Streamlit pages/ 디렉토리 표준 및 사이드바 탭 폴백
     st.sidebar.title("🌱 NutriMatch Navigation")
-    menu = st.sidebar.radio("메뉴 이동", ["맞춤 진단", "나의 약통", "데이터 분석"])
+    menu = st.sidebar.radio("메뉴 이동", ["맞춤 진단", "나의 약통", "데이터 분석", "카카오 알림 연동"])
     
     if menu == "맞춤 진단":
         render_custom_care_page()
     elif menu == "나의 약통":
         render_virtual_pillbox_page()
+    elif menu == "카카오 알림 연동":
+        kakao_alert_path = os.path.join(os.path.dirname(__file__), "pages", "05_Kakao_Alert.py")
+        if os.path.exists(kakao_alert_path):
+            with open(kakao_alert_path, "r", encoding="utf-8") as f:
+                code = f.read()
+            exec(code)
     elif menu == "데이터 분석":
         data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "02_Data_Analysis.py")
         if os.path.exists(data_analysis_path):
