@@ -2,18 +2,22 @@
 
 import streamlit as st
 
-st.set_page_config(
-    page_title="NutriMatch | 데이터 분석",
-    page_icon="📊",
-    layout="wide"
-)
-
 st.markdown("""
 <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
     
-    * {
-        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+    html, body, .stApp, p, div, span, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    }
+
+    [data-testid="stIcon"], 
+    [class*="material-"], 
+    .material-symbols-outlined,
+    .material-icons,
+    [data-testid="stSidebarCollapseButton"] *,
+    [data-testid="stHeaderActionElements"] *,
+    i[aria-hidden="true"] {
+        font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
     }
 
     .block-container { 

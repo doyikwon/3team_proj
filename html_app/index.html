@@ -1161,22 +1161,26 @@
         }
 
         // 3. 동의 모달 열기 (매번 모든 체크박스 해제 + 버튼 비활성화)
+        function setCheckedById(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.checked = val;
+        }
+
+        function isCheckedById(id) {
+            const el = document.getElementById(id);
+            return el ? el.checked : false;
+        }
+
         function openConsentModal() {
             document.body.style.overflow = 'hidden';
             const modal = document.getElementById("consent-modal");
             if (modal) {
                 // (1) 모든 체크박스 기본 해제
-                const allCb = document.getElementById("consent-all");
-                const privCb = document.getElementById("consent-privacy");
-                const healthCb = document.getElementById("consent-health");
-                const discCb = document.getElementById("consent-disclaimer");
-                const mktCb = document.getElementById("consent-marketing");
-
-                if (allCb) allCb.checked = false;
-                if (privCb) privCb.checked = false;
-                if (healthCb) healthCb.checked = false;
-                if (discCb) discCb.checked = false;
-                if (mktCb) mktCb.checked = false;
+                const cbIds = ['consent-all', 'consent-privacy', 'consent-health', 'consent-disclaimer', 'consent-marketing',
+                               'consent-item-terms', 'consent-item-age', 'consent-item-sensitive'];
+                cbIds.forEach(function(id) {
+                    setCheckedById(id, false);
+                });
 
                 // (2) '다음 단계(동의하고 시작하기)' 버튼 비활성화 상태로 리셋
                 updateConsentButtonState();
@@ -1197,8 +1201,7 @@
             const cbIds = ['consent-all', 'consent-privacy', 'consent-health', 'consent-disclaimer', 'consent-marketing',
                            'consent-item-terms', 'consent-item-age', 'consent-item-sensitive'];
             cbIds.forEach(function(id) {
-                const cb = document.getElementById(id);
-                if (cb) cb.checked = false;
+                setCheckedById(id, false);
             });
 
             // 동의 버튼 비활성화로 리셋
@@ -1210,41 +1213,84 @@
 
         // 4. 전체 동의 클릭 시 하위 항목 일괄 조작
         function toggleAllConsent(checked) {
-            document.getElementById("consent-privacy").checked = checked;
-            document.getElementById("consent-health").checked = checked;
-            document.getElementById("consent-disclaimer").checked = checked;
-            document.getElementById("consent-marketing").checked = checked;
+            // 모든 '전체 동의' 체크박스 상태 시각적 동기화
+            document.querySelectorAll('#consent-all').forEach(function(cb) {
+                cb.checked = checked;
+            });
+
+            const subCbIds = [
+                'consent-privacy', 'consent-health', 'consent-disclaimer', 'consent-marketing',
+                'consent-item-terms', 'consent-item-age', 'consent-item-sensitive'
+            ];
+            subCbIds.forEach(function(id) {
+                setCheckedById(id, checked);
+            });
+
             updateConsentButtonState();
         }
 
         // 5. 개별 항목 조작 시 전체 동의 양방향 동기화 및 버튼 갱신
         function onIndividualConsentChange() {
-            const p = document.getElementById("consent-privacy").checked;
-            const h = document.getElementById("consent-health").checked;
-            const d = document.getElementById("consent-disclaimer").checked;
-            const m = document.getElementById("consent-marketing").checked;
-            
-            // 필수+선택 4개 모두 체크되면 전체 동의도 체크, 하나라도 풀리면 전체 동의 해제
-            document.getElementById("consent-all").checked = (p && h && d && m);
+            // 필수 1 동기화 (consent-privacy & consent-item-terms)
+            if (document.getElementById('consent-item-terms') && document.getElementById('consent-privacy')) {
+                const val = isCheckedById('consent-item-terms') || isCheckedById('consent-privacy');
+                setCheckedById('consent-item-terms', val);
+                setCheckedById('consent-privacy', val);
+            }
+            // 필수 2 동기화 (consent-health & consent-item-age)
+            if (document.getElementById('consent-item-age') && document.getElementById('consent-health')) {
+                const val = isCheckedById('consent-item-age') || isCheckedById('consent-health');
+                setCheckedById('consent-item-age', val);
+                setCheckedById('consent-health', val);
+            }
+            // 필수 3 동기화 (consent-disclaimer & consent-item-sensitive)
+            if (document.getElementById('consent-item-sensitive') && document.getElementById('consent-disclaimer')) {
+                const val = isCheckedById('consent-item-sensitive') || isCheckedById('consent-disclaimer');
+                setCheckedById('consent-item-sensitive', val);
+                setCheckedById('consent-disclaimer', val);
+            }
+
+            // 필수 항목 3개 체크 판단
+            const p = isCheckedById('consent-privacy') || isCheckedById('consent-item-terms');
+            const h = isCheckedById('consent-health') || isCheckedById('consent-item-age');
+            const d = isCheckedById('consent-disclaimer') || isCheckedById('consent-item-sensitive');
+            const m = isCheckedById('consent-marketing');
+
+            // 존재하는 모든 개별 항목이 체크되었는지 판단
+            const allChecked = p && h && d && (document.getElementById('consent-marketing') ? m : true);
+
+            // '전체 동의' 체크박스 양방향 동기화
+            document.querySelectorAll('#consent-all').forEach(function(cb) {
+                cb.checked = allChecked;
+            });
+
             updateConsentButtonState();
         }
 
         // 6. 버튼 상태 갱신 (필수 3개 모두 동의 시 초록 활성화, 미달 시 회색 비활성화)
         function updateConsentButtonState() {
-            const p = document.getElementById("consent-privacy").checked;
-            const h = document.getElementById("consent-health").checked;
-            const d = document.getElementById("consent-disclaimer").checked;
-            const btn = document.getElementById("consent-submit-btn");
+            const p = isCheckedById('consent-privacy') || isCheckedById('consent-item-terms');
+            const h = isCheckedById('consent-health') || isCheckedById('consent-item-age');
+            const d = isCheckedById('consent-disclaimer') || isCheckedById('consent-item-sensitive');
 
-            if (btn) {
-                if (p && h && d) {
-                    btn.disabled = false;
-                    btn.className = "w-full bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-pointer text-center text-sm shadow-md";
-                } else {
-                    btn.disabled = true;
-                    btn.className = "w-full bg-slate-300 text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-not-allowed text-center text-sm shadow-md";
+            const isRequiredAgreed = p && h && d;
+
+            const btns = [
+                document.getElementById("consent-submit-btn"),
+                document.getElementById("consent-submit-btn-top")
+            ];
+
+            btns.forEach(function(btn) {
+                if (btn) {
+                    if (isRequiredAgreed) {
+                        btn.disabled = false;
+                        btn.className = "w-full bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-pointer text-center text-sm shadow-md";
+                    } else {
+                        btn.disabled = true;
+                        btn.className = "w-full bg-slate-300 text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-not-allowed text-center text-sm shadow-md";
+                    }
                 }
-            }
+            });
         }
 
         function toggleConsentDetail(id) {
@@ -1254,10 +1300,10 @@
 
         // 7. 동의 제출 처리 (localStorage 저장 후 모달 닫고 목표 플로우 진행)
         function submitConsent() {
-            const p = document.getElementById("consent-privacy").checked;
-            const h = document.getElementById("consent-health").checked;
-            const d = document.getElementById("consent-disclaimer").checked;
-            const m = document.getElementById("consent-marketing").checked;
+            const p = isCheckedById('consent-privacy') || isCheckedById('consent-item-terms');
+            const h = isCheckedById('consent-health') || isCheckedById('consent-item-age');
+            const d = isCheckedById('consent-disclaimer') || isCheckedById('consent-item-sensitive');
+            const m = isCheckedById('consent-marketing');
 
             if (!p || !h || !d) {
                 showToast("필수 동의 항목에 모두 동의하셔야 합니다.", "error");
