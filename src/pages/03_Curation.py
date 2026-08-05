@@ -12,6 +12,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils.data_loader import load_supplement_data
 from utils.recommender import get_recommendations
+from utils.clustering import get_current_user_cluster
 
 st.set_page_config(page_title="NutriFit | 큐레이션 상세", page_icon="🛒", layout="wide")
 
@@ -20,6 +21,25 @@ if 'answers' not in st.session_state or not st.session_state.answers.get('goals'
     st.stop()
 
 st.title("🛒 초개인화 맞춤 큐레이션")
+
+# --- 고객 군집화 기반 사용자 분석 표시 ---
+user_cluster, cluster_msg = get_current_user_cluster(st.session_state.answers)
+
+colors = {
+    '👑 VIP 고객': '#FCE4EC',     # 연한 핑크
+    '🚀 잠재 충성 고객': '#FFF3E0', # 연한 오렌지
+    '🌱 신규 고객': '#E8F5E9',     # 연한 그린
+    '⚠️ 이탈 위험 고객': '#F5F5F5'  # 연한 그레이
+}
+bg_color = colors.get(user_cluster, '#FFFFFF')
+
+st.markdown(f"""
+<div style='background-color: {bg_color}; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #E0E0E0;'>
+    <h4 style='margin-top:0px; color:#333;'>고객 분석 결과: {user_cluster}</h4>
+    <p style='margin-bottom:0px; color:#555;'>{cluster_msg}</p>
+</div>
+""", unsafe_allow_html=True)
+
 st.write("유저님의 건강 목표, 라이프스타일, 그리고 안전성(Hard Filter)을 최우선으로 고려한 추천 상품입니다.")
 
 df = load_supplement_data()
