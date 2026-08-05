@@ -9,6 +9,32 @@ NutriMatch (NutriFit) 통합 멀티페이지 대시보드 진입점 (app.py)
 import streamlit as st
 import streamlit.components.v1 as components
 import os
+import requests
+
+# 카카오 인가 코드 처리 (어느 페이지로 랜딩하든 처리되도록 app.py 상단에 배치)
+KAKAO_REST_API_KEY = st.secrets.get("KAKAO_REST_API_KEY", "bb7ce2797d28c596c5a78c8666517b8f")
+# 로컬 테스트용 Redirect URI
+REDIRECT_URI = st.secrets.get("REDIRECT_URI", "http://localhost:8501")
+
+query_params = st.query_params
+auth_code = query_params.get("code")
+
+if auth_code and "kakao_access_token" not in st.session_state:
+    with st.spinner("카카오톡 연동 승인 중..."):
+        token_url = "https://kauth.kakao.com/oauth/token"
+        headers = {"Content-Type": "application/x-www-form-urlencoded;charset=utf-8"}
+        data = {
+            "grant_type": "authorization_code",
+            "client_id": KAKAO_REST_API_KEY,
+            "redirect_uri": REDIRECT_URI,
+            "code": auth_code
+        }
+        response = requests.post(token_url, headers=headers, data=data)
+        if response.status_code == 200:
+            st.session_state["kakao_access_token"] = response.json().get("access_token")
+            st.success("✅ 카카오톡 알림 연동이 성공적으로 완료되었습니다!")
+        else:
+            st.error(f"카카오톡 연동 실패: {response.text}")
 
 st.set_page_config(
     page_title="NutriMatch | 개인 맞춤형 영양 케어 & 데이터 분석",
