@@ -210,8 +210,16 @@
                 </h3>
                 <p class="text-[11px] sm:text-xs text-slate-500 mt-1">이번 달 나의 건강 관리 달성 기록입니다.</p>
             </div>
-            <div class="text-sm font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100" id="habit-month-label">
-                8월
+            <div class="flex items-center gap-2">
+                <button onclick="changeTrackerMonth(-1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition flex items-center justify-center shadow-sm border border-slate-200">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
+                <div class="text-[13px] font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100 min-w-[80px] text-center" id="habit-month-label">
+                    8월
+                </div>
+                <button onclick="changeTrackerMonth(1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition flex items-center justify-center shadow-sm border border-slate-200">
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
             </div>
         </div>
 
@@ -265,6 +273,10 @@
                     dosage = '1일 1회 1정 (점심 식후)';
                     priority = 'high';
                 }
+
+                // 시작일자 가짜 데이터 생성 (시연용으로 8월 초중순 랜덤 지정)
+                const mockStartDay = (supp.id % 15) + 1;
+                supp.startDate = new Date(2026, 7, mockStartDay); // 2026년 8월
 
                 return {
                     id: supp.id,
@@ -377,24 +389,38 @@
         }
     }
 
+    const todayDateObj = new Date();
+    let currentTrackerYear = todayDateObj.getFullYear();
+    let currentTrackerMonth = todayDateObj.getMonth();
+
+    function changeTrackerMonth(offset) {
+        currentTrackerMonth += offset;
+        if (currentTrackerMonth < 0) {
+            currentTrackerMonth = 11;
+            currentTrackerYear--;
+        } else if (currentTrackerMonth > 11) {
+            currentTrackerMonth = 0;
+            currentTrackerYear++;
+        }
+        renderHabitTracker();
+    }
+
     // 해빗 트래커 렌더링 함수 (매트릭스 뷰)
     function renderHabitTracker() {
         const matrixContainer = document.getElementById('habit-matrix-container');
         const monthLabel = document.getElementById('habit-month-label');
         
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth();
-        const todayDate = now.getDate();
+        const isCurrentMonthView = currentTrackerYear === todayDateObj.getFullYear() && currentTrackerMonth === todayDateObj.getMonth();
+        const todayDate = todayDateObj.getDate();
         
-        monthLabel.textContent = `${month + 1}월`;
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        monthLabel.textContent = `${currentTrackerYear}년 ${currentTrackerMonth + 1}월`;
+        const daysInMonth = new Date(currentTrackerYear, currentTrackerMonth + 1, 0).getDate();
 
         // 1. 헤더 (일자 및 달성률) 생성
         let html = `<div class="flex items-center gap-1 mb-2">
             <div class="w-32 shrink-0 font-bold text-[11px] text-slate-400 pl-2">내 영양제 목록</div>`;
         for (let day = 1; day <= daysInMonth; day++) {
-            const isToday = day === todayDate;
+            const isToday = isCurrentMonthView && day === todayDate;
             html += `<div class="w-7 h-7 flex shrink-0 items-center justify-center text-[10px] font-bold ${isToday ? 'bg-emerald-50 text-emerald-600 rounded-lg ring-1 ring-emerald-200' : 'text-slate-400'}">${day}</div>`;
         }
         html += `<div class="w-16 shrink-0 flex items-center justify-end text-[11px] font-bold text-slate-400 pr-2">월 달성률</div></div><div class="space-y-1.5">`;
@@ -408,14 +434,22 @@
                     <div class="w-32 shrink-0 text-[11px] font-bold text-slate-700 truncate pl-1 pr-2" title="${supp.name}">${supp.name}</div>`;
                 
                 let rowTakenCount = 0;
-                let rowTotalDays = todayDate;
+                let rowTotalDays = 0;
 
                 for (let day = 1; day <= daysInMonth; day++) {
+                    const cellDate = new Date(currentTrackerYear, currentTrackerMonth, day);
+                    const isToday = isCurrentMonthView && day === todayDate;
+                    const pastThreshold = new Date(todayDateObj.getFullYear(), todayDateObj.getMonth(), todayDate);
+
                     let cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-50 border border-slate-100"></div>`; // 미래
                     
-                    if (day < todayDate) {
+                    if (cellDate < supp.startDate) {
+                        // 복용 시작일 이전 (비활성화 처리)
+                        cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100/40 border border-slate-200/50 text-slate-300" title="복용 시작 전"><i class="fa-solid fa-ban text-[8px] opacity-20"></i></div>`;
+                    } else if (cellDate < pastThreshold) {
                         // 과거 (고정된 시드 기반 가짜 데이터 생성)
-                        const seed = supp.id * 100 + day;
+                        rowTotalDays++;
+                        const seed = supp.id * 100 + day + currentTrackerMonth * 31;
                         const taken = Math.abs(Math.sin(seed)) > 0.2; // 80% 확률로 섭취
                         
                         if (taken) {
@@ -424,8 +458,9 @@
                         } else {
                             cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100 text-slate-300"><i class="fa-solid fa-minus text-[10px]"></i></div>`;
                         }
-                    } else if (day === todayDate) {
+                    } else if (isToday) {
                         // 오늘 (현재 상태 실시간 반영)
+                        rowTotalDays++;
                         if (supp.taken) {
                             rowTakenCount++;
                             cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-[#10B981] text-white shadow-md shadow-emerald-500/30 ring-2 ring-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
@@ -436,7 +471,7 @@
                     html += cellHtml;
                 }
                 
-                const pct = Math.round((rowTakenCount / rowTotalDays) * 100);
+                const pct = rowTotalDays > 0 ? Math.round((rowTakenCount / rowTotalDays) * 100) : 0;
                 html += `<div class="w-16 shrink-0 flex items-center justify-end pr-2 text-[11px] font-black ${pct >= 80 ? 'text-emerald-600' : 'text-slate-500'}">${pct}%</div>`;
                 html += `</div>`;
             });
