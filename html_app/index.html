@@ -10,12 +10,6 @@
     <title>뉴트리매치 (NutriMatch) - 개인 맞춤형 영양 체크 & 스마트 케어</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Lora & Noto Sans KR -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
-        rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -30,16 +24,19 @@
                         warning: '#EF4444',
                     },
                     fontFamily: {
-                        sans: ['Pretendard', '-apple-system', 'sans-serif'],
-                        serif: ['Lora', 'serif'],
+                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        serif: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
+        * {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+        }
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
             background-color: #FAF9F6;
             overflow-x: hidden;
             letter-spacing: -0.01em;
@@ -185,7 +182,7 @@
                 <div class="w-10 h-10 rounded-xl bg-[#1E3A2F] flex items-center justify-center text-white">
                     <i class="fa-solid fa-seedling text-lg text-[#10B981]"></i>
                 </div>
-                <span class="font-serif text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span
+                <span class="font-sans text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span
                         class="text-[#10B981]">Match</span></span>
             </a>
 
@@ -230,7 +227,7 @@
                             <i class="fa-solid fa-shield-heart"></i> AI 기반 1:1 개인 맞춤형 영양 케어
                         </span>
                         <h1
-                            class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A2F] font-serif leading-tight tracking-tight">
+                            class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A2F] font-sans leading-tight tracking-tight">
                             더 이상 넘겨짚지 마세요.<br>내 몸에 꼭 맞는<br><span class="text-[#10B981]">안심 영양 설계</span>
                         </h1>
                         <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-lg">
@@ -400,7 +397,7 @@
                     <i class="fa-solid fa-dna text-4xl text-[#10B981] animate-bounce"></i>
                 </div>
                 <div class="space-y-3">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">AI 정밀 유전체 및 건강 시뮬레이션 가동 중</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">AI 정밀 유전체 및 건강 시뮬레이션 가동 중</h3>
                     <p id="loading-subtitle" class="text-sm text-slate-500 min-h-[40px] transition-all duration-500">
                         성분 간 충돌 여부 정밀 시뮬레이션 중...
                     </p>
@@ -427,7 +424,7 @@
                         <div class="md:col-span-8 space-y-4">
                             <span class="text-xs text-[#10B981] font-bold tracking-widest uppercase">AI Clinical
                                 Diagnosis Result</span>
-                            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight font-serif"><span
+                            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight font-sans"><span
                                     id="user-display-name">고객</span>님만을 위한 안심 하루 한 팩 솔루션</h2>
                             <p class="text-slate-300 text-sm sm:text-base max-w-xl">
                                 입력하신 프로필, 라이프스타일, 질환 유무 및 알레르기를 종합 분석했습니다. 부작용을 회피한 1:1 맞춤 설계입니다.
@@ -441,7 +438,7 @@
                         <div
                             class="md:col-span-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-center">
                             <div class="text-xs text-emerald-400 font-bold uppercase tracking-widest">종합 매치 신뢰 스코어</div>
-                            <div class="text-5xl font-extrabold font-serif my-2 text-[#10B981]" id="result-match-score">
+                            <div class="text-5xl font-extrabold font-sans my-2 text-[#10B981]" id="result-match-score">
                                 98.8<span class="text-sm">점</span></div>
                             <p class="text-[11px] text-slate-300">알레르기 / 약물 충돌 요인 완전 차단 검증</p>
                         </div>
@@ -468,7 +465,7 @@
 
                         <!-- 추천 팩 리스트 -->
                         <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
-                            <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                            <h3 class="text-xl font-bold text-[#1E3A2F] font-sans flex items-center gap-2">
                                 <i class="fa-solid fa-basket-shopping text-[#10B981]"></i> 인기 영양제 추천 및 실시간 외부 판매처 바로가기
                             </h3>
 
@@ -510,7 +507,7 @@
                         <!-- 중복/안전 섭취량 바 차트 영역 -->
                         <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
                             <div>
-                                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                                <h3 class="text-xl font-bold text-[#1E3A2F] font-sans flex items-center gap-2">
                                     <i class="fa-solid fa-chart-line text-[#10B981]"></i> 안심 영양성분 1일 상호 복용 안전 검수 대시보드
                                 </h3>
                                 <p class="text-xs text-slate-500 mt-1">
@@ -629,7 +626,7 @@
                         <span
                             class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Nutrient
                             Overlap Diagnostic</span>
-                        <h2 class="text-2xl sm:text-3xl font-bold font-serif">내 영양제 중복·과다 섭취 셀프 체크</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold font-sans">내 영양제 중복·과다 섭취 셀프 체크</h2>
                         <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
                             현재 식탁 위 혹은 서랍장에 보관 중이신 영양제를 목록에 등록하세요. 사용자의 연령 및 특이 몸 상태 프로필에 기반하여 위험 상한선(Tolerable Upper
                             Intake Level)을 동적으로 변경하고 부작용 위장장애 및 간독성을 경고해 드립니다.
@@ -825,7 +822,7 @@
                         <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-100 space-y-6">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h3 class="text-xl font-bold text-slate-800 font-serif flex items-center gap-2">
+                                    <h3 class="text-xl font-bold text-slate-800 font-sans flex items-center gap-2">
                                         <i class="fa-solid fa-square-poll-horizontal text-emerald-500"></i> 종합 영양 성분 섭취
                                         분석기
                                     </h3>
@@ -955,7 +952,7 @@
                     <div class="w-8 h-8 rounded-lg bg-[#10B981] flex items-center justify-center text-white">
                         <i class="fa-solid fa-seedling text-sm"></i>
                     </div>
-                    <span class="font-serif text-lg font-bold text-white tracking-tight">NutriMatch</span>
+                    <span class="font-sans text-lg font-bold text-white tracking-tight">NutriMatch</span>
                 </div>
                 <p class="text-xs text-slate-400 leading-relaxed">
                     뉴트리매치는 식약처 권장 가이드를 준수하며 개인의 복용 데이터 분석해 최상의 오버도즈 케어 시스템과 천연 원료 영양 매칭 솔루션을 선사합니다.
@@ -982,7 +979,7 @@
             </div>
 
             <div class="space-y-3">
-                <h5 class="text-white font-bold font-serif">Supplements Safety Guard</h5>
+                <h5 class="text-white font-bold font-sans">Supplements Safety Guard</h5>
                 <p class="text-xs text-slate-400 leading-relaxed">
                     각 영양소의 일일 권장량 및 상한 섭취 기준은 식품의약품안전처 및 보건복지부의 최신 ‘한국인 영양소 섭취기준’ 원장을 준수하여 평가합니다.
                 </p>
@@ -1918,7 +1915,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-2 text-center py-4 border-b border-slate-100">
-                    <h3 class="text-2xl font-extrabold text-[#1E3A2F] font-serif">시작 전 이용약관 및 정보 동의</h3>
+                    <h3 class="text-2xl font-extrabold text-[#1E3A2F] font-sans">시작 전 이용약관 및 정보 동의</h3>
                     <p class="text-xs text-slate-400">맞춤 영양 매칭 시스템을 위해 안전 가이드를 읽어주세요.</p>
                 </div>
                 
@@ -1966,7 +1963,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 1. 생물학적 성별 선택 및 전용 라이프 영역</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 1. 생물학적 성별 선택 및 전용 라이프 영역</h3>
                     <p class="text-xs text-slate-400">성별 특화 기관 건강과 복용 안전 범위를 매칭하기 위한 필수 관문입니다.</p>
                 </div>
                 
@@ -2040,7 +2037,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 2. 연령대 및 신체 대사 분석</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 2. 연령대 및 신체 대사 분석</h3>
                     <p class="text-xs text-slate-400">BMI(체질량 지수)를 자동 연산하여 칼슘 흡수율과 영양 밸런스를 측정합니다.</p>
                 </div>
 
@@ -2081,7 +2078,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 3. 운동 성향 및 수면 패턴 파악</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 3. 운동 성향 및 수면 패턴 파악</h3>
                     <p class="text-xs text-slate-400">땀 배출과 수면 회복 효율에 연관된 비타민B군, L-테아닌 소모율을 가산합니다.</p>
                 </div>
 
@@ -2130,7 +2127,7 @@
             else if (state.quizStep === 4) {
                 html = `
             <div class="space-y-6 animate-fadeIn">
-                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 4. 평소 식습관 및 일상 섭취 기호</h3>
+                <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 4. 평소 식습관 및 일상 섭취 기호</h3>
 
                 <div class="space-y-2">
                     <label class="block text-xs font-bold text-slate-500">🥗 평소 대표적인 식생활 형태</label>
@@ -2174,7 +2171,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 5. 만성 일상 스트레스 인지 수준</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 5. 만성 일상 스트레스 인지 수준</h3>
                     <p class="text-xs text-slate-400">자율신경계 과항진 완화를 돕는 테아닌, 부신 피로 보호 영양소 매칭을 조절합니다.</p>
                 </div>
 
@@ -2207,7 +2204,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-red-500 animate-pulse"></i> STEP 6. 의료 안전 필터 (흡연 & 알레르기)</h3>
+                    <h3 class="text-xl font-bold text-red-900 font-sans flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-red-500 animate-pulse"></i> STEP 6. 의료 안전 필터 (흡연 & 알레르기)</h3>
                     <p class="text-xs text-red-500/70">식약처 기능성 배합 위험 원료 자동 우회 가동을 위한 정보 수집입니다.</p>
                 </div>
 
@@ -2253,7 +2250,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-prescription-bottle text-red-500"></i> STEP 7. 부작용 이력 및 복용 약물 점검</h3>
+                    <h3 class="text-xl font-bold text-red-900 font-sans flex items-center gap-1.5"><i class="fa-solid fa-prescription-bottle text-red-500"></i> STEP 7. 부작용 이력 및 복용 약물 점검</h3>
                     <p class="text-xs text-red-500/70">현재 드시는 병원 약품과의 상호 작용 및 과거 위장 피로 요인을 배제합니다.</p>
                 </div>
 
@@ -2311,7 +2308,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 8. 최우선 건강 목표 및 집중 고민 선택</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 8. 최우선 건강 목표 및 집중 고민 선택</h3>
                     <p class="text-xs text-slate-400">가장 원하시는 목표 영역을 **최대 2개** 선택해 주세요. (가장 중요 단계)</p>
                 </div>
 
@@ -2346,7 +2343,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 9. 복용 편의성 및 선호 가공 형태</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 9. 복용 편의성 및 선호 가공 형태</h3>
                     <p class="text-xs text-slate-400">알약 크기로 인한 삼킴 곤란 여부를 조율하고 선호 형태를 대조합니다.</p>
                 </div>
 
@@ -2393,7 +2390,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 10. 가치관 및 구매 성향 맞춤 큐레이션</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 10. 가치관 및 구매 성향 맞춤 큐레이션</h3>
                     <p class="text-xs text-slate-400">소비 성향과 휴대 편의성에 적합한 맞춤 포장 및 할인 구도를 산출합니다.</p>
                 </div>
 
@@ -2756,12 +2753,12 @@
                             <span class="bg-[#1E3A2F] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md">${item.tag}</span>
                             <span class="text-xs text-slate-400 font-medium">제형: ${item.size}</span>
                         </div>
-                        <h4 class="text-xl font-bold text-slate-800 font-serif">${item.name}</h4>
+                        <h4 class="text-xl font-bold text-slate-800 font-sans">${item.name}</h4>
                         <p class="text-xs text-slate-500 leading-relaxed">${item.detail}</p>
                     </div>
                     <div class="flex flex-col items-end shrink-0 w-full sm:w-auto bg-white p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1">
                         <div class="text-xs font-bold text-slate-400">개인 맞춤 적합도</div>
-                        <div class="text-2xl font-black text-[#10B981] font-serif">${matchPercentStr}<span class="text-sm font-sans">%</span></div>
+                        <div class="text-2xl font-black text-[#10B981] font-sans">${matchPercentStr}<span class="text-sm font-sans">%</span></div>
                     </div>
                 </div>
 
@@ -3727,7 +3724,7 @@
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-50 text-[#10B981] mb-0.5">
                     <i class="fa-solid fa-shield-halved text-xl"></i>
                 </div>
-                <h3 class="text-xl font-extrabold text-[#1E3A2F] font-serif">시작 전 이용약관 및 정보 동의</h3>
+                <h3 class="text-xl font-extrabold text-[#1E3A2F] font-sans">시작 전 이용약관 및 정보 동의</h3>
                 <p class="text-[11px] text-slate-400 font-normal">안전하고 정밀한 맞춤 영양 설계를 위한 필수 절차입니다.</p>
             </div>
 
