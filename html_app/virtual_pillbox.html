@@ -366,14 +366,14 @@
         monthLabel.textContent = `${month + 1}월`;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        // 1. 헤더 (일자) 생성
+        // 1. 헤더 (일자 및 달성률) 생성
         let html = `<div class="flex items-center gap-1 mb-2">
             <div class="w-32 shrink-0 font-bold text-[11px] text-slate-400 pl-2">내 영양제 목록</div>`;
         for (let day = 1; day <= daysInMonth; day++) {
             const isToday = day === todayDate;
             html += `<div class="w-7 h-7 flex shrink-0 items-center justify-center text-[10px] font-bold ${isToday ? 'bg-emerald-50 text-emerald-600 rounded-lg ring-1 ring-emerald-200' : 'text-slate-400'}">${day}</div>`;
         }
-        html += `</div><div class="space-y-1.5">`;
+        html += `<div class="w-16 shrink-0 flex items-center justify-end text-[11px] font-bold text-slate-400 pr-2">월 달성률</div></div><div class="space-y-1.5">`;
 
         // 2. 영양제별 행(Row) 생성
         if (supplementsState.length === 0) {
@@ -383,13 +383,19 @@
                 html += `<div class="flex items-center gap-1 hover:bg-slate-50/50 p-1 rounded-xl transition-colors">
                     <div class="w-32 shrink-0 text-[11px] font-bold text-slate-700 truncate pl-1 pr-2" title="${supp.name}">${supp.name}</div>`;
                 
+                let rowTakenCount = 0;
+                let rowTotalDays = todayDate;
+
                 for (let day = 1; day <= daysInMonth; day++) {
                     let cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-50 border border-slate-100"></div>`; // 미래
                     
                     if (day < todayDate) {
-                        // 과거 (시연용 랜덤)
-                        const taken = Math.random() > 0.2;
+                        // 과거 (고정된 시드 기반 가짜 데이터 생성)
+                        const seed = supp.id * 100 + day;
+                        const taken = Math.abs(Math.sin(seed)) > 0.2; // 80% 확률로 섭취
+                        
                         if (taken) {
+                            rowTakenCount++;
                             cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20"><i class="fa-solid fa-check text-[10px]"></i></div>`;
                         } else {
                             cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-slate-100 text-slate-300"><i class="fa-solid fa-minus text-[10px]"></i></div>`;
@@ -397,6 +403,7 @@
                     } else if (day === todayDate) {
                         // 오늘 (현재 상태 실시간 반영)
                         if (supp.taken) {
+                            rowTakenCount++;
                             cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-[#10B981] text-white shadow-md shadow-emerald-500/30 ring-2 ring-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
                         } else {
                             cellHtml = `<div class="w-7 h-7 shrink-0 flex items-center justify-center rounded-lg bg-white border-2 border-emerald-300 text-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></div>`;
@@ -404,6 +411,9 @@
                     }
                     html += cellHtml;
                 }
+                
+                const pct = Math.round((rowTakenCount / rowTotalDays) * 100);
+                html += `<div class="w-16 shrink-0 flex items-center justify-end pr-2 text-[11px] font-black ${pct >= 80 ? 'text-emerald-600' : 'text-slate-500'}">${pct}%</div>`;
                 html += `</div>`;
             });
         }
