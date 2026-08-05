@@ -1,8 +1,9 @@
 """
-NutriMatch (NutriFit) 대시보드 메인 앱 (app.py)
-작성자: Antigravity
-작성일: 2026-07-18
-역할: 기존 순수 HTML/JS로 작성된 완벽한 웹 대시보드를 Streamlit 화면 전체에 렌더링합니다.
+NutriMatch (NutriFit) 통합 멀티페이지 대시보드 진입점 (app.py)
+작성자: Antigravity & 별별
+역할: Streamlit 통합 실행 진입점
+ - 페이지 1: "맞춤 진단" (html_app/index.html 전체 렌더링)
+ - 페이지 2: "데이터 분석" (팀원 봄이 담당 파이썬 분석 및 랭킹 엔진)
 """
 
 import streamlit as st
@@ -10,41 +11,55 @@ import streamlit.components.v1 as components
 import os
 
 st.set_page_config(
-    page_title="NutriMatch | 개인 맞춤형 영양 진단",
+    page_title="NutriMatch | 개인 맞춤형 영양 케어 & 데이터 분석",
     page_icon="🌱",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
-# Streamlit 기본 UI 숨기기 및 여백 제거
-st.markdown("""
-<style>
-    /* 전체 화면 꽉 채우기 */
-    .block-container { 
-        padding: 0 !important; 
-        max-width: 100% !important; 
-        margin: 0 !important;
-    }
-    /* 헤더, 사이드바, 푸터 숨기기 */
-    header { display: none !important; }
-    #MainMenu { display: none !important; }
-    footer { display: none !important; }
-    [data-testid="stSidebarNav"] { display: none !important; }
+def render_custom_care_page():
+    st.markdown("""
+    <style>
+        .block-container { 
+            padding: 0 !important; 
+            max-width: 100% !important; 
+            margin: 0 !important;
+        }
+        header { display: none !important; }
+        footer { display: none !important; }
+        .stApp { background-color: #FAF9F6; }
+        iframe { border: none !important; width: 100% !important; }
+    </style>
+    """, unsafe_allow_html=True)
     
-    /* 기본 배경색 일치 및 스크롤바 최적화 */
-    .stApp { background-color: #FAF9F6; }
-    iframe { border: none !important; }
-</style>
-""", unsafe_allow_html=True)
+    html_path = os.path.join(os.path.dirname(__file__), "..", "html_app", "index.html")
+    if os.path.exists(html_path):
+        with open(html_path, "r", encoding="utf-8", errors="ignore") as f:
+            html_data = f.read()
+        components.html(html_data, height=1400, scrolling=True)
+    else:
+        st.error("HTML 대시보드 파일(html_app/index.html)을 찾을 수 없습니다.")
 
-# index.html 파일 읽어서 렌더링
-html_path = os.path.join(os.path.dirname(__file__), "..", "html_app", "index.html")
-if os.path.exists(html_path):
-    with open(html_path, "r", encoding="utf-8", errors="ignore") as f:
-        html_data = f.read()
+# Streamlit 최신 st.navigation API 사용 시도
+if hasattr(st, "navigation") and hasattr(st, "Page"):
+    page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
+    page_2 = st.Page("pages/02_Data_Analysis.py", title="데이터 분석", icon="📊")
     
-    # iframe 형태로 전체 화면 렌더링
-    # height를 넉넉하게 줘서 내부 스크롤을 유도합니다
-    components.html(html_data, height=1200, scrolling=True)
+    pg = st.navigation([page_1, page_2])
+    pg.run()
 else:
-    st.error("HTML 대시보드 파일을 찾을 수 없습니다. 경로를 확인해주세요.")
+    # Streamlit pages/ 디렉토리 표준 및 사이드바 탭 폴백
+    st.sidebar.title("🌱 NutriMatch Navigation")
+    menu = st.sidebar.radio("메뉴 이동", ["맞춤 진단", "데이터 분석"])
+    
+    if menu == "맞춤 진단":
+        render_custom_care_page()
+    elif menu == "데이터 분석":
+        data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "02_Data_Analysis.py")
+        if os.path.exists(data_analysis_path):
+            with open(data_analysis_path, "r", encoding="utf-8") as f:
+                code = f.read()
+            exec(code)
+        else:
+            st.title("📊 데이터 분석")
+            st.info("💡 데이터 분석 페이지 준비 중입니다. (팀원 봄이 작업 영역)")

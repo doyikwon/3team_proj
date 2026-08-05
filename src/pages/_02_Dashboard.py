@@ -186,7 +186,7 @@ with card1:
     st.markdown("""
     <div style='background-color:#E3F2FD; padding:20px; border-radius:15px; height:100%;'>
         <h4>💊 피곤한 직장인을 위한<br>비타민B군 고르는 법</h4>
-        <p style='font-size:13px; color:#555;'>에너지 생성에 필수적인 비타민B군, 활성형인지 함량은 충분한지 꼭 확인하세요!</p>
+        <p style='font-size:13px; color:#555;'>에너지 생성에 도움을 줄 수 있는 비타민B군, 함량과 구성 성분을 꼭 확인하세요!</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -194,14 +194,19 @@ with card2:
     st.markdown("""
     <div style='background-color:#FFF3E0; padding:20px; border-radius:15px; height:100%;'>
         <h4>⏰ 식전? 식후?<br>영양제 타이밍 가이드</h4>
-        <p style='font-size:13px; color:#555;'>지용성 비타민은 식후에, 유산균은 공복에! 흡수율을 200% 높이는 시간대 공식.</p>
+        <p style='font-size:13px; color:#555;'>지용성 비타민은 식후에, 유산균은 공복에! 섭취 타이밍 참고 공식.</p>
     </div>
     """, unsafe_allow_html=True)
 
 with card3:
     st.markdown("""
     <div style='background-color:#FFEBEE; padding:20px; border-radius:15px; height:100%;'>
-        <h4>❌ 같이 먹으면 독?<br>병용 금기 영양제 조합</h4>
-        <p style='font-size:13px; color:#555;'>철분과 칼슘은 상극! 서로의 흡수를 방해하는 최악의 조합 리스트를 공개합니다.</p>
+        <h4>❌ 같이 먹으면 주의?<br>영양제 조합 체크</h4>
+        <p style='font-size:13px; color:#555;'>서로의 흡수를 방해할 수 있어 주의가 필요한 조합 리스트를 공개합니다.</p>
     </div>
     """, unsafe_allow_html=True)
+
+st.markdown("---")
+st.caption("본 서비스는 의학적 진단·처방이 아니며, 건강기능식품 정보 제공을 목적으로 한 참고용입니다. 개인의 건강 상태에 따라 전문가와 상담하세요.")
+st.caption("데이터 출처: 식약처 공공데이터 / 보건복지부 한국인 영양소 섭취기준(KDRI)")
+
