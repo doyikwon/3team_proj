@@ -14,6 +14,16 @@ def load_supplement_data(file_path='3team_proj/data/올리브영_영양제_수�
     올리브영 영양제 데이터를 로드하고 전처리합니다.
     """
     try:
+        import os
+        if not os.path.exists(file_path):
+            alt_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', '올리브영_영양제_수집데이터.csv')
+            if os.path.exists(alt_path):
+                file_path = alt_path
+            else:
+                alt_path2 = os.path.join(os.path.dirname(__file__), '..', 'data', '올리브영_영양제_수집데이터.csv')
+                if os.path.exists(alt_path2):
+                    file_path = alt_path2
+                    
         df = pd.read_csv(file_path)
         
         # 기본 전처리

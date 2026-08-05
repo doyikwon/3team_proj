@@ -68,16 +68,26 @@ if hasattr(st, "navigation") and hasattr(st, "Page"):
     page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
     page_2 = st.Page("pages/02_Data_Analysis.py", title="데이터 분석", icon="📊")
     page_3 = st.Page(render_virtual_pillbox_page, title="나의 약통", icon="💊")
+    page_4 = st.Page("pages/03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
     
-    pg = st.navigation([page_1, page_3, page_2])
+    pg = st.navigation([page_1, page_4, page_3, page_2])
     pg.run()
 else:
     # Streamlit pages/ 디렉토리 표준 및 사이드바 탭 폴백
     st.sidebar.title("🌱 NutriMatch Navigation")
-    menu = st.sidebar.radio("메뉴 이동", ["맞춤 진단", "나의 약통", "데이터 분석"])
+    menu = st.sidebar.radio("메뉴 이동", ["맞춤 진단", "맞춤형 영양제 추천", "나의 약통", "데이터 분석"])
     
     if menu == "맞춤 진단":
         render_custom_care_page()
+    elif menu == "맞춤형 영양제 추천":
+        curation_path = os.path.join(os.path.dirname(__file__), "pages", "03_Curation.py")
+        if os.path.exists(curation_path):
+            with open(curation_path, "r", encoding="utf-8") as f:
+                code = f.read()
+            exec(code)
+        else:
+            st.title("🛒 맞춤형 영양제 추천")
+            st.info("💡 추천 페이지 준비 중입니다.")
     elif menu == "나의 약통":
         render_virtual_pillbox_page()
     elif menu == "데이터 분석":
