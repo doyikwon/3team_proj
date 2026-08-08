@@ -67,15 +67,38 @@ def render_virtual_pillbox_page():
 if hasattr(st, "navigation") and hasattr(st, "Page"):
     page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
     page_2 = st.Page("pages/_02_Data_Analysis.py", title="데이터 분석", icon="📊")
-    page_3 = st.Page(render_virtual_pillbox_page, title="나의 약통", icon="💊")
-    page_4 = st.Page("pages/03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
     
-    pg = st.navigation([page_1, page_4, page_3, page_2])
+    pages = [page_1]
+    
+    # 2. 맞춤형 영양제 추천 추가
+    page_curation = st.Page("pages/03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
+    pages.append(page_curation)
+
+    # 3. 약통 페이지 존재 시 추가
+    html_pillbox_path = os.path.join(os.path.dirname(__file__), "..", "html_app", "virtual_pillbox.html")
+    if os.path.exists(html_pillbox_path):
+        page_3 = st.Page(render_virtual_pillbox_page, title="나의 약통", icon="💊")
+        pages.append(page_3)
+        
+    # 4. 데이터 분석 추가
+    pages.append(page_2)
+    
+    # 5. 카카오 알림 연동 페이지 추가 (main의 최신 코드 반영)
+    page_kakao = st.Page("pages/05_Kakao_Alert.py", title="카카오 알림 연동", icon="💬")
+    pages.append(page_kakao)
+    
+    pg = st.navigation(pages)
     pg.run()
 else:
-    # Streamlit pages/ 디렉토리 표준 및 사이드바 탭 폴백
-    st.sidebar.title("🌱 NutriMatch Navigation")
-    menu = st.sidebar.radio("메뉴 이동", ["맞춤 진단", "맞춤형 영양제 추천", "나의 약통", "데이터 분석"])
+    st.sidebar.title("🌱 NutriMatch")
+    menu_options = ["맞춤 진단", "맞춤형 영양제 추천"]
+    
+    html_pillbox_path = os.path.join(os.path.dirname(__file__), "..", "html_app", "virtual_pillbox.html")
+    if os.path.exists(html_pillbox_path):
+        menu_options.append("나의 약통")
+        
+    menu_options.extend(["데이터 분석", "카카오 알림 연동"])
+    menu = st.sidebar.radio("메뉴 선택", menu_options)
     
     if menu == "맞춤 진단":
         render_custom_care_page()
@@ -90,8 +113,17 @@ else:
             st.info("💡 추천 페이지 준비 중입니다.")
     elif menu == "나의 약통":
         render_virtual_pillbox_page()
+    elif menu == "카카오 알림 연동":
+        kakao_alert_path = os.path.join(os.path.dirname(__file__), "pages", "05_Kakao_Alert.py")
+        if os.path.exists(kakao_alert_path):
+            with open(kakao_alert_path, "r", encoding="utf-8") as f:
+                code = f.read()
+            exec(code)
     elif menu == "데이터 분석":
-        data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "02_Data_Analysis.py")
+        data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "_02_Data_Analysis.py")
+        if not os.path.exists(data_analysis_path):
+            data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "02_Data_Analysis.py")
+            
         if os.path.exists(data_analysis_path):
             with open(data_analysis_path, "r", encoding="utf-8") as f:
                 code = f.read()

@@ -2,3 +2,4 @@ streamlit
 pandas
 numpy
 starlette<0.37.0
+requests
