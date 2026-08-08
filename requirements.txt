@@ -4,3 +4,4 @@ numpy
 starlette<0.37.0
 scikit-learn
 requests
+plotly
