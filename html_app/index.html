@@ -2479,6 +2479,14 @@
 
         // 분석 결과를 화면에 렌더링하고 쇼핑몰 자동 검색 연동 적용
         function renderRecommendationResults() {
+            const answersStr = encodeURIComponent(JSON.stringify(state.answers));
+            try {
+                window.parent.location.href = '/Curation?answers=' + answersStr;
+            } catch(e) {
+                window.location.href = '/Curation?answers=' + answersStr;
+            }
+            
+            // 기존 결과 렌더링 폴백 (리디렉션 실패 시 대비)
             switchView('result');
 
             const nameNode = document.getElementById('user-display-name');

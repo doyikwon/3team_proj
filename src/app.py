@@ -1,9 +1,9 @@
 """
-NutriMatch 통합 멀티페이지 대시보드 진입점 (app.py)
- - Pretendard 폰트 시스템 및 정돈된 베이지/포레스트그린 사이드바 톤앤매너 적용
- - 사이드바-콘텐츠 좌우 대칭 여백 균형 최적화
- - Streamlit Material Symbols 아이콘 폰트 보존 (keyboard_double_ 등 아이콘 깨짐 방지)
- - 사이드바 접음/펼침 토글 컨트롤 버튼 노출 및 Pretendard 최적 자간 적용
+NutriMatch (NutriFit) 통합 멀티페이지 대시보드 진입점 (app.py)
+작성자: Antigravity & 별별
+역할: Streamlit 통합 실행 진입점
+ - 페이지 1: "맞춤 진단" (html_app/index.html 전체 렌더링)
+ - 페이지 2: "데이터 분석" (팀원 봄이 담당 파이썬 분석 및 랭킹 엔진)
 """
 
 import streamlit as st
@@ -20,89 +20,15 @@ st.set_page_config(
 def render_custom_care_page():
     st.markdown("""
     <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
-        
-        /* 본문 요소 폰트 및 자간 적용 (Streamlit 내장 아이콘 폰트 제외) */
-        html, body, .stApp, p, div, span, button, input, select, textarea {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-            letter-spacing: -0.02em;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-            letter-spacing: -0.03em !important;
-        }
-
-        /* Streamlit Material Symbols 및 Icon 폰트 강제 보존 */
-        [data-testid="stIcon"], 
-        [class*="material-"], 
-        .material-symbols-outlined,
-        .material-icons,
-        [data-testid="stSidebarCollapseButton"] *,
-        [data-testid="stHeaderActionElements"] *,
-        i[aria-hidden="true"] {
-            font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
-        }
-
-        /* 메인 컨테이너 여백 및 대칭 배치 (사이드바 간격 28px + 우측 대칭) */
         .block-container { 
-            padding: 0.75rem 2rem 1.5rem 2rem !important; 
+            padding: 0 !important; 
             max-width: 100% !important; 
-            margin: 0 auto !important;
+            margin: 0 !important;
         }
-        
-        /* 헤더 전체 숨김 대신 상단 장식선만 숨겨 사이드바 펼치기 버튼([data-testid="stSidebarCollapsedControl"]) 표시 보장 */
-        header[data-testid="stHeader"] {
-            background-color: transparent !important;
-            z-index: 9999 !important;
-            height: 3rem !important;
-        }
-
-        [data-testid="stHeaderDecoration"] {
-            display: none !important;
-        }
-
-        /* 사이드바 접기/펼치기 버튼 강제 표시 및 포레스트그린 스타일링 */
-        [data-testid="stSidebarCollapsedControl"],
-        [data-testid="stSidebarCollapseButton"] {
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            z-index: 10000 !important;
-        }
-
-        [data-testid="stSidebarCollapsedControl"] button,
-        [data-testid="stSidebarCollapseButton"] button,
-        [data-testid="stSidebarCollapsedControl"] span,
-        [data-testid="stSidebarCollapseButton"] span {
-            color: #1E3A2F !important;
-            font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
-        }
-
+        header { display: none !important; }
         footer { display: none !important; }
-        
-        .stApp { 
-            background-color: #FAF9F6 !important; 
-        }
-        
-        /* 사이드바 대시보드 베이지 & 포레스트 그린 톤앤매너 조화 */
-        [data-testid="stSidebar"] {
-            background-color: #F4F2EC !important;
-            border-right: 1px solid #E5E2D8 !important;
-            padding-top: 1rem !important;
-        }
-        
-        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-        [data-testid="stSidebar"] span {
-            color: #1E3A2F !important;
-            font-weight: 600 !important;
-        }
-
-        /* iframe full width & 스크롤 유연성 */
-        iframe { 
-            border: none !important; 
-            width: 100% !important; 
-        }
+        .stApp { background-color: #FAF9F6; }
+        iframe { border: none !important; width: 100% !important; }
     </style>
     """, unsafe_allow_html=True)
     
@@ -110,18 +36,9 @@ def render_custom_care_page():
     if os.path.exists(html_path):
         with open(html_path, "r", encoding="utf-8", errors="ignore") as f:
             html_data = f.read()
-        components.html(html_data, height=1550, scrolling=False)
+        components.html(html_data, height=1400, scrolling=True)
     else:
         st.error("HTML 대시보드 파일(html_app/index.html)을 찾을 수 없습니다.")
-
-def render_data_analysis_page():
-    data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "_02_Data_Analysis.py")
-    if os.path.exists(data_analysis_path):
-        with open(data_analysis_path, "r", encoding="utf-8") as f:
-            code = f.read()
-        exec(code, globals())
-    else:
-        st.error("데이터 분석 파일(src/pages/_02_Data_Analysis.py)을 찾을 수 없습니다.")
 
 def render_virtual_pillbox_page():
     st.markdown("""
@@ -146,39 +63,54 @@ def render_virtual_pillbox_page():
     else:
         st.error("나의 약통 HTML 파일(html_app/virtual_pillbox.html)을 찾을 수 없습니다.")
 
-# Streamlit st.navigation API 구동 (pages/ 자동 스캔 차단 후 st.Page 컨트롤)
+# Streamlit 최신 st.navigation API 사용 시도
 if hasattr(st, "navigation") and hasattr(st, "Page"):
     page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
-    page_2 = st.Page(render_data_analysis_page, title="데이터 분석", icon="📊")
+    page_2 = st.Page("pages/_02_Data_Analysis.py", title="데이터 분석", icon="📊")
     
     pages = [page_1]
     
-    # 약통 페이지 존재 시 추가
+    # 2. 맞춤형 영양제 추천 추가
+    page_curation = st.Page("pages/03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
+    pages.append(page_curation)
+
+    # 3. 약통 페이지 존재 시 추가
     html_pillbox_path = os.path.join(os.path.dirname(__file__), "..", "html_app", "virtual_pillbox.html")
     if os.path.exists(html_pillbox_path):
         page_3 = st.Page(render_virtual_pillbox_page, title="나의 약통", icon="💊")
         pages.append(page_3)
         
+    # 4. 데이터 분석 추가
     pages.append(page_2)
     
-    # 카카오 알림 연동 페이지 추가
-    page_4 = st.Page("pages/05_Kakao_Alert.py", title="카카오 알림 연동", icon="💬")
-    pages.append(page_4)
+    # 5. 카카오 알림 연동 페이지 추가 (main의 최신 코드 반영)
+    page_kakao = st.Page("pages/05_Kakao_Alert.py", title="카카오 알림 연동", icon="💬")
+    pages.append(page_kakao)
     
     pg = st.navigation(pages)
     pg.run()
 else:
     st.sidebar.title("🌱 NutriMatch")
-    menu_options = ["맞춤 진단", "데이터 분석"]
+    menu_options = ["맞춤 진단", "맞춤형 영양제 추천"]
+    
     html_pillbox_path = os.path.join(os.path.dirname(__file__), "..", "html_app", "virtual_pillbox.html")
     if os.path.exists(html_pillbox_path):
-        menu_options.insert(1, "나의 약통")
+        menu_options.append("나의 약통")
         
-    menu_options.append("카카오 알림 연동")
+    menu_options.extend(["데이터 분석", "카카오 알림 연동"])
     menu = st.sidebar.radio("메뉴 선택", menu_options)
     
     if menu == "맞춤 진단":
         render_custom_care_page()
+    elif menu == "맞춤형 영양제 추천":
+        curation_path = os.path.join(os.path.dirname(__file__), "pages", "03_Curation.py")
+        if os.path.exists(curation_path):
+            with open(curation_path, "r", encoding="utf-8") as f:
+                code = f.read()
+            exec(code)
+        else:
+            st.title("🛒 맞춤형 영양제 추천")
+            st.info("💡 추천 페이지 준비 중입니다.")
     elif menu == "나의 약통":
         render_virtual_pillbox_page()
     elif menu == "카카오 알림 연동":
@@ -188,4 +120,14 @@ else:
                 code = f.read()
             exec(code)
     elif menu == "데이터 분석":
-        render_data_analysis_page()
+        data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "_02_Data_Analysis.py")
+        if not os.path.exists(data_analysis_path):
+            data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "02_Data_Analysis.py")
+            
+        if os.path.exists(data_analysis_path):
+            with open(data_analysis_path, "r", encoding="utf-8") as f:
+                code = f.read()
+            exec(code)
+        else:
+            st.title("📊 데이터 분석")
+            st.info("💡 데이터 분석 페이지 준비 중입니다. (팀원 봄이 작업 영역)")
