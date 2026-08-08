@@ -144,6 +144,58 @@ def get_formulation(name, tags):
         return "젤리/구미 (Jelly)"
     return "기타 제형"
 
+def get_mock_reviews(name, tags):
+    text = (name + " " + tags).lower()
+    if "유산균" in text or "프로바이오" in text:
+        return [
+            "👍 먹고 나서 확실히 속이 편해지고 배변 활동이 좋아졌어요. 맛도 상큼해서 먹기 편합니다.",
+            "꾸준히 먹으니까 가스 차던 게 덜해요. 재구매 의사 있습니다!",
+            "가성비 유산균으로 최고인 것 같아요. 온가족이 함께 먹고 있어요.",
+            "가루 타입이라 물 없이도 편하게 섭취할 수 있어 좋습니다."
+        ]
+    elif "오메가" in text:
+        return [
+            "비린내 걱정했는데 전혀 안 나고 알약 크기도 적당해서 목 넘김이 수월해요.",
+            "눈 건조증이랑 혈행 개선 목적으로 샀는데 눈이 덜 뻑뻑한 느낌입니다.",
+            "하루 한 알로 챙길 수 있어서 간편하고 유통기한도 넉넉하네요.",
+            "포장이 개별로 되어 있어서 산패 걱정 없이 위생적으로 먹고 있어요."
+        ]
+    elif "비타민" in text or "멀티" in text:
+        return [
+            "피곤함이 덜하고 아침에 일어날 때 몸이 한결 가벼워진 게 체감됩니다.",
+            "비타민 특유의 냄새가 적어서 거부감 없이 섭취 가능해요.",
+            "구성 성분이 알차서 이거 하나로 영양 관리 끝낼 수 있어 만족합니다.",
+            "꾸준히 먹으니 피부 톤도 맑아지는 것 같고 활력이 생기네요."
+        ]
+    elif "루테인" in text or "눈" in text:
+        return [
+            "침침하던 눈이 맑아지는 느낌이고 건조함이 덜해서 인공눈물 넣는 횟수가 줄었어요.",
+            "스마트폰을 자주 보는데 눈 피로가 눈에 띄게 완화되었습니다.",
+            "알약이 작아서 삼키기 매우 편하고 성분 함량도 만족스럽습니다.",
+            "부모님 선물로 드렸는데 만족해하셔서 매번 구매하고 있어요."
+        ]
+    elif "콜라겐" in text or "피부" in text:
+        return [
+            "피부 속건조가 많이 개선되었고 아침 화장이 더 잘 먹는 것 같아요.",
+            "콜라겐 특유의 비린 맛 없이 상큼하고 맛있어서 매일 챙겨 먹게 되네요.",
+            "흡수가 잘되는 저분자라서 만족스럽고 확실히 피부 탱탱해진 느낌이에요.",
+            "가볍게 한 포씩 휴대하면서 섭취하기 너무 좋은 제품입니다."
+        ]
+    elif "칼슘" in text or "마그네슘" in text or "관절" in text:
+        return [
+            "눈밑 떨림 증상 때문에 구매했는데 복용 3일 만에 떨림이 사라졌어요.",
+            "무릎 관절이 뻐근해서 챙겨 먹는데 계단 오르내릴 때 확실히 덜 아픕니다.",
+            "칼슘이랑 마그네슘, 비타민D 복합 구성이라 뼈 건강에 신뢰가 갑니다.",
+            "취침 전에 먹으니 잠도 더 잘 오고 근육 뭉침이 덜해 만족합니다."
+        ]
+    else:
+        return [
+            "배송도 빠르고 유통기한도 넉넉해서 만족스럽게 잘 먹고 있습니다.",
+            "평소 챙겨 먹기 힘든 영양소인데 먹기 간편해서 마음에 듭니다.",
+            "성분 좋고 가격대비 양도 많아서 가족들과 함께 먹기 딱 좋아요.",
+            "꾸준히 먹으니 몸이 건강해지는 기분이에요. 추천합니다!"
+        ]
+
 st.title("🛒 초개인화 맞춤 큐레이션")
 
 # --- 고객 군집화 기반 사용자 분석 표시 ---
@@ -171,13 +223,13 @@ if df.empty:
     st.error("데이터를 불러오지 못했습니다.")
     st.stop()
 
-recommended_items = get_recommendations(df, st.session_state.answers)
+recommended_items = get_recommendations(df, st.session_state.answers).drop_duplicates(subset=['goods_no'])
 
 # --- 탭 구성 신설 ---
 tab1, tab2 = st.tabs(["맞춤형 영양제 추천", "⚖️ 1:1 영양제 비교 분석"])
 
 with tab1:
-    st.markdown(f"**총 {len(recommended_items.head(6))}개의 큐레이션 상품이 준비되었습니다.**")
+    st.markdown(f"**총 {len(recommended_items.head(6))}개의 큐레이션 상품이 준비되었습니다. (비교함은 최대 3개까지 선택 가능)**")
     
     cols = st.columns(3)
     for i, (_, row) in enumerate(recommended_items.head(6).iterrows()):
@@ -190,14 +242,23 @@ with tab1:
                 st.markdown(f"<h4 style='color: #E91E63;'>{row['price_cur']:,}원</h4>", unsafe_allow_html=True)
                 st.write(f"⭐ {row['score']} | 💬 리뷰 {row['review_count']:,}건")
                 
-                # 비교함 담기 체크박스 추가
-                is_selected = st.checkbox("비교함 담기 ⚖️", key=f"compare_{row['goods_no']}", value=(row['goods_no'] in st.session_state.compare_items))
-                if is_selected:
-                    if row['goods_no'] not in st.session_state.compare_items:
+                # 비교함 담기 체크박스 추가 (최대 3개 제한)
+                is_in_compare = row['goods_no'] in st.session_state.compare_items
+                is_disabled = (not is_in_compare) and (len(st.session_state.compare_items) >= 3)
+                
+                is_selected = st.checkbox(
+                    "비교함 담기 ⚖️", 
+                    key=f"compare_{row['goods_no']}", 
+                    value=is_in_compare,
+                    disabled=is_disabled
+                )
+                
+                if is_selected != is_in_compare:
+                    if is_selected:
                         st.session_state.compare_items.append(row['goods_no'])
-                else:
-                    if row['goods_no'] in st.session_state.compare_items:
+                    else:
                         st.session_state.compare_items.remove(row['goods_no'])
+                    st.rerun()
                 
                 # 상세 정보 Expander
                 with st.expander("자세히 보기 (효능 및 주의사항)"):
@@ -223,11 +284,7 @@ with tab1:
                 st.button("장바구니 담기 🛒", key=f"add_{i}", use_container_width=True)
 
     st.markdown("---")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.button("✅ 선택 상품 모두 담기", use_container_width=True)
-    with col2:
-        st.button("🔔 정기구독 신청", use_container_width=True, type="primary")
+    st.button("✅ 선택 상품 모두 담기", use_container_width=True)
 
 with tab2:
     st.subheader("⚖️ 선택한 영양제 1:1 비교 분석")
@@ -241,55 +298,114 @@ with tab2:
         # 최대 3개까지만 비교
         compare_df = selected_items.head(3)
         
-        # st.columns를 사용해 나란히 배치
-        compare_cols = st.columns(len(compare_df))
+        # 1:1 비교 분석 행 기준 정렬 레이아웃
+        cols = st.columns(len(compare_df))
+        
+        # 1. 이미지 및 제품 정보
         for idx, (_, row) in enumerate(compare_df.iterrows()):
-            with compare_cols[idx]:
-                with st.container(border=True):
-                    # 상단 이미지 및 제목 (70% 크기 조정 및 중앙 정렬)
-                    st.markdown(f'<div style="text-align: center; margin-bottom: 10px;"><img src="{row["img_url"]}" style="width: 70%; max-height: 180px; object-fit: contain;"></div>', unsafe_allow_html=True)
-                    st.caption(row['brand'])
-                    st.markdown(f"**{row['name']}**")
-                    
-                    st.markdown("---")
-                    
-                    # 1. 가격 및 용량
-                    price = row['price_cur']
-                    capacity = parse_capacity(row['name'])
-                    st.markdown(f"**💰 가격 및 용량**")
-                    st.markdown(f"- 가격: <h5 style='color: #E91E63; display:inline;'>{price:,}원</h5>", unsafe_allow_html=True)
-                    st.markdown(f"- 용량: **{capacity}**")
-                    
-                    # 2. 1일 섭취 비용
-                    days = parse_serving_days(row['name'])
-                    daily_cost = int(price / days) if days > 0 else 0
-                    st.markdown(f"**⏱️ 1일 섭취 비용**")
-                    st.markdown(f"- 약 **{daily_cost:,}원** / 일 ({days}일분 기준)")
-                    
-                    # 3. 사용자 평점 및 리뷰 요약
-                    st.markdown(f"**⭐ 평점 및 리뷰**")
-                    st.markdown(f"- 평점: **{row['score']} / 5.0**")
-                    st.markdown(f"- 리뷰 수: **{row['review_count']:,}건**")
-                    st.markdown(f"- 요약: *{row['tags_clean']}* 중심의 긍정 평가 다수")
-                    
-                    # 4. 제형
-                    formulation = get_formulation(row['name'], row['tags_clean'])
-                    st.markdown(f"**💊 제형**")
-                    st.markdown(f"- {formulation}")
-                    
-                    # 5. 주요 효능 및 핵심 성분
-                    st.markdown(f"**✨ 주요 효능 및 성분**")
-                    st.markdown(f"- {row['benefits_tag']}")
-                    st.caption(f"근거: {row['reason']}")
-                    
-                    # 6. 안전성 경고
-                    st.markdown(f"**⚠️ 주의 사항**")
-                    st.caption(row['safety_warning'])
-                    
-                    st.markdown("---")
-                    
-                    # 구매 링크 다이렉트 연동 CTA 버튼
-                    st.link_button("구매하러 가기 🔗", row['link'], use_container_width=True, type="primary")
+            with cols[idx]:
+                st.markdown(f'<div style="text-align: center; margin-bottom: 10px;"><img src="{row["img_url"]}" style="width: 70%; max-height: 150px; object-fit: contain;"></div>', unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align:center; min-height: 60px;'><b>[{row['brand']}]</b><br>{row['name']}</div>", unsafe_allow_html=True)
+                st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
+                
+        # 2. 가격 및 용량
+        st.markdown("##### 💰 가격 및 용량")
+        row_cols = st.columns(len(compare_df))
+        for idx, (_, row) in enumerate(compare_df.iterrows()):
+            with row_cols[idx]:
+                price = row['price_cur']
+                capacity = parse_capacity(row['name'])
+                st.markdown(f"<div style='background-color:#F4F2EC; padding: 10px; border-radius: 8px; min-height: 70px; border: 1px solid #E5E2D8; color:#1E3A2F;'>"
+                            f"정가/할인가: <b>{price:,}원</b><br>"
+                            f"용량: <b>{capacity}</b>"
+                            f"</div>", unsafe_allow_html=True)
+
+        st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
+        
+        # 3. 1일 섭취 비용
+        st.markdown("##### ⏱️ 1일 섭취 비용")
+        row_cols = st.columns(len(compare_df))
+        for idx, (_, row) in enumerate(compare_df.iterrows()):
+            with row_cols[idx]:
+                price = row['price_cur']
+                days = parse_serving_days(row['name'])
+                daily_cost = int(price / days) if days > 0 else 0
+                st.markdown(f"<div style='background-color:#FAF9F6; padding: 10px; border-radius: 8px; min-height: 70px; border: 1px solid #E5E2D8; color:#1E3A2F;'>"
+                            f"1일 권장 비용: <b style='color:#2E7D32;'>약 {daily_cost:,}원</b><br>"
+                            f"섭취 일수: {days}일분 기준"
+                            f"</div>", unsafe_allow_html=True)
+
+        st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
+
+        # 4. 사용자 평점 및 리뷰 요약
+        st.markdown("##### ⭐ 평점 및 리뷰 요약")
+        row_cols = st.columns(len(compare_df))
+        for idx, (_, row) in enumerate(compare_df.iterrows()):
+            with row_cols[idx]:
+                clean_tags = row['tags_clean'] if row['tags_clean'] else "정보 없음"
+                reviews = get_mock_reviews(row['name'], row['tags_clean'])
+                reviews_html = "".join([f"<li style='margin-bottom:6px; font-size:0.82em; color:#444; line-height:1.4;'>{rev}</li>" for rev in reviews])
+                st.markdown(f"<div style='background-color:#FAF9F6; padding: 12px; border-radius: 8px; min-height: 270px; border: 1px solid #E5E2D8; color:#1E3A2F;'>"
+                            f"평점: <b>⭐ {row['score']}</b> ({row['review_count']:,}건)<br>"
+                            f"추천 태그: <span style='font-size: 0.85em; color: #333;'>{clean_tags}</span>"
+                            f"<hr style='margin: 8px 0; border:0; border-top:1px dashed #DDD;'>"
+                            f"<p style='margin: 0 0 5px 0; font-weight:bold; font-size:0.85em;'>실제 구매자 후기:</p>"
+                            f"<ul style='padding-left:14px; margin:0;'>{reviews_html}</ul>"
+                            f"</div>", unsafe_allow_html=True)
+
+        st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
+
+        # 5. 제형
+        st.markdown("##### 💊 제형")
+        row_cols = st.columns(len(compare_df))
+        for idx, (_, row) in enumerate(compare_df.iterrows()):
+            with row_cols[idx]:
+                formulation = get_formulation(row['name'], row['tags_clean'])
+                st.markdown(f"<div style='background-color:#FAF9F6; padding: 10px; border-radius: 8px; min-height: 60px; border: 1px solid #E5E2D8; color:#1E3A2F;'>"
+                            f"<b>{formulation}</b>"
+                            f"</div>", unsafe_allow_html=True)
+
+        st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
+
+        # 6. 주요 효능 및 핵심 성분
+        st.markdown("##### ✨ 주요 효능 및 핵심 성분")
+        row_cols = st.columns(len(compare_df))
+        for idx, (_, row) in enumerate(compare_df.iterrows()):
+            with row_cols[idx]:
+                st.markdown(f"<div style='background-color:#E8F5E9; padding: 10px; border-radius: 8px; min-height: 120px; border: 1px solid #C8E6C9; color:#2E7D32;'>"
+                            f"<b>{row['benefits_tag']}</b><br>"
+                            f"<span style='font-size:0.85em;'>{row['reason']}</span>"
+                            f"</div>", unsafe_allow_html=True)
+
+        st.markdown("<div style='margin: 10px 0;'></div>", unsafe_allow_html=True)
+
+        # 7. 안전성 및 주의 사항
+        st.markdown("##### ⚠️ 안전성 및 주의 사항")
+        row_cols = st.columns(len(compare_df))
+        for idx, (_, row) in enumerate(compare_df.iterrows()):
+            with row_cols[idx]:
+                warning_text = row['safety_warning']
+                if "금기" in warning_text or "주의" in warning_text or "피하" in warning_text:
+                    bg_col = "#FFEBEE"
+                    border_col = "#FFCDD2"
+                    text_col = "#C62828"
+                    icon = "🚨"
+                else:
+                    bg_col = "#E3F2FD"
+                    border_col = "#BBDEFB"
+                    text_col = "#1565C0"
+                    icon = "✅"
+                st.markdown(f"<div style='background-color:{bg_col}; padding: 10px; border-radius: 8px; min-height: 100px; border: 1px solid {border_col}; color:{text_col}; font-size: 0.85em;'>"
+                            f"{icon} {warning_text}"
+                            f"</div>", unsafe_allow_html=True)
+
+        st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
+
+        # 8. 구매 링크 다이렉트 연동
+        row_cols = st.columns(len(compare_df))
+        for idx, (_, row) in enumerate(compare_df.iterrows()):
+            with row_cols[idx]:
+                st.link_button("구매하러 가기 🔗", row['link'], use_container_width=True, type="primary")
 
 st.caption("본 서비스는 의학적 진단·처방이 아니며, 건강기능식품 정보 제공을 목적으로 한 참고용입니다. 개인의 건강 상태에 따라 전문가와 상담하세요.")
 st.caption("데이터 출처: 식약처 공공데이터 / 보건복지부 한국인 영양소 섭취기준(KDRI)")

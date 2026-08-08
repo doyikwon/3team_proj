@@ -66,7 +66,7 @@ def render_virtual_pillbox_page():
 # Streamlit 최신 st.navigation API 사용 시도
 if hasattr(st, "navigation") and hasattr(st, "Page"):
     page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
-    page_2 = st.Page("pages/02_Data_Analysis.py", title="데이터 분석", icon="📊")
+    page_2 = st.Page("pages/_02_Data_Analysis.py", title="데이터 분석", icon="📊")
     page_3 = st.Page(render_virtual_pillbox_page, title="나의 약통", icon="💊")
     page_4 = st.Page("pages/03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
     
