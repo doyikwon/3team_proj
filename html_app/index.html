@@ -2,17 +2,14 @@
 <html lang="ko">
 
 <head>
+    <!-- Pretendard Font CDN -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>뉴트리매치 (NutriMatch) - 개인 맞춤형 영양 체크 & 스마트 케어</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Lora & Noto Sans KR -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
-        rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -27,18 +24,45 @@
                         warning: '#EF4444',
                     },
                     fontFamily: {
-                        sans: ['Noto Sans KR', 'sans-serif'],
-                        serif: ['Lora', 'serif'],
+                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        serif: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
+        * {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            letter-spacing: -0.02em;
+        }
         body {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
             background-color: #FAF9F6;
             overflow-x: hidden;
+            letter-spacing: -0.02em;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .hero-title, .section-title, .card-title {
+            font-weight: 800;
+            letter-spacing: -0.03em !important;
+        }
+        
+        p, .body-text {
+            font-weight: 400;
+            line-height: 1.65;
+            letter-spacing: -0.015em;
+        }
+        
+        .btn-text, button, .badge, input, select, textarea {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        
+        .caption-text {
+            font-weight: 400;
+            opacity: 0.8;
+            letter-spacing: -0.01em;
         }
 
         .pulse-emerald {
@@ -92,7 +116,55 @@
                 transform: translateY(0);
             }
         }
-    </style>
+    
+        /* 뷰포트 정중앙 배치 동의 모달 & hidden 지원 CSS */
+        #consent-modal:not(.hidden) {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: rgba(15, 23, 42, 0.75) !important;
+            backdrop-filter: blur(5px) !important;
+            padding: 1rem !important;
+            box-sizing: border-box !important;
+        }
+
+        #consent-modal.hidden {
+            display: none !important;
+        }
+
+        #consent-modal-card {
+            position: relative !important;
+            width: 100% !important;
+            max-width: 520px !important;
+            max-height: 85vh !important;
+            overflow-y: auto !important;
+            border-radius: 1.25rem !important;
+            background-color: #FFFFFF !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+            padding: 1.5rem !important;
+            margin: auto !important;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+</style>
 </head>
 
 <body class="flex flex-col min-h-screen text-slate-700 antialiased">
@@ -105,7 +177,7 @@
                 <div class="w-10 h-10 rounded-xl bg-[#1E3A2F] flex items-center justify-center text-white">
                     <i class="fa-solid fa-seedling text-lg text-[#10B981]"></i>
                 </div>
-                <span class="font-serif text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span
+                <span class="font-sans text-2xl font-bold text-[#1E3A2F] tracking-tight">Nutri<span
                         class="text-[#10B981]">Match</span></span>
             </a>
 
@@ -149,11 +221,11 @@
                             <i class="fa-solid fa-shield-heart"></i> AI 기반 1:1 개인 맞춤형 영양 케어
                         </span>
                         <h1
-                            class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A2F] font-serif leading-tight tracking-tight">
+                            class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A2F] font-sans leading-tight tracking-tight">
                             더 이상 넘겨짚지 마세요.<br>내 몸에 꼭 맞는<br><span class="text-[#10B981]">안심 영양 설계</span>
                         </h1>
                         <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-lg">
-                            나만의 신체적 특성과 컨디션 등을 완벽히 분석하여 100% 맞춤형 영양제를 추천해드립니다.
+                            나만의 신체적 특성과 컨디션 등을 종합적으로 분석하여 나에게 맞는 영양제를 추천해드립니다.
                         </p>
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-3">
                             <button onclick="startQuiz()"
@@ -188,8 +260,7 @@
                             class="relative z-10 bg-white p-8 rounded-3xl border border-slate-100 shadow-2xl space-y-6">
                             <div class="flex justify-between items-center">
                                 <span
-                                    class="text-xs bg-[#1E3A2F] text-white px-2.5 py-1 rounded font-bold uppercase tracking-wider">AI
-                                    Medical Filter Verified</span>
+                                    class="text-xs bg-[#1E3A2F] text-white px-2.5 py-1 rounded font-bold uppercase tracking-wider">AI 성분 안전 필터</span>
                                 <i class="fa-solid fa-heart-pulse text-red-500 animate-pulse text-lg"></i>
                             </div>
                             <div class="space-y-4">
@@ -198,7 +269,7 @@
                                     <i class="fa-solid fa-shield-virus text-[#10B981] text-xl mt-1"></i>
                                     <div>
                                         <span class="text-xs font-bold text-[#1E3A2F] block">흡연자 특별 필터 탑재</span>
-                                        <p class="text-[11px] text-slate-500">흡연자의 폐암 유발 확률을 높이는 고농도 베타카로틴 성분을 자동 우회·원천
+                                        <p class="text-[11px] text-slate-500">흡연자에게 권장되지 않는 고농도 베타카로틴 성분을 자동 안내·우회
                                             차단합니다.</p>
                                     </div>
                                 </div>
@@ -206,8 +277,7 @@
                                     <i class="fa-solid fa-capsules text-amber-600 text-xl mt-1"></i>
                                     <div>
                                         <span class="text-xs font-bold text-amber-800 block">복용 약물 시너지 가미</span>
-                                        <p class="text-[11px] text-slate-500">고혈압, 당뇨 및 항응고제 섭취자를 위해 혈액 응고 방지 중복 충돌을
-                                            조율합니다.</p>
+                                        <p class="text-[11px] text-slate-500">복용 중인 약물과 중복될 수 있는 성분을 안내합니다.</p>
                                     </div>
                                 </div>
                             </div>
@@ -321,7 +391,7 @@
                     <i class="fa-solid fa-dna text-4xl text-[#10B981] animate-bounce"></i>
                 </div>
                 <div class="space-y-3">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">AI 정밀 유전체 및 건강 시뮬레이션 가동 중</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">AI 정밀 유전체 및 건강 시뮬레이션 가동 중</h3>
                     <p id="loading-subtitle" class="text-sm text-slate-500 min-h-[40px] transition-all duration-500">
                         성분 간 충돌 여부 정밀 시뮬레이션 중...
                     </p>
@@ -348,7 +418,7 @@
                         <div class="md:col-span-8 space-y-4">
                             <span class="text-xs text-[#10B981] font-bold tracking-widest uppercase">AI Clinical
                                 Diagnosis Result</span>
-                            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight font-serif"><span
+                            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight font-sans"><span
                                     id="user-display-name">고객</span>님만을 위한 안심 하루 한 팩 솔루션</h2>
                             <p class="text-slate-300 text-sm sm:text-base max-w-xl">
                                 입력하신 프로필, 라이프스타일, 질환 유무 및 알레르기를 종합 분석했습니다. 부작용을 회피한 1:1 맞춤 설계입니다.
@@ -362,7 +432,7 @@
                         <div
                             class="md:col-span-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-center">
                             <div class="text-xs text-emerald-400 font-bold uppercase tracking-widest">종합 매치 신뢰 스코어</div>
-                            <div class="text-5xl font-extrabold font-serif my-2 text-[#10B981]" id="result-match-score">
+                            <div class="text-5xl font-extrabold font-sans my-2 text-[#10B981]" id="result-match-score">
                                 98.8<span class="text-sm">점</span></div>
                             <p class="text-[11px] text-slate-300">알레르기 / 약물 충돌 요인 완전 차단 검증</p>
                         </div>
@@ -389,7 +459,7 @@
 
                         <!-- 추천 팩 리스트 -->
                         <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
-                            <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                            <h3 class="text-xl font-bold text-[#1E3A2F] font-sans flex items-center gap-2">
                                 <i class="fa-solid fa-basket-shopping text-[#10B981]"></i> 인기 영양제 추천 및 실시간 외부 판매처 바로가기
                             </h3>
 
@@ -408,7 +478,7 @@
                             </div>
                         </div>
 
-                        <!-- 실시간 기존 영양제와의 사전 충돌 방지 진단기 -->
+                        <!-- 실시간 기존 영양제와의 사전 충돌 방지 체크기 -->
                         <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
                             <div
                                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
@@ -420,7 +490,7 @@
                                 </div>
                                 <button onclick="checkSupplementsCollision()"
                                     class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2.5 px-5 rounded-xl transition shadow-md flex items-center gap-1.5 shrink-0">
-                                    <i class="fa-solid fa-bolt"></i> 실시간 충돌 여부 정밀 진단
+                                    <i class="fa-solid fa-bolt"></i> 실시간 충돌 여부 성분 확인
                                 </button>
                             </div>
                             <div id="pre-purchase-clash-results" class="hidden space-y-3">
@@ -431,11 +501,11 @@
                         <!-- 중복/안전 섭취량 바 차트 영역 -->
                         <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
                             <div>
-                                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif flex items-center gap-2">
+                                <h3 class="text-xl font-bold text-[#1E3A2F] font-sans flex items-center gap-2">
                                     <i class="fa-solid fa-chart-line text-[#10B981]"></i> 안심 영양성분 1일 상호 복용 안전 검수 대시보드
                                 </h3>
                                 <p class="text-xs text-slate-500 mt-1">
-                                    중복 복용에 따른 부작용을 원천 차단하기 위해 NutriMatch AI 분석 엔진이 하루 최적섭취량(100%)을 완벽 제어했습니다.
+                                    중복 복용에 따른 부작용을 원천 차단하기 위해 NutriMatch AI 분석 엔진이 하루 권장 섭취량 수준으로 조율했습니다.
                                 </p>
                             </div>
 
@@ -467,7 +537,7 @@
                             </div>
                         </div>
 
-                        <!-- 내 보관함에 추천 성분 담고 1:1 진단 연계 버튼 -->
+                        <!-- 내 보관함에 추천 성분 담고 1:1 셀프 체크 연계 버튼 -->
                         <div
                             class="bg-gradient-to-r from-teal-900 to-emerald-900 rounded-3xl p-6 text-white shadow-xl space-y-4">
                             <span
@@ -475,11 +545,11 @@
                                 Continuity</span>
                             <h4 class="text-base font-bold">기존 보관함에 이 추천 조합 합산하기</h4>
                             <p class="text-[11px] text-slate-200 leading-relaxed">
-                                추천된 영양 성분들을 현재 보관함에 즉시 투입시켜, 기존 영양제들과 누적으로 합산된 과다 복용 상태를 진단기로 연속 모니터링합니다.
+                                추천된 영양 성분들을 현재 보관함에 즉시 투입시켜, 기존 영양제들과 누적으로 합산된 과다 복용 가능성을 셀프 체크로 연속 모니터링합니다.
                             </p>
                             <button onclick="addRecommendedToChecker()"
                                 class="w-full bg-[#10B981] hover:bg-[#0f9f6e] text-white font-bold py-3.5 rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-circle-plus"></i> 내 보관함에 추천팩 임시 저장 & 진단하기
+                                <i class="fa-solid fa-circle-plus"></i> 내 보관함에 추천팩 임시 저장 & 체크하기
                             </button>
                         </div>
 
@@ -550,7 +620,7 @@
                         <span
                             class="text-xs bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Nutrient
                             Overlap Diagnostic</span>
-                        <h2 class="text-2xl sm:text-3xl font-bold font-serif">내 영양제 중복·과다 섭취 셀프 체크</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold font-sans">내 영양제 중복·과다 섭취 셀프 체크</h2>
                         <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
                             현재 식탁 위 혹은 서랍장에 보관 중이신 영양제를 목록에 등록하세요. 사용자의 연령 및 특이 몸 상태 프로필에 기반하여 위험 상한선(Tolerable Upper
                             Intake Level)을 동적으로 변경하고 부작용 위장장애 및 간독성을 경고해 드립니다.
@@ -746,7 +816,7 @@
                         <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-100 space-y-6">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h3 class="text-xl font-bold text-slate-800 font-serif flex items-center gap-2">
+                                    <h3 class="text-xl font-bold text-slate-800 font-sans flex items-center gap-2">
                                         <i class="fa-solid fa-square-poll-horizontal text-emerald-500"></i> 종합 영양 성분 섭취
                                         분석기
                                     </h3>
@@ -876,7 +946,7 @@
                     <div class="w-8 h-8 rounded-lg bg-[#10B981] flex items-center justify-center text-white">
                         <i class="fa-solid fa-seedling text-sm"></i>
                     </div>
-                    <span class="font-serif text-lg font-bold text-white tracking-tight">NutriMatch</span>
+                    <span class="font-sans text-lg font-bold text-white tracking-tight">NutriMatch</span>
                 </div>
                 <p class="text-xs text-slate-400 leading-relaxed">
                     뉴트리매치는 식약처 권장 가이드를 준수하며 개인의 복용 데이터 분석해 최상의 오버도즈 케어 시스템과 천연 원료 영양 매칭 솔루션을 선사합니다.
@@ -903,7 +973,7 @@
             </div>
 
             <div class="space-y-3">
-                <h5 class="text-white font-bold font-serif">Supplements Safety Guard</h5>
+                <h5 class="text-white font-bold font-sans">Supplements Safety Guard</h5>
                 <p class="text-xs text-slate-400 leading-relaxed">
                     각 영양소의 일일 권장량 및 상한 섭취 기준은 식품의약품안전처 및 보건복지부의 최신 ‘한국인 영양소 섭취기준’ 원장을 준수하여 평가합니다.
                 </p>
@@ -1082,21 +1152,26 @@
         }
 
         // 3. 동의 모달 열기 (매번 모든 체크박스 해제 + 버튼 비활성화)
+        function setCheckedById(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.checked = val;
+        }
+
+        function isCheckedById(id) {
+            const el = document.getElementById(id);
+            return el ? el.checked : false;
+        }
+
         function openConsentModal() {
+            document.body.style.overflow = 'hidden';
             const modal = document.getElementById("consent-modal");
             if (modal) {
                 // (1) 모든 체크박스 기본 해제
-                const allCb = document.getElementById("consent-all");
-                const privCb = document.getElementById("consent-privacy");
-                const healthCb = document.getElementById("consent-health");
-                const discCb = document.getElementById("consent-disclaimer");
-                const mktCb = document.getElementById("consent-marketing");
-
-                if (allCb) allCb.checked = false;
-                if (privCb) privCb.checked = false;
-                if (healthCb) healthCb.checked = false;
-                if (discCb) discCb.checked = false;
-                if (mktCb) mktCb.checked = false;
+                const cbIds = ['consent-all', 'consent-privacy', 'consent-health', 'consent-disclaimer', 'consent-marketing',
+                               'consent-item-terms', 'consent-item-age', 'consent-item-sensitive'];
+                cbIds.forEach(function(id) {
+                    setCheckedById(id, false);
+                });
 
                 // (2) '다음 단계(동의하고 시작하기)' 버튼 비활성화 상태로 리셋
                 updateConsentButtonState();
@@ -1109,45 +1184,104 @@
         function closeConsentModal() {
             const modal = document.getElementById("consent-modal");
             if (modal) modal.classList.add("hidden");
+
+            // 배경 스크롤 잠금 해제
+            document.body.style.overflow = '';
+
+            // 모든 체크박스 초기화
+            const cbIds = ['consent-all', 'consent-privacy', 'consent-health', 'consent-disclaimer', 'consent-marketing',
+                           'consent-item-terms', 'consent-item-age', 'consent-item-sensitive'];
+            cbIds.forEach(function(id) {
+                setCheckedById(id, false);
+            });
+
+            // 동의 버튼 비활성화로 리셋
+            updateConsentButtonState();
+
+            // 대기 중인 타겟 액션 초기화 (취소이므로 저장하지 않음)
+            pendingTargetAction = null;
         }
 
         // 4. 전체 동의 클릭 시 하위 항목 일괄 조작
         function toggleAllConsent(checked) {
-            document.getElementById("consent-privacy").checked = checked;
-            document.getElementById("consent-health").checked = checked;
-            document.getElementById("consent-disclaimer").checked = checked;
-            document.getElementById("consent-marketing").checked = checked;
+            // 모든 '전체 동의' 체크박스 상태 시각적 동기화
+            document.querySelectorAll('#consent-all').forEach(function(cb) {
+                cb.checked = checked;
+            });
+
+            const subCbIds = [
+                'consent-privacy', 'consent-health', 'consent-disclaimer', 'consent-marketing',
+                'consent-item-terms', 'consent-item-age', 'consent-item-sensitive'
+            ];
+            subCbIds.forEach(function(id) {
+                setCheckedById(id, checked);
+            });
+
             updateConsentButtonState();
         }
 
         // 5. 개별 항목 조작 시 전체 동의 양방향 동기화 및 버튼 갱신
         function onIndividualConsentChange() {
-            const p = document.getElementById("consent-privacy").checked;
-            const h = document.getElementById("consent-health").checked;
-            const d = document.getElementById("consent-disclaimer").checked;
-            const m = document.getElementById("consent-marketing").checked;
-            
-            // 필수+선택 4개 모두 체크되면 전체 동의도 체크, 하나라도 풀리면 전체 동의 해제
-            document.getElementById("consent-all").checked = (p && h && d && m);
+            // 필수 1 동기화 (consent-privacy & consent-item-terms)
+            if (document.getElementById('consent-item-terms') && document.getElementById('consent-privacy')) {
+                const val = isCheckedById('consent-item-terms') || isCheckedById('consent-privacy');
+                setCheckedById('consent-item-terms', val);
+                setCheckedById('consent-privacy', val);
+            }
+            // 필수 2 동기화 (consent-health & consent-item-age)
+            if (document.getElementById('consent-item-age') && document.getElementById('consent-health')) {
+                const val = isCheckedById('consent-item-age') || isCheckedById('consent-health');
+                setCheckedById('consent-item-age', val);
+                setCheckedById('consent-health', val);
+            }
+            // 필수 3 동기화 (consent-disclaimer & consent-item-sensitive)
+            if (document.getElementById('consent-item-sensitive') && document.getElementById('consent-disclaimer')) {
+                const val = isCheckedById('consent-item-sensitive') || isCheckedById('consent-disclaimer');
+                setCheckedById('consent-item-sensitive', val);
+                setCheckedById('consent-disclaimer', val);
+            }
+
+            // 필수 항목 3개 체크 판단
+            const p = isCheckedById('consent-privacy') || isCheckedById('consent-item-terms');
+            const h = isCheckedById('consent-health') || isCheckedById('consent-item-age');
+            const d = isCheckedById('consent-disclaimer') || isCheckedById('consent-item-sensitive');
+            const m = isCheckedById('consent-marketing');
+
+            // 존재하는 모든 개별 항목이 체크되었는지 판단
+            const allChecked = p && h && d && (document.getElementById('consent-marketing') ? m : true);
+
+            // '전체 동의' 체크박스 양방향 동기화
+            document.querySelectorAll('#consent-all').forEach(function(cb) {
+                cb.checked = allChecked;
+            });
+
             updateConsentButtonState();
         }
 
         // 6. 버튼 상태 갱신 (필수 3개 모두 동의 시 초록 활성화, 미달 시 회색 비활성화)
         function updateConsentButtonState() {
-            const p = document.getElementById("consent-privacy").checked;
-            const h = document.getElementById("consent-health").checked;
-            const d = document.getElementById("consent-disclaimer").checked;
-            const btn = document.getElementById("consent-submit-btn");
+            const p = isCheckedById('consent-privacy') || isCheckedById('consent-item-terms');
+            const h = isCheckedById('consent-health') || isCheckedById('consent-item-age');
+            const d = isCheckedById('consent-disclaimer') || isCheckedById('consent-item-sensitive');
 
-            if (btn) {
-                if (p && h && d) {
-                    btn.disabled = false;
-                    btn.className = "w-full bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-pointer text-center text-sm shadow-md";
-                } else {
-                    btn.disabled = true;
-                    btn.className = "w-full bg-slate-300 text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-not-allowed text-center text-sm shadow-md";
+            const isRequiredAgreed = p && h && d;
+
+            const btns = [
+                document.getElementById("consent-submit-btn"),
+                document.getElementById("consent-submit-btn-top")
+            ];
+
+            btns.forEach(function(btn) {
+                if (btn) {
+                    if (isRequiredAgreed) {
+                        btn.disabled = false;
+                        btn.className = "w-full bg-[#1E3A2F] hover:bg-[#142820] text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-pointer text-center text-sm shadow-md";
+                    } else {
+                        btn.disabled = true;
+                        btn.className = "w-full bg-slate-300 text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-not-allowed text-center text-sm shadow-md";
+                    }
                 }
-            }
+            });
         }
 
         function toggleConsentDetail(id) {
@@ -1157,10 +1291,10 @@
 
         // 7. 동의 제출 처리 (localStorage 저장 후 모달 닫고 목표 플로우 진행)
         function submitConsent() {
-            const p = document.getElementById("consent-privacy").checked;
-            const h = document.getElementById("consent-health").checked;
-            const d = document.getElementById("consent-disclaimer").checked;
-            const m = document.getElementById("consent-marketing").checked;
+            const p = isCheckedById('consent-privacy') || isCheckedById('consent-item-terms');
+            const h = isCheckedById('consent-health') || isCheckedById('consent-item-age');
+            const d = isCheckedById('consent-disclaimer') || isCheckedById('consent-item-sensitive');
+            const m = isCheckedById('consent-marketing');
 
             if (!p || !h || !d) {
                 showToast("필수 동의 항목에 모두 동의하셔야 합니다.", "error");
@@ -1775,7 +1909,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-2 text-center py-4 border-b border-slate-100">
-                    <h3 class="text-2xl font-extrabold text-[#1E3A2F] font-serif">시작 전 이용약관 및 정보 동의</h3>
+                    <h3 class="text-2xl font-extrabold text-[#1E3A2F] font-sans">시작 전 이용약관 및 정보 동의</h3>
                     <p class="text-xs text-slate-400">맞춤 영양 매칭 시스템을 위해 안전 가이드를 읽어주세요.</p>
                 </div>
                 
@@ -1823,7 +1957,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 1. 생물학적 성별 선택 및 전용 라이프 영역</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 1. 생물학적 성별 선택 및 전용 라이프 영역</h3>
                     <p class="text-xs text-slate-400">성별 특화 기관 건강과 복용 안전 범위를 매칭하기 위한 필수 관문입니다.</p>
                 </div>
                 
@@ -1897,7 +2031,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 2. 연령대 및 신체 대사 분석</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 2. 연령대 및 신체 대사 분석</h3>
                     <p class="text-xs text-slate-400">BMI(체질량 지수)를 자동 연산하여 칼슘 흡수율과 영양 밸런스를 측정합니다.</p>
                 </div>
 
@@ -1938,7 +2072,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 3. 운동 성향 및 수면 패턴 파악</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 3. 운동 성향 및 수면 패턴 파악</h3>
                     <p class="text-xs text-slate-400">땀 배출과 수면 회복 효율에 연관된 비타민B군, L-테아닌 소모율을 가산합니다.</p>
                 </div>
 
@@ -1987,7 +2121,7 @@
             else if (state.quizStep === 4) {
                 html = `
             <div class="space-y-6 animate-fadeIn">
-                <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 4. 평소 식습관 및 일상 섭취 기호</h3>
+                <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 4. 평소 식습관 및 일상 섭취 기호</h3>
 
                 <div class="space-y-2">
                     <label class="block text-xs font-bold text-slate-500">🥗 평소 대표적인 식생활 형태</label>
@@ -1997,7 +2131,7 @@
                            <option value="irregular" ${state.answers.diet === 'irregular' ? 'selected' : ''}>가공식품 / 인스턴트 및 불규칙식</option>
                         <option value="meat" ${state.answers.diet === 'meat' ? 'selected' : ''}>육식 위주 지방질 식습관</option>
                         <option value="veg" ${state.answers.diet === 'veg' ? 'selected' : ''}>채식 위주 정갈한 식사 / 간헐적 단식</option>
-                        <option value="vegan" ${state.answers.diet === 'vegan' ? 'selected' : ''}>완벽한 순수 비건 (동물 원료 차단)</option>
+                        <option value="vegan" ${state.answers.diet === 'vegan' ? 'selected' : ''}>순수 비건 (동물 원료 미포함)</option>
                     </select>
                 </div>
 
@@ -2031,7 +2165,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 5. 만성 일상 스트레스 인지 수준</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 5. 만성 일상 스트레스 인지 수준</h3>
                     <p class="text-xs text-slate-400">자율신경계 과항진 완화를 돕는 테아닌, 부신 피로 보호 영양소 매칭을 조절합니다.</p>
                 </div>
 
@@ -2064,7 +2198,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-red-500 animate-pulse"></i> STEP 6. 의료 안전 필터 (흡연 & 알레르기)</h3>
+                    <h3 class="text-xl font-bold text-red-900 font-sans flex items-center gap-1.5"><i class="fa-solid fa-user-shield text-red-500 animate-pulse"></i> STEP 6. 의료 안전 필터 (흡연 & 알레르기)</h3>
                     <p class="text-xs text-red-500/70">식약처 기능성 배합 위험 원료 자동 우회 가동을 위한 정보 수집입니다.</p>
                 </div>
 
@@ -2110,7 +2244,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-red-900 font-serif flex items-center gap-1.5"><i class="fa-solid fa-prescription-bottle text-red-500"></i> STEP 7. 부작용 이력 및 복용 약물 점검</h3>
+                    <h3 class="text-xl font-bold text-red-900 font-sans flex items-center gap-1.5"><i class="fa-solid fa-prescription-bottle text-red-500"></i> STEP 7. 부작용 이력 및 복용 약물 점검</h3>
                     <p class="text-xs text-red-500/70">현재 드시는 병원 약품과의 상호 작용 및 과거 위장 피로 요인을 배제합니다.</p>
                 </div>
 
@@ -2168,7 +2302,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 8. 최우선 건강 목표 및 집중 고민 선택</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 8. 최우선 건강 목표 및 집중 고민 선택</h3>
                     <p class="text-xs text-slate-400">가장 원하시는 목표 영역을 **최대 2개** 선택해 주세요. (가장 중요 단계)</p>
                 </div>
 
@@ -2203,7 +2337,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 9. 복용 편의성 및 선호 가공 형태</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 9. 복용 편의성 및 선호 가공 형태</h3>
                     <p class="text-xs text-slate-400">알약 크기로 인한 삼킴 곤란 여부를 조율하고 선호 형태를 대조합니다.</p>
                 </div>
 
@@ -2250,7 +2384,7 @@
                 html = `
             <div class="space-y-6 animate-fadeIn">
                 <div class="space-y-1">
-                    <h3 class="text-xl font-bold text-[#1E3A2F] font-serif">STEP 10. 가치관 및 구매 성향 맞춤 큐레이션</h3>
+                    <h3 class="text-xl font-bold text-[#1E3A2F] font-sans">STEP 10. 가치관 및 구매 성향 맞춤 큐레이션</h3>
                     <p class="text-xs text-slate-400">소비 성향과 휴대 편의성에 적합한 맞춤 포장 및 할인 구도를 산출합니다.</p>
                 </div>
 
@@ -2621,12 +2755,12 @@
                             <span class="bg-[#1E3A2F] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md">${item.tag}</span>
                             <span class="text-xs text-slate-400 font-medium">제형: ${item.size}</span>
                         </div>
-                        <h4 class="text-xl font-bold text-slate-800 font-serif">${item.name}</h4>
+                        <h4 class="text-xl font-bold text-slate-800 font-sans">${item.name}</h4>
                         <p class="text-xs text-slate-500 leading-relaxed">${item.detail}</p>
                     </div>
                     <div class="flex flex-col items-end shrink-0 w-full sm:w-auto bg-white p-3 rounded-2xl border border-slate-100 shadow-sm space-y-1">
                         <div class="text-xs font-bold text-slate-400">개인 맞춤 적합도</div>
-                        <div class="text-2xl font-black text-[#10B981] font-serif">${matchPercentStr}<span class="text-sm font-sans">%</span></div>
+                        <div class="text-2xl font-black text-[#10B981] font-sans">${matchPercentStr}<span class="text-sm font-sans">%</span></div>
                     </div>
                 </div>
 
@@ -2825,9 +2959,9 @@
 
                 activeGuidelines["비타민D"].maxSafe = 250;
                 activeGuidelines["비타민D"].danger = 400;
-                activeGuidelines["비타민D"].desc += " [KDRI 2025: 근감소증 및 골다공증 예방을 위해 비타민 D 권장 섭취량(15μg)이 상향됨에 따라 안전 한계치도 넓게 허용됩니다.]";
+                activeGuidelines["비타민D"].desc += " [KDRI 2025: 근감소증 및 골다공증 관리를 위해 비타민 D 권장 섭취량(15μg)이 상향됨에 따라 안전 한계치도 넓게 허용됩니다.]";
 
-                profileLogs.push("👵👴 <strong>50대 이상 KDRI 기준:</strong> 노화 예방을 위해 <strong>비타민D</strong> 한계치는 상향 완화되었으나, 심혈관 부담 경감을 위해 <strong>칼슘</strong> 상한 기준은 엄격히 제한되었습니다.");
+                profileLogs.push("👵👴 <strong>50대 이상 KDRI 기준:</strong> 노화 케어를 위해 <strong>비타민D</strong> 한계치는 상향 완화되었으나, 심혈관 부담 경감을 위해 <strong>칼슘</strong> 상한 기준은 엄격히 제한되었습니다.");
             }
 
             if (profileLogs.length > 0) {
@@ -3314,7 +3448,7 @@
             } else if (nutrient === "아연") {
                 solution = "아연 과다 복용 시 미네랄 경쟁 흡수로 면역 기능의 기둥인 구리 흡수를 억제합니다. 단품으로 더하고 있는 아연 보충제의 중복을 중단하세요.";
             } else if (nutrient === "실리마린" && isOrganCaution) {
-                solution = "간/신장 예방 모드가 감지되었습니다. 과중한 실리마린(밀크씨슬) 고농도 허브 복용은 오히려 신진대사 여과 피로를 더합니다. 복용량을 절반 이하로 줄이십시오.";
+                solution = "간/신장 케어 모드가 감지되었습니다. 과중한 실리마린(밀크씨슬) 고농도 허브 복용은 오히려 신진대사 여과 피로를 더합니다. 복용량을 절반 이하로 줄이십시오.";
             } else {
                 solution = `${nutrient} 중복을 피하기 위해 복합 종합제 이외의 단일제 배합을 잠정 중단하시거나 1일 1회 맞춤 팩 시스템으로 성분을 일원화할 것을 권고합니다.`;
             }
@@ -3551,6 +3685,28 @@
             switchView('landing');
             buildNutrientGridUI();
             recalculateSupplements();
+
+            // ESC 키로 동의 모달 닫기
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('consent-modal');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        closeConsentModal();
+                    }
+                }
+            });
+
+            // 오버레이(모달 바깥) 클릭 시 모달 닫기
+            var consentModal = document.getElementById('consent-modal');
+            if (consentModal) {
+                consentModal.addEventListener('click', function(e) {
+                    // 클릭 대상이 오버레이(#consent-modal) 자체일 때만 닫기
+                    // 모달 카드 내부 클릭은 무시
+                    if (e.target === consentModal) {
+                        closeConsentModal();
+                    }
+                });
+            }
         };
     </script>
 
@@ -3558,20 +3714,72 @@
     <!-- ==============================================
      동의 게이트 모달 (Consent Gate Modal)
      ============================================== -->
-    <div id="consent-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden animate-fadeIn border border-slate-100 flex flex-col max-h-[90vh]">
-            <!-- 모달 헤더 -->
-            <div class="bg-[#1E3A2F] text-white p-6 relative">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-[#10B981] flex items-center justify-center text-white font-bold shrink-0">
-                        <i class="fa-solid fa-shield-check text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-serif font-bold text-xl leading-tight">NutriMatch 서비스 이용 동의</h3>
-                        <p class="text-xs text-emerald-200/90 mt-0.5">맞춤 영양 정보 안내 및 셀프 체크 이용을 위한 필수 절차입니다.</p>
-                    </div>
+        <!-- 전면 동의 게이트 모달 (하단 잘림 방지 컴팩트 레이아웃) -->
+    <div id="consent-modal" class="hidden">
+        <div id="consent-modal-card" class="space-y-4">
+            <!-- 닫기(X) 버튼 -->
+            <button type="button" onclick="closeConsentModal()" aria-label="모달 닫기"
+                style="position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; color:#94a3b8; cursor:pointer; z-index:10; line-height:1; padding:4px 6px; border-radius:6px; transition: color 0.15s, background 0.15s;"
+                onmouseover="this.style.color='#1E3A2F'; this.style.background='#f1f5f9';" onmouseout="this.style.color='#94a3b8'; this.style.background='none';">
+                ✕
+            </button>
+            <div class="text-center space-y-1 border-b border-slate-100 pb-3">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-50 text-[#10B981] mb-0.5">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <h3 class="text-xl font-extrabold text-[#1E3A2F] font-sans">시작 전 이용약관 및 정보 동의</h3>
+                <p class="text-[11px] text-slate-400 font-normal">안전하고 정밀한 맞춤 영양 설계를 위한 필수 절차입니다.</p>
+            </div>
+
+            <div class="bg-amber-50/80 border border-amber-200/60 rounded-xl p-3 text-xs text-amber-900 leading-relaxed space-y-1">
+                <span class="font-bold block flex items-center gap-1.5 text-amber-800 text-[11px]">
+                    <i class="fa-solid fa-circle-info text-amber-500"></i> 서비스 이용 및 법적 면책 고지
+                </span>
+                <p class="text-[10px] text-amber-800/90 leading-normal">
+                    본 서비스는 의학적 진단·치료를 대신하지 않으며, 식약처 공공데이터 기반 정보 참고용 가이드입니다. 기저질환이나 복용 약물이 있는 경우 전문의와 상담하세요.
+                </p>
+            </div>
+
+            <div class="space-y-2 pt-1">
+                <label id="label-agree-all" class="flex items-center justify-between p-3 rounded-xl bg-slate-100/80 hover:bg-slate-100 cursor-pointer transition border border-slate-200/80 font-bold text-xs">
+                    <span class="text-[#1E3A2F] text-xs font-bold">전체 동의하기</span>
+                    <input type="checkbox" id="consent-all" onchange="toggleAllConsent(this.checked)" class="w-4.5 h-4.5 rounded text-[#10B981] accent-[#10B981] cursor-pointer">
+                </label>
+
+                <div class="space-y-1.5 pt-1.5 border-t border-slate-100">
+                    <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/60 cursor-pointer transition text-xs">
+                        <input type="checkbox" id="consent-item-terms" onchange="onIndividualConsentChange()" class="w-4 h-4 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div>
+                            <span class="font-semibold text-slate-800 text-[11px]">[필수] 서비스 이용약관 및 개인정보 동의</span>
+                            <p class="text-[9.5px] text-slate-400 font-normal">서비스 이용 규칙 준수 동의</p>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/60 cursor-pointer transition text-xs">
+                        <input type="checkbox" id="consent-item-age" onchange="onIndividualConsentChange()" class="w-4 h-4 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div>
+                            <span class="font-semibold text-slate-800 text-[11px]">[필수] 만 14세 이상 이용 확인</span>
+                            <p class="text-[9.5px] text-slate-400 font-normal">만 14세 미만 아동 이용 제한</p>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/60 cursor-pointer transition text-xs">
+                        <input type="checkbox" id="consent-item-sensitive" onchange="onIndividualConsentChange()" class="w-4 h-4 rounded text-[#10B981] accent-[#10B981] mt-0.5">
+                        <div>
+                            <span class="font-semibold text-slate-800 text-[11px]">[필수] 건강 민감정보 수집·이용 동의</span>
+                            <p class="text-[9.5px] text-slate-400 font-normal">맞춤 계산용 건강 상태 정보 처리</p>
+                        </div>
+                    </label>
                 </div>
             </div>
+
+            <div class="pt-1">
+                <button id="consent-submit-btn-top" onclick="submitConsent()" disabled class="w-full bg-slate-300 text-white font-bold py-3.5 rounded-2xl transition duration-300 cursor-not-allowed text-center text-sm shadow-md">
+                    동의하고 시작하기 <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
             <!-- 모달 바디 -->
             <div class="p-6 overflow-y-auto space-y-4 text-sm text-slate-700">
