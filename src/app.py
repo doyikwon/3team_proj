@@ -66,12 +66,12 @@ def render_virtual_pillbox_page():
 # Streamlit 최신 st.navigation API 사용 시도
 if hasattr(st, "navigation") and hasattr(st, "Page"):
     page_1 = st.Page(render_custom_care_page, title="맞춤 진단", icon="🌱", default=True)
-    page_2 = st.Page("pages/_02_Data_Analysis.py", title="데이터 분석", icon="📊")
+    page_2 = st.Page("pages/02_Data_Analysis.py", title="데이터 분석", icon="📊")
     
     pages = [page_1]
     
     # 2. 맞춤형 영양제 추천 추가
-    page_curation = st.Page("pages/_03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
+    page_curation = st.Page("pages/03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
     pages.append(page_curation)
 
     # 3. 약통 페이지 존재 시 추가
@@ -103,7 +103,7 @@ else:
     if menu == "맞춤 진단":
         render_custom_care_page()
     elif menu == "맞춤형 영양제 추천":
-        curation_path = os.path.join(os.path.dirname(__file__), "pages", "_03_Curation.py")
+        curation_path = os.path.join(os.path.dirname(__file__), "pages", "03_Curation.py")
         if os.path.exists(curation_path):
             with open(curation_path, "r", encoding="utf-8") as f:
                 code = f.read()
@@ -119,10 +119,7 @@ else:
             with open(kakao_alert_path, "r", encoding="utf-8") as f:
                 code = f.read()
             exec(code)
-    elif menu == "데이터 분석":
-        data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "_02_Data_Analysis.py")
-        if not os.path.exists(data_analysis_path):
-            data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "02_Data_Analysis.py")
+        data_analysis_path = os.path.join(os.path.dirname(__file__), "pages", "02_Data_Analysis.py")
             
         if os.path.exists(data_analysis_path):
             with open(data_analysis_path, "r", encoding="utf-8") as f:
