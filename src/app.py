@@ -71,7 +71,7 @@ if hasattr(st, "navigation") and hasattr(st, "Page"):
     pages = [page_1]
     
     # 2. 맞춤형 영양제 추천 추가
-    page_curation = st.Page("pages/03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
+    page_curation = st.Page("pages/_03_Curation.py", title="맞춤형 영양제 추천", icon="🛒")
     pages.append(page_curation)
 
     # 3. 약통 페이지 존재 시 추가
@@ -103,7 +103,7 @@ else:
     if menu == "맞춤 진단":
         render_custom_care_page()
     elif menu == "맞춤형 영양제 추천":
-        curation_path = os.path.join(os.path.dirname(__file__), "pages", "03_Curation.py")
+        curation_path = os.path.join(os.path.dirname(__file__), "pages", "_03_Curation.py")
         if os.path.exists(curation_path):
             with open(curation_path, "r", encoding="utf-8") as f:
                 code = f.read()
